@@ -1,0 +1,34 @@
+.app {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  h1 {
+    font-size: 3em;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .generate-btn {
+    margin-top: 2em;
+    border: 1px solid #5f159c;
+    border-radius: 4px;
+    background-color: transparent;
+    font-size: 1em;
+    color: hsl(0deg, 0%, 15%);
+    padding: 0.5em 1.5em;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out,
+      border-color 0.2s ease-in-out;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #5f159c;
+      color: white;
+      border-color: transparent;
+    }
+  }
+}

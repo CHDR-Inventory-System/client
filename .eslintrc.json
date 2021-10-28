@@ -1,0 +1,46 @@
+{
+  "extends": ["plugin:react/recommended", "airbnb", "airbnb/hooks"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true,
+    "es2021": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "ignorePatterns": ["build/**/*"],
+  "rules": {
+    "arrow-parens": ["error", "as-needed"],
+    "semi": ["error", "always"],
+    "semi-style": "off",
+    "no-console": "warn",
+    "no-unused-vars": ["error", { "args": "after-used" }],
+    "no-mixed-spaces-and-tabs": "error",
+    "no-trailing-spaces": "error",
+    "no-var": "error",
+    "object-curly-spacing": ["error", "always"],
+    "no-alert": "error",
+    "comma-dangle": ["error", "never"],
+    "operator-linebreak": "off",
+    "react/jsx-curly-spacing": [
+      "error",
+      {
+        "when": "never",
+        "children": {
+          "when": "never"
+        }
+      }
+    ],
+    "react/jsx-one-expression-per-line": "off"
+  }
+}
