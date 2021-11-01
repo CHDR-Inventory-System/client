@@ -2,8 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
-/** @type {import('webpack').Configuration} */
-module.exports = {
+module.exports = (env, argv) => ({
   plugins: [
     new ESLintPlugin({
       extensions: ['js', 'jsx']
@@ -18,7 +17,11 @@ module.exports = {
   entry: path.resolve(__dirname, 'src', 'index.jsx'),
   output: {
     path: path.resolve(__dirname, 'build'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    // During development, the project will be served on the path '/'
+    // but we need to serve on the path '/csi' during production
+    // so we can properly load static assets
+    publicPath: argv.mode === 'production' ? '/csi' : '/'
   },
   devServer: {
     static: {
@@ -68,4 +71,4 @@ module.exports = {
     // extension is found.
     extensions: ['.js', '.jsx']
   }
-};
+});

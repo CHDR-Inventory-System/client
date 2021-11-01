@@ -20,6 +20,7 @@
   },
   "ignorePatterns": ["build/**/*"],
   "rules": {
+    "arrow-body-style":"off",
     "arrow-parens": ["error", "as-needed"],
     "semi": ["error", "always"],
     "semi-style": "off",
