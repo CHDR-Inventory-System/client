@@ -7,7 +7,7 @@ const App = () => {
   );
 
   const getRandomNumber = () => {
-    fetch('/api/random')
+    fetch('/csi/random')
       .then(resp => resp.json())
       .then(resp => setRandomNumber(resp.number))
       .catch(error => {

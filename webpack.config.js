@@ -30,13 +30,13 @@ module.exports = {
     // Using 0.0.0.0 allows the project to be accessed by all
     // devices on the same network as the host
     host: '0.0.0.0',
-    // Allows us to make requests using fetch('/api/route') that then
+    // Allows us to make requests using fetch('/csi/route') that then
     // get transformed into fetch('/route'). This is only for development
     proxy: {
-      '/api': {
-        target: 'http://localhost:4200',
+      '/csi': {
+        target: 'http://localhost:4565',
         pathRewrite: {
-          '^/api': ''
+          '^/csi': ''
         }
       }
     }
