@@ -1,2 +1,2 @@
 #!/bin/sh
-yarn precommit
+npm run precommit

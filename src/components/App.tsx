@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../style/App.scss';
 
-const App = () => {
+const App = (): JSX.Element => {
   const [randomNumber, setRandomNumber] = useState(
     Math.floor(Math.random() * 100)
   );
