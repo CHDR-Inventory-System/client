@@ -49,6 +49,7 @@
     "func-names": "off",
     "no-param-reassign": ["error", { "props": false }],
     "no-alert": "error",
+    "operator-linebreak": "off",
     "import/extensions": ["error", "never"],
     "react-hooks/exhaustive-deps": "off",
     "react/no-array-index-key": "off",

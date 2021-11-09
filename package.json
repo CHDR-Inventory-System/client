@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "scripts": {
     "build": "webpack --config webpack.config.js --mode=production",
+    "build:dev": "webpack --config webpack.config.js --mode=development",
     "check-types": "tsc --noemit",
     "dev": "webpack serve --mode=development",
     "format": "yarn format:ts && yarn format:scss",
