@@ -31,7 +31,7 @@
       }
     }
   },
-  "ignorePatterns": ["dist/**/*"],
+  "ignorePatterns": ["build/**/*"],
   "rules": {
     "arrow-parens": ["error", "as-needed"],
     "class-methods-use-this": "off",
