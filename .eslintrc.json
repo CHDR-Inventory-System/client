@@ -51,7 +51,12 @@
     "no-alert": "error",
     "operator-linebreak": "off",
     "import/extensions": ["error", "never"],
+    "import/no-import-module-exports": "off",
     "react-hooks/exhaustive-deps": "off",
+    "react/function-component-definition": [
+      "warn",
+      { "namedComponents": "arrow-function" }
+    ],
     "react/no-array-index-key": "off",
     "react/jsx-props-no-spreading": "off",
     "react/destructuring-assignment": "off",
@@ -76,10 +81,7 @@
     ],
     "react/sort-comp": "error",
     "react/jsx-closing-bracket-location": ["error", "tag-aligned"],
-    "react/jsx-tag-spacing": [
-      "error",
-      { "beforeSelfClosing": "always" }
-    ],
+    "react/jsx-tag-spacing": ["error", { "beforeSelfClosing": "always" }],
     "react/jsx-wrap-multilines": "error",
     "react/self-closing-comp": "error",
     "react/no-unused-state": "error",

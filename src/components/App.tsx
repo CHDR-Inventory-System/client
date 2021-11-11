@@ -10,11 +10,14 @@ type InventoryItem = {
   quantity: number;
 };
 
+const BASE_URL =
+  process.env.NODE_ENV === 'development' ? 'http://localhost:4565' : '/csi';
+
 const App = (): JSX.Element => {
   const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
 
   const getAllItems = async () => {
-    fetch('/csi/api/items/')
+    fetch(`${BASE_URL}/api/inventory/`)
       .then(resp => resp.json())
       .then(data => setInventoryItems(data))
       .catch(error => {

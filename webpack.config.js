@@ -33,17 +33,7 @@ module.exports = (env, argv) => ({
     hot: true,
     // Using 0.0.0.0 allows the project to be accessed by all
     // devices on the same network as the host
-    host: '0.0.0.0',
-    // Allows us to make requests using fetch('/csi/route') that then
-    // get transformed into fetch('/route'). This is only for development
-    proxy: {
-      '/csi': {
-        target: 'http://localhost:4565',
-        pathRewrite: {
-          '^/csi': ''
-        }
-      }
-    }
+    host: '0.0.0.0'
   },
   module: {
     rules: [
