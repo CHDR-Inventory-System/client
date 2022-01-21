@@ -1,0 +1,27 @@
+@import './mixins';
+
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('../assets/fonts/Gotham-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('../assets/fonts/Gotham-Book.ttf');
+}
+
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('../assets/fonts/Gotham-Medium.ttf');
+}
+
+body {
+  @include font-fallback('Gotham-Book');
+  color: hsl(0deg, 0%, 15%);
+  background-color: hsl(0, 0%, 98%);
+  margin: 0;
+}
+
+h1 {
+  @include font-fallback('Gotham-Bold');
+}

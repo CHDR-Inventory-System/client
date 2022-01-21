@@ -11,7 +11,7 @@ module.exports = (env, argv) => ({
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html'),
       favicon: path.resolve(__dirname, 'public', 'favicon.ico'),
-      title: 'CHDR Dev Sandbox'
+      title: 'CHDR Inventory'
     })
   ],
   target: 'web',
@@ -31,6 +31,7 @@ module.exports = (env, argv) => ({
     open: false,
     port: 9000,
     hot: true,
+    historyApiFallback: true,
     // Using 0.0.0.0 allows the project to be accessed by all
     // devices on the same network as the host
     host: '0.0.0.0'

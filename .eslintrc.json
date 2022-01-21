@@ -50,6 +50,8 @@
     "no-param-reassign": ["error", { "props": false }],
     "no-alert": "error",
     "operator-linebreak": "off",
+    // This option is turned off because it conflicts with prettier
+    "object-curly-newline": "off",
     "import/extensions": ["error", "never"],
     "import/no-import-module-exports": "off",
     "react-hooks/exhaustive-deps": "off",

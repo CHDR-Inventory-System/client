@@ -1,0 +1,87 @@
+@import './variables';
+@import './mixins';
+
+.auth {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  header {
+    text-align: center;
+    margin-bottom: 1.5em;
+    margin-top: 2em;
+
+    h1 {
+      font-size: 3.5em;
+      margin-bottom: 0;
+    }
+
+    p {
+      color: map-get($colors, 'text-muted');
+    }
+  }
+
+  .auth-card {
+    @media screen and (max-width: 500px) {
+      max-width: 90%;
+    }
+
+    @media screen and (max-height: 900px) and (max-width: 900px) {
+      margin-bottom: 5em;
+    }
+
+    &.ant-card {
+      box-shadow: 0px 4px 41px 8px hsla(0deg, 0%, 0%, 0.07);
+      padding: 1.5em 3em;
+      border-radius: 16px;
+
+      @media screen and (max-width: 500px) {
+        padding: 1.5em;
+      }
+    }
+
+    .ant-card-head {
+      border: none;
+    }
+
+    .ant-card-head-title {
+      @include font-fallback('Gotham-Bold');
+      text-align: center;
+      font-size: 1.5em;
+      padding-bottom: 0;
+      white-space: normal;
+    }
+
+    .ant-card-meta-detail {
+      margin-bottom: 2em;
+    }
+
+    .ant-card-body {
+      padding-bottom: 0;
+    }
+
+    button[type='submit'] {
+      margin-top: 0.5em;
+      width: 100%;
+    }
+  }
+
+  .card-description {
+    text-align: center;
+
+    button {
+      background-color: white;
+      border: none;
+      margin: 0;
+      padding: 0;
+      appearance: none;
+      cursor: pointer;
+      color: map-get($colors, 'monochromatic-2');
+      text-align: left;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

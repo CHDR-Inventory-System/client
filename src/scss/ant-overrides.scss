@@ -1,0 +1,71 @@
+// If the styling for any ant component needs to be overridden and should
+// stay consistent across the site, it should go in here. Any specific
+// styling should go in a separate scss file IMPORTANT: Any styling
+// put in here will affect every component of the app. Because
+// of specificity, some styles may need !important.
+@import './variables';
+@import './mixins';
+
+.ant-btn.ant-btn-primary {
+  background-color: map-get($colors, 'monochromatic-1');
+  border: none;
+  border-radius: 6px;
+  padding-top: 18px;
+  padding-bottom: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: map-get($colors, 'monochromatic-3');
+  }
+}
+
+.ant-form-item-explain.ant-form-item-explain-connected,
+.ant-form-item-explain-error {
+  margin-bottom: 0.5em;
+}
+
+// Refers to inputs as well as the password input in a form
+.ant-input,
+.ant-btn.ant-btn.ant-btn-primary,
+.ant-input-affix-wrapper {
+  border-radius: 6px;
+
+  &:focus {
+    border-color: map-get($colors, 'monochromatic-3');
+    box-shadow: none;
+  }
+
+  &:hover {
+    border-color: map-get($colors, 'monochromatic-3') !important;
+  }
+}
+
+// This class wraps the input so we need to make sure
+// only the outer element has a border radius while
+// the inner input element doesn't
+.ant-input-affix-wrapper > input {
+  border-radius: 0;
+}
+
+.ant-input-affix-wrapper-focused {
+  box-shadow: none;
+  border-color: map-get($colors, 'monochromatic-3');
+}
+
+.ant-col.ant-form-item-label {
+  @include font-fallback('Gotham-Medium');
+}
+
+.ant-input {
+  // Increase the input size on mobile to prevent the device
+  // from zooming into the field by default
+  @media screen and (max-width: 500px) {
+    font-size: 16px;
+  }
+}
+
+.ant-input-show-count-has-suffix {
+  margin-right: 4px;
+}
