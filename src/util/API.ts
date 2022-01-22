@@ -12,8 +12,11 @@ type CreateAccountOptions = {
 };
 
 class API {
-  static async login(email: string, password: string): Promise<{ token: string }> {
-    const response = await axios.post('/users/login', { email, password });
+  static async login(nid: string, password: string): Promise<{ token: string }> {
+    const response = await axios.post('/users/login', {
+      nid,
+      password
+    });
 
     return response.data;
   }

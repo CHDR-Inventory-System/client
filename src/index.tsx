@@ -3,7 +3,7 @@ import './scss/ant-overrides.scss';
 import './scss/index.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Auth from './pages/Auth';
 
 if (module.hot) {
@@ -11,10 +11,10 @@ if (module.hot) {
 }
 
 ReactDOM.render(
-  <BrowserRouter>
+  <HashRouter>
     <Routes>
       <Route path="/auth" element={<Auth />} />
     </Routes>
-  </BrowserRouter>,
+  </HashRouter>,
   document.getElementById('app')
 );

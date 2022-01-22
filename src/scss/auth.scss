@@ -22,12 +22,11 @@
   }
 
   .auth-card {
+    max-width: 480px;
+    margin-bottom: 5em;
+
     @media screen and (max-width: 500px) {
       max-width: 90%;
-    }
-
-    @media screen and (max-height: 900px) and (max-width: 900px) {
-      margin-bottom: 5em;
     }
 
     &.ant-card {
@@ -58,6 +57,10 @@
 
     .ant-card-body {
       padding-bottom: 0;
+    }
+
+    .ant-alert {
+      margin-bottom: 1em;
     }
 
     button[type='submit'] {

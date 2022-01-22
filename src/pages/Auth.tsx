@@ -2,9 +2,8 @@ import '../scss/auth.scss';
 import React, { useState } from 'react';
 import SignUpCard from '../components/cards/SignUpCard';
 import LogInCard from '../components/cards/LogInCard';
-import ForgotPasswordCard from '../components/cards/ForgotPasswordCard';
 
-type CardType = 'login' | 'signUp' | 'forgotPassword';
+type CardType = 'login' | 'signUp';
 
 const Auth = (): JSX.Element => {
   const [card, setCard] = useState<CardType>('signUp');
@@ -22,12 +21,6 @@ const Auth = (): JSX.Element => {
                 Click here to sign up.
               </button>
             </p>
-            <p>
-              Forgot your password?{' '}
-              <button onClick={() => setCard('forgotPassword')} type="button">
-                Click here to reset it.
-              </button>
-            </p>
           </div>
         }
       />
@@ -38,26 +31,15 @@ const Auth = (): JSX.Element => {
         description={
           // eslint-disable-next-line react/jsx-wrap-multilines
           <div className="card-description">
-            Already have an account?{' '}
-            <button onClick={() => setCard('login')} type="button">
-              Click here to log in.
-            </button>
-          </div>
-        }
-      />
-    ),
-    forgotPassword: (
-      <ForgotPasswordCard
-        className="auth-card"
-        description={
-          // eslint-disable-next-line react/jsx-wrap-multilines
-          <div className="card-description">
-            <p>Enter your email to receive a link to reset your password.</p>
             <p>
               Already have an account?{' '}
               <button onClick={() => setCard('login')} type="button">
                 Click here to log in.
               </button>
+            </p>
+            <p>
+              Your NID and password should be the same combination you use to sign into
+              myUCF.
             </p>
           </div>
         }
