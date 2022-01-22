@@ -22,7 +22,7 @@ module.exports = (env, argv) => ({
     // During development, the project will be served on the path '/'
     // but we need to serve on the path '/csi' during production
     // so we can properly load static assets
-    publicPath: argv.mode === 'production' ? '/csi' : '/'
+    publicPath: argv.mode === 'production' ? '/csi/' : '/'
   },
   devServer: {
     static: {
