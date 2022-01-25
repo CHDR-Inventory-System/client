@@ -6,7 +6,7 @@ import LogInCard from '../components/cards/LogInCard';
 type CardType = 'login' | 'signUp';
 
 const Auth = (): JSX.Element => {
-  const [card, setCard] = useState<CardType>('signUp');
+  const [card, setCard] = useState<CardType>('login');
 
   const cards: Record<CardType, JSX.Element> = {
     login: (
@@ -38,8 +38,11 @@ const Auth = (): JSX.Element => {
               </button>
             </p>
             <p>
-              Your NID and password should be the same combination you use to sign into
-              myUCF.
+              Your NID and password should be the same combination you use to sign into{' '}
+              <a href="https://my.ucf.edu/" target="_blank" rel="noreferrer">
+                myUCF
+              </a>
+              .
             </p>
           </div>
         }
@@ -50,7 +53,7 @@ const Auth = (): JSX.Element => {
   return (
     <div className="auth">
       <header>
-        <h1>CHDR</h1>
+        <h1>CHDR Inventory</h1>
         <p>Center for Humanities and Digital Research</p>
       </header>
       {cards[card]}

@@ -1,4 +1,5 @@
 @import './mixins';
+@import './_variables.scss';
 
 @font-face {
   font-family: 'Gotham-Bold';
@@ -24,4 +25,12 @@ body {
 
 h1 {
   @include font-fallback('Gotham-Bold');
+}
+
+a {
+  color: map-get($colors, 'monochromatic-2');
+
+  &:hover {
+    color: map-get($colors, 'monochromatic-3');
+  }
 }
