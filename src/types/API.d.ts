@@ -4,8 +4,12 @@ export type CreateAccountOptions = {
   password: string;
 };
 
+export type UserRole = 'Super' | 'Admin' | 'User';
+
 export type User = {
+  ID: number;
+  created: string;
   email: string;
-  role: 'super' | 'admin' | 'user';
-  id: number;
+  role: UserRole;
+  nid: string;
 };

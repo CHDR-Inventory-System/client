@@ -1,0 +1,23 @@
+@import './variables';
+@import './mixins';
+
+.navbar {
+  background-color: $body-color;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  .ant-page-header-heading-title {
+    @include font-fallback('Gotham-Bold');
+    font-size: 2em;
+
+    @media screen and (max-width: 600px) {
+      font-size: 1.5em;
+    }
+  }
+
+  .ant-page-header-heading-sub-title {
+    @include font-fallback('Gotham-Medium');
+    color: map-get($colors, 'text-muted');
+  }
+}

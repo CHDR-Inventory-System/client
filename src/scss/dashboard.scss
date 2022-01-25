@@ -1,0 +1,114 @@
+@import './variables';
+
+.dashboard {
+  $table-border-radius: 8px;
+
+  .ant-table {
+    border-radius: $table-border-radius;
+    color: hsl(0deg, 0%, 30%);
+  }
+
+  .ant-table-content {
+    border-radius: $table-border-radius;
+  }
+
+  .ant-table-thead > tr > th {
+    color: white;
+    padding-left: 2em;
+    padding-right: 2em;
+    background-color: map-get($colors, 'monochromatic-1');
+  }
+
+  .ant-table-tbody > tr > td {
+    padding-left: 2em;
+    padding-right: 2em;
+    padding: 1.5em 2em;
+    cursor: pointer;
+  }
+
+  .ant-table-container table > thead > tr:first-child th:first-child {
+    border-top-left-radius: $table-border-radius;
+  }
+
+  .ant-table-container table > thead > tr:first-child th:last-child {
+    border-top-right-radius: $table-border-radius;
+  }
+
+  // Removes the shadows that appear to the left and right of the
+  // table when scrolling horizontally
+  .ant-table-ping-left:not(.ant-table-has-fix-left) .ant-table-container::before,
+  .ant-table-ping-right:not(.ant-table-has-fix-right) .ant-table-container::after {
+    box-shadow: none;
+  }
+
+  .ant-tabs-nav {
+    margin-bottom: 2em;
+    width: 85%;
+    margin: 0 auto;
+  }
+
+  .ant-card {
+    border-radius: $table-border-radius;
+    max-width: 940px;
+    width: 100%;
+    box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.07);
+    margin: 2em;
+
+    @media screen and (max-width: 1000px) {
+      max-width: 90%;
+    }
+  }
+
+  .ant-card-body {
+    padding: 0px;
+  }
+
+  .ant-tabs-tabpane {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .ant-table-cell:hover {
+    svg {
+      opacity: 1;
+    }
+  }
+
+  .ant-dropdown-trigger {
+    display: flex;
+    align-items: center;
+
+    svg {
+      transition: opacity 0.2s ease-in-out;
+      opacity: 0;
+      margin-left: 0.5em;
+
+      @media screen and (max-width: 750px) {
+        opacity: 1;
+      }
+    }
+  }
+
+  .ant-table-pagination {
+    padding-right: 1em;
+  }
+
+  .ant-pagination-item,
+  .ant-pagination-item-link {
+    border-radius: 4px;
+    border: none;
+  }
+
+  .ant-pagination-item:hover,
+  .ant-pagination-item-link:hover,
+  .ant-pagination-item-active {
+    border-color: map-get($colors, 'monochromatic-3');
+    color: map-get($colors, 'monochromatic-3');
+
+    & a {
+      color: map-get($colors, 'monochromatic-3');
+    }
+  }
+}

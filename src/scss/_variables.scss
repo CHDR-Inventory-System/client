@@ -1,8 +1,12 @@
+$base-hue: 241deg;
+$base-saturation: 79%;
+$body-color: hsl(0, 0%, 98%);
+
 $colors: (
-  'monochromatic-1': hsl(241deg, 79%, 10%),
-  'monochromatic-2': hsl(241deg, 79%, 35%),
-  'monochromatic-3': hsl(241deg, 79%, 60%),
-  'monochromatic-4': hsl(241deg, 79%, 85%),
-  'monochromatic-5': hsl(241deg, 79%, 99%),
+  'monochromatic-1': hsl($base-hue, $base-saturation, 10%),
+  'monochromatic-2': hsl($base-hue, $base-saturation, 35%),
+  'monochromatic-3': hsl($base-hue, $base-saturation, 60%),
+  'monochromatic-4': hsl($base-hue, $base-saturation, 85%),
+  'monochromatic-5': hsl($base-hue, $base-saturation, 99%),
   'text-muted': hsl(0, 0%, 45%)
 );

@@ -18,8 +18,8 @@
 
 body {
   @include font-fallback('Gotham-Book');
-  color: hsl(0deg, 0%, 15%);
-  background-color: hsl(0, 0%, 98%);
+  color: hsl(0deg, 0%, 30%);
+  background-color: $body-color;
   margin: 0;
 }
 
