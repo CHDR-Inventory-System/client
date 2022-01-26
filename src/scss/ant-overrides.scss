@@ -28,6 +28,14 @@
     }
   }
 
+  &.ant-btn-link,
+  &.ant-btn-link:hover,
+  &.ant-btn-link:focus,
+  &.ant-btn-ghost:hover,
+  &.ant-btn-ghost:focus {
+    color: map-get($colors, 'monochromatic-3');
+  }
+
   &:disabled,
   &:disabled:hover {
     background-color: hsl(0deg, 0%, 60%);
@@ -159,4 +167,20 @@
 
 .ant-dropdown-menu-item-disabled {
   color: rgba(0, 0, 0, 25%);
+}
+
+.ant-table-filter-dropdown {
+  @media screen and (min-width: 700px) {
+    min-width: 250px;
+  }
+}
+
+.ant-dropdown-menu-item:hover,
+.ant-dropdown-menu-item-selected {
+  background-color: map-get($colors, 'monochromatic-5');
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: map-get($colors, 'monochromatic-3');
+  border-color: map-get($colors, 'monochromatic-3');
 }

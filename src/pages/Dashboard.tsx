@@ -13,7 +13,9 @@ const Dashboard = (): JSX.Element => (
       <Tabs defaultActiveKey="users">
         <TabPane tab="Inventory" key="inventory" />
         <TabPane tab="Users" key="users">
-          <UserTable />
+          <div className="table-wrapper">
+            <UserTable />
+          </div>
         </TabPane>
         <TabPane tab="Reservations" key="reservations" />
       </Tabs>

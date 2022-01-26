@@ -27,16 +27,37 @@
     },
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".d.ts"]
+        "extensions": [
+          ".js",
+          ".jsx",
+          ".ts",
+          ".tsx",
+          ".d.ts"
+        ]
       }
     }
   },
-  "ignorePatterns": ["build/**/*"],
+  "ignorePatterns": [
+    "build/**/*"
+  ],
   "rules": {
-    "arrow-parens": ["error", "as-needed"],
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
+    "arrow-parens": [
+      "error",
+      "as-needed"
+    ],
     "class-methods-use-this": "off",
-    "comma-dangle": ["error", "never"],
-    "semi": ["error", "always"],
+    "comma-dangle": [
+      "error",
+      "never"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
     "no-console": "warn",
     // Disabled to let TypeScript handle unused variable checking.
     // Otherwise, ESLint would report unused variables in a type's
@@ -47,17 +68,29 @@
     "no-mixed-spaces-and-tabs": "error",
     "no-plusplus": "off",
     "func-names": "off",
-    "no-param-reassign": ["error", { "props": false }],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
     "no-alert": "error",
     "operator-linebreak": "off",
     // This option is turned off because it conflicts with prettier
     "object-curly-newline": "off",
-    "import/extensions": ["error", "never"],
+    // Disabled since it conflicts with prettier
+    "implicit-arrow-linebreak": "off",
+    "import/extensions": [
+      "error",
+      "never"
+    ],
     "import/no-import-module-exports": "off",
     "react-hooks/exhaustive-deps": "off",
     "react/function-component-definition": [
       "warn",
-      { "namedComponents": "arrow-function" }
+      {
+        "namedComponents": "arrow-function"
+      }
     ],
     "react/no-array-index-key": "off",
     "react/jsx-props-no-spreading": "off",
@@ -75,21 +108,43 @@
     ],
     "react/jsx-filename-extension": [
       "error",
-      { "extensions": [".jsx", ".tsx"] }
+      {
+        "extensions": [
+          ".jsx",
+          ".tsx"
+        ]
+      }
     ],
     "react/require-default-props": [
       "error",
-      { "ignoreFunctionalComponents": true }
+      {
+        "ignoreFunctionalComponents": true
+      }
     ],
     "react/sort-comp": "error",
-    "react/jsx-closing-bracket-location": ["error", "tag-aligned"],
-    "react/jsx-tag-spacing": ["error", { "beforeSelfClosing": "always" }],
+    "react/jsx-closing-bracket-location": [
+      "error",
+      "tag-aligned"
+    ],
+    "react/jsx-tag-spacing": [
+      "error",
+      {
+        "beforeSelfClosing": "always"
+      }
+    ],
     "react/jsx-wrap-multilines": "error",
     "react/self-closing-comp": "error",
     "react/no-unused-state": "error",
-    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-use-before-define": [
+      "error"
+    ],
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/explicit-module-boundary-types": "error",
-    "@typescript-eslint/no-unused-vars": ["error", { "args": "after-used" }]
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "args": "after-used"
+      }
+    ]
   }
 }

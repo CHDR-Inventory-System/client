@@ -1,24 +1,68 @@
 @import './variables';
 
+// Needs to be outside of .dashboard since this component
+// renders outside of the root react app
+.table-filter-dropdown {
+  padding: 1.5em 1em;
+
+  .ant-input {
+    margin-bottom: 1em;
+  }
+
+  .ant-btn {
+    width: 100%;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .filter-actions {
+    display: flex;
+    gap: 1em;
+  }
+}
+
 .dashboard {
   $table-border-radius: 8px;
+
+  .table-wrapper {
+    max-width: 930px;
+    width: 100%;
+    margin: 2em;
+
+    @media screen and (max-width: 1000px) {
+      max-width: 90%;
+    }
+  }
 
   .ant-table {
     border-radius: $table-border-radius;
     color: hsl(0deg, 0%, 30%);
   }
 
+  // Prevents the table header from changing color on hover
+  // if this column is sortable
+  .ant-table-cell.ant-table-column-has-sorters:hover {
+    background-color: map-get($colors, 'monochromatic-1');
+  }
+
   .ant-table-content {
     border-radius: $table-border-radius;
   }
 
+  .ant-table-column-title {
+    user-select: none;
+  }
+
+  // Applies to only the first row of the table
   .ant-table-thead > tr > th {
     color: white;
     padding-left: 2em;
     padding-right: 2em;
     background-color: map-get($colors, 'monochromatic-1');
+    user-select: none;
   }
 
+  // Applies to subsequent table rows
   .ant-table-tbody > tr > td {
     padding-left: 2em;
     padding-right: 2em;
@@ -26,6 +70,8 @@
     cursor: pointer;
   }
 
+  // Removes the shadows that appear on the left and the right of the
+  // table body when you try to scroll horizontally
   .ant-table-container table > thead > tr:first-child th:first-child {
     border-top-left-radius: $table-border-radius;
   }
@@ -48,15 +94,8 @@
   }
 
   .ant-card {
-    border-radius: $table-border-radius;
-    max-width: 940px;
-    width: 100%;
     box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.07);
-    margin: 2em;
-
-    @media screen and (max-width: 1000px) {
-      max-width: 90%;
-    }
+    border-radius: $table-border-radius;
   }
 
   .ant-card-body {
@@ -76,9 +115,15 @@
     }
   }
 
-  .ant-dropdown-trigger {
+  // Applies to the icon in the table's body
+  // (specifically the role column in the user table)
+  td.ant-table-cell .ant-dropdown-trigger {
     display: flex;
     align-items: center;
+
+    &:hover svg {
+      opacity: 1 !important;
+    }
 
     svg {
       transition: opacity 0.2s ease-in-out;
@@ -88,6 +133,15 @@
       @media screen and (max-width: 750px) {
         opacity: 1;
       }
+    }
+  }
+
+  // Applies to the icons in the table header
+  .ant-dropdown-trigger.ant-table-filter-trigger {
+    background-color: transparent;
+
+    &:hover {
+      color: white;
     }
   }
 
