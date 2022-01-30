@@ -43,7 +43,7 @@ const InventoryTable = (): JSX.Element => {
    * Used to show the current table count along with the
    * total number of items on the current page
    */
-  const showTotal = (total: number, range: [number, number]) =>
+  const renderTableCount = (total: number, range: [number, number]) =>
     `${range[0]}-${range[1]} of ${total}`;
 
   /**
@@ -80,14 +80,14 @@ const InventoryTable = (): JSX.Element => {
         placeholder={`Search ${dataIndex}`}
       />
       <div className="filter-actions">
+        <Button type="ghost" onClick={() => handleSearchReset(confirm, clearFilters)}>
+          Reset
+        </Button>
         <Button
           type="primary"
           onClick={() => handleSearch(selectedKeys[0] as string, confirm, dataIndex)}
         >
           Search
-        </Button>
-        <Button type="ghost" onClick={() => handleSearchReset(confirm, clearFilters)}>
-          Reset
         </Button>
       </div>
     </div>
@@ -153,7 +153,26 @@ const InventoryTable = (): JSX.Element => {
       title: 'Location',
       key: 'location',
       dataIndex: 'location',
+      ...getColumnSearchProps('location'),
       sorter: (first, second) => first.location.localeCompare(second.location)
+    },
+    {
+      title: 'Status',
+      key: 'available',
+      dataIndex: 'available',
+      filters: [
+        {
+          value: true,
+          text: 'Available'
+        },
+        {
+          value: false,
+          text: 'Unavailable'
+        }
+      ],
+      sorter: (first, second) => +first.available - +second.available,
+      render: (value: boolean) => (value ? 'Available' : 'Unavailable'),
+      onFilter: (value, item) => item.available === (value as boolean)
     }
   ];
 
@@ -183,7 +202,10 @@ const InventoryTable = (): JSX.Element => {
         onChange={onTableChange}
         dataSource={tableData}
         columns={columns}
-        pagination={{ showTotal }}
+        pagination={{
+          showTotal: renderTableCount,
+          showSizeChanger: true
+        }}
         // Only allow the table to scroll if there's actually data in it
         scroll={{ x: rowCount > 0 ? true : undefined }}
         rowClassName={item => (item.children?.length === 0 ? 'no-children' : '')}

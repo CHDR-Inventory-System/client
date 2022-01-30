@@ -175,7 +175,10 @@
   }
 }
 
+// Applies to Menu item options and Select item options
+.ant-select-item:hover,
 .ant-dropdown-menu-item:hover,
+.ant-select-item.ant-select-item-option-selected,
 .ant-dropdown-menu-item-selected {
   background-color: map-get($colors, 'monochromatic-5');
 }
@@ -183,4 +186,18 @@
 .ant-checkbox-checked .ant-checkbox-inner {
   background-color: map-get($colors, 'monochromatic-3');
   border-color: map-get($colors, 'monochromatic-3');
+}
+
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: map-get($colors, 'monochromatic-3');
+}
+
+// prettier-ignore
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: map-get($colors, 'monochromatic-3');
+  box-shadow: none;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-radius: 4px;
 }

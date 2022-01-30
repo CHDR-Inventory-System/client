@@ -61,7 +61,7 @@ const UserTable = (): JSX.Element => {
    * Used to show the current table count along with the
    * total number of items on the current page
    */
-  const showTotal = (total: number, range: [number, number]) =>
+  const renderTableCount = (total: number, range: [number, number]) =>
     `${range[0]}-${range[1]} of ${total}`;
 
   /**
@@ -147,14 +147,14 @@ const UserTable = (): JSX.Element => {
         placeholder={`Search ${dataIndex}`}
       />
       <div className="filter-actions">
+        <Button type="ghost" onClick={() => handleSearchReset(confirm, clearFilters)}>
+          Reset
+        </Button>
         <Button
           type="primary"
           onClick={() => handleSearch(selectedKeys[0] as string, confirm, dataIndex)}
         >
           Search
-        </Button>
-        <Button type="ghost" onClick={() => handleSearchReset(confirm, clearFilters)}>
-          Reset
         </Button>
       </div>
     </div>
@@ -197,14 +197,14 @@ const UserTable = (): JSX.Element => {
       title: 'Email',
       key: 'email',
       dataIndex: 'email',
-      sorter: (first, second) => first.role.localeCompare(second.role),
+      sorter: (first, second) => first.email.localeCompare(second.email),
       ...getColumnSearchProps('email')
     },
     {
       title: 'NID',
       key: 'nid',
       dataIndex: 'nid',
-      sorter: (first, second) => first.role.localeCompare(second.role),
+      sorter: (first, second) => first.nid.localeCompare(second.nid),
       ...getColumnSearchProps('nid')
     },
     {
@@ -275,7 +275,10 @@ const UserTable = (): JSX.Element => {
         onChange={onTableChange}
         dataSource={tableData}
         columns={columns}
-        pagination={{ showTotal }}
+        pagination={{
+          showTotal: renderTableCount,
+          showSizeChanger: true
+        }}
         // Only allow the table to scroll if there's actually data in it
         scroll={{ x: rowCount > 0 ? true : undefined }}
       />
