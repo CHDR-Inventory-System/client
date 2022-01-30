@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { User, CreateAccountOptions, JWT } from '../types/API';
+import { User, CreateAccountOptions, JWT, Item } from '../types/API';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
 axios.defaults.baseURL =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:4565/api' : '/csi/api';
+  process.env.NODE_ENV === 'development' ? 'http://localhost:4565/api' : '/inventory/api';
 
 class API {
   static async login(nid: string, password: string): Promise<User & JWT> {
@@ -32,6 +32,16 @@ class API {
 
   static async getAllUsers(): Promise<User[]> {
     const response = await axios.get('/users/');
+    return response.data;
+  }
+
+  static async getAllItems(): Promise<Item[]> {
+    const response = await axios.get('/inventory/');
+    return response.data;
+  }
+
+  static async getItem(id: number): Promise<Item> {
+    const response = await axios.get(`/inventory/${id}`);
     return response.data;
   }
 }
