@@ -17,7 +17,7 @@ module.exports = (env, argv) => ({
   target: 'web',
   entry: path.resolve(__dirname, 'src', 'index.tsx'),
   output: {
-    path: path.resolve(__dirname, 'public_html'),
+    path: path.resolve(__dirname, 'build'),
     filename: 'index.js',
     // During development, the project will be served on the path '/'
     // but we need to serve on the path '/csi' during production

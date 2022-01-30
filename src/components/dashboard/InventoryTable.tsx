@@ -179,7 +179,8 @@ const InventoryTable = (): JSX.Element => {
       title: 'Type',
       key: 'type',
       dataIndex: 'type',
-      sorter: (first, second) => first.type.localeCompare(second.type)
+      sorter: (first, second) => first.type.localeCompare(second.type),
+      ...getColumnSearchProps('type')
     },
     {
       title: 'Quantity',
