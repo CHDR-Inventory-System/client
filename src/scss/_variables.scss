@@ -8,5 +8,7 @@ $colors: (
   'monochromatic-3': hsl($base-hue, $base-saturation, 60%),
   'monochromatic-4': hsl($base-hue, $base-saturation, 85%),
   'monochromatic-5': hsl($base-hue, $base-saturation, 96%),
-  'text-muted': hsl(0, 0%, 45%)
+  'text-muted': hsl(0, 0%, 45%),
+  'danger': #de1306,
+  'success': #3d8a00
 );

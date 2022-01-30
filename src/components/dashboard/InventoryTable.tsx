@@ -1,9 +1,10 @@
 import '../../scss/inventory-table.scss';
 import React, { useRef, useState, useEffect } from 'react';
-import { Table, Card, Input, Button } from 'antd';
+import { Table, Card, Input, Button, Modal, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineSearch, AiOutlineWarning } from 'react-icons/ai';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
+import classNames from 'classnames';
 import {
   FilterDropdownProps,
   FilterValue,
@@ -39,6 +40,11 @@ const InventoryTable = (): JSX.Element => {
     confirm();
   };
 
+  const updateItemStatus = (item: Item) => {
+    // eslint-disable-next-line no-console
+    console.log(`New availability => ${!item.available}`, item);
+  };
+
   /**
    * Used to show the current table count along with the
    * total number of items on the current page
@@ -60,8 +66,40 @@ const InventoryTable = (): JSX.Element => {
     setRowCount(extra.currentDataSource.length);
   };
 
-  // Renders the filter search component that renders when the search icon in
-  // the table's header is clicked
+  const onMenuItemClick = (item: Item) => {
+    const body = item.available ? (
+      <>
+        Marking an item as <b>unavailable</b> will prevent users from placing reservations
+        on this item. It will no longer show up in user&apos;s searches, but will not be
+        deleted.
+      </>
+    ) : (
+      <>
+        Marking an item as <b>available</b> will allow users to search for and reserve
+        this item.
+      </>
+    );
+
+    Modal.confirm({
+      title: "Are you sure you want to change this item's status?",
+      content: <p>{body}</p>,
+      okText: 'Change Availability',
+      cancelText: 'Cancel',
+      onOk: () => updateItemStatus(item),
+      maskClosable: true,
+      centered: true,
+      icon: (
+        <span className="anticon">
+          <AiOutlineWarning color="#000" />
+        </span>
+      )
+    });
+  };
+
+  /**
+   * Renders the filter search component that renders when the
+   * search icon in the table's header is clicked
+   */
   const createFilterDropdown = (
     dataIndex: keyof Item,
     { setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps
@@ -103,10 +141,10 @@ const InventoryTable = (): JSX.Element => {
     },
     filterIcon: <AiOutlineSearch size="1.5em" />,
     onFilter: (value: string | number | boolean, record: Item) =>
-      record[dataIndex]
+      !!record[dataIndex]
         ?.toString()
         .toLowerCase()
-        .includes(value.toString().toLowerCase()) || false,
+        .includes(value.toString().toLowerCase()),
     render: (text: string) => {
       if (searchedColumn === dataIndex) {
         return (
@@ -171,8 +209,15 @@ const InventoryTable = (): JSX.Element => {
         }
       ],
       sorter: (first, second) => +first.available - +second.available,
-      render: (value: boolean) => (value ? 'Available' : 'Unavailable'),
-      onFilter: (value, item) => item.available === (value as boolean)
+      onFilter: (value, item) => item.available === (value as boolean),
+      className: 'row-status',
+      render: (value: boolean, row: Item) => (
+        <Tooltip placement="top" title="Update this item's status">
+          <button onClick={() => onMenuItemClick(row)} type="button">
+            {value ? 'Available' : 'Unavailable'}
+          </button>
+        </Tooltip>
+      )
     }
   ];
 
@@ -208,7 +253,15 @@ const InventoryTable = (): JSX.Element => {
         }}
         // Only allow the table to scroll if there's actually data in it
         scroll={{ x: rowCount > 0 ? true : undefined }}
-        rowClassName={item => (item.children?.length === 0 ? 'no-children' : '')}
+        rowClassName={
+          item =>
+            classNames({
+              'no-children': item.children?.length === 0,
+              'status-available': item.available,
+              'status-unavailable': !item.available
+            })
+          // eslint-disable-next-line react/jsx-curly-newline
+        }
       />
     </Card>
   );

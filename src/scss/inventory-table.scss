@@ -7,6 +7,20 @@
     display: none;
   }
 
+  .status-available .row-status {
+    color: map-get($colors, 'success');
+  }
+
+  .status-unavailable .row-status {
+    color: map-get($colors, 'danger');
+  }
+
+  .row-status button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
   .ant-table-row.ant-table-row-level-1,
   .ant-table-row.ant-table-row-level-1 td {
     background-color: map-get($colors, 'monochromatic-5');

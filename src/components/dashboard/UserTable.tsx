@@ -100,35 +100,31 @@ const UserTable = (): JSX.Element => {
     });
   };
 
-  // Renders the menu that drops down when a user's role is clicked
-  const createRoleMenu = (user: User) => (
-    <Menu>
-      <Menu.Item
-        key="User"
-        disabled={user.role === 'User'}
-        onClick={(info: MenuInfo) => onMenuItemClick(user, info.key as UserRole)}
-      >
-        User
-      </Menu.Item>
-      <Menu.Item
-        key="Admin"
-        disabled={user.role === 'Admin'}
-        onClick={(info: MenuInfo) => onMenuItemClick(user, info.key as UserRole)}
-      >
-        Admin
-      </Menu.Item>
-      <Menu.Item
-        key="Super"
-        disabled={user.role === 'Super'}
-        onClick={(info: MenuInfo) => onMenuItemClick(user, info.key as UserRole)}
-      >
-        Super
-      </Menu.Item>
-    </Menu>
-  );
+  /**
+   * Renders the menu that drops down when a user's role is clicked
+   */
+  const createRoleMenu = (user: User) => {
+    const userRoles: UserRole[] = ['User', 'Admin', 'Super'];
 
-  // Renders the filter search component that renders when the search icon in
-  // the table's header is clicked
+    return (
+      <Menu>
+        {userRoles.map(role => (
+          <Menu.Item
+            key={role}
+            disabled={user.role === role}
+            onClick={(info: MenuInfo) => onMenuItemClick(user, info.key as UserRole)}
+          >
+            {role}
+          </Menu.Item>
+        ))}
+      </Menu>
+    );
+  };
+
+  /**
+   * Renders the filter search component that renders when the
+   * search icon in the table's header is clicked
+   */
   const createFilterDropdown = (
     dataIndex: keyof User,
     { setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps
@@ -227,7 +223,7 @@ const UserTable = (): JSX.Element => {
           text: 'Super'
         }
       ],
-      onFilter: (value, record) => record.role.indexOf(value as string) === 0,
+      onFilter: (value, user) => user.role.indexOf(value as string) === 0,
       render: (text: string, row: User) => (
         <Tooltip placement="top" title="Change this user's role">
           <Dropdown overlay={createRoleMenu(row)} trigger={['click']}>
