@@ -5,7 +5,7 @@
   background-color: $body-color;
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 
   .ant-page-header-heading-title {
     @include font-fallback('Gotham-Bold');

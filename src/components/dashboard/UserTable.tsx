@@ -7,12 +7,18 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineDown, AiOutlineUser, AiOutlineSearch } from 'react-icons/ai';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
-import { FilterDropdownProps } from 'antd/lib/table/interface';
+import {
+  FilterDropdownProps,
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+  TablePaginationConfig
+} from 'antd/lib/table/interface';
 import type { User, UserRole } from '../../types/API';
-import { mockUsers } from '../../util/mock-data';
+import mockUsers from '../../assets/mocks/users.json';
 import API from '../../util/API';
 
-const mockDataSource: User[] = mockUsers.map(user => ({
+const mockDataSource: User[] = (mockUsers as User[]).map(user => ({
   ...user,
   created: new Date(user.created).toLocaleDateString('en-US', {
     month: 'short',
@@ -27,6 +33,7 @@ const UserTable = (): JSX.Element => {
   const [searchedColumn, setSearchedColumn] = useState<keyof User>();
   const [isLoading, setLoading] = useState(false);
   const [tableData, setTableData] = useState<User[]>(mockDataSource);
+  const [rowCount, setRowCount] = useState(mockDataSource.length);
   const searchInputRef = useRef<Input>();
 
   const updateUserRole = (user: User, role: UserRole) => {
@@ -48,6 +55,27 @@ const UserTable = (): JSX.Element => {
     clearFilters?.();
     setSearchedText('');
     confirm();
+  };
+
+  /**
+   * Used to show the current table count along with the
+   * total number of items on the current page
+   */
+  const showTotal = (total: number, range: [number, number]) =>
+    `${range[0]}-${range[1]} of ${total}`;
+
+  /**
+   * Because filtering the table doesn't actually change the size of
+   * `tableData`, we'll need to manually keep track of how many rows
+   * are in the table.
+   */
+  const onTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<User> | SorterResult<User>[],
+    extra: TableCurrentDataSource<User>
+  ) => {
+    setRowCount(extra.currentDataSource.length);
   };
 
   const onMenuItemClick = (user: User, role: UserRole) => {
@@ -160,6 +188,12 @@ const UserTable = (): JSX.Element => {
 
   const columns: ColumnsType<User> = [
     {
+      title: 'Name',
+      key: 'fullName',
+      dataIndex: 'fullName',
+      sorter: (first, second) => first.fullName.localeCompare(second.fullName)
+    },
+    {
       title: 'Email',
       key: 'email',
       dataIndex: 'email',
@@ -203,13 +237,6 @@ const UserTable = (): JSX.Element => {
           </Dropdown>
         </Tooltip>
       )
-    },
-    {
-      title: 'Created',
-      key: 'created',
-      dataIndex: 'created',
-      sorter: (first, second) =>
-        new Date(first.created).getTime() - new Date(second.created).getTime()
     }
   ];
 
@@ -245,12 +272,12 @@ const UserTable = (): JSX.Element => {
     <Card bordered={false}>
       <Table
         loading={isLoading}
+        onChange={onTableChange}
         dataSource={tableData}
         columns={columns}
-        scroll={{
-          // Only allow the table to scroll if there's actually data in it
-          x: tableData.length > 0 ? true : undefined
-        }}
+        pagination={{ showTotal }}
+        // Only allow the table to scroll if there's actually data in it
+        scroll={{ x: rowCount > 0 ? true : undefined }}
       />
     </Card>
   );

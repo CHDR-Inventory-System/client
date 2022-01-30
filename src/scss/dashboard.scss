@@ -24,16 +24,6 @@
 .dashboard {
   $table-border-radius: 8px;
 
-  .table-wrapper {
-    max-width: 930px;
-    width: 100%;
-    margin: 2em;
-
-    @media screen and (max-width: 1000px) {
-      max-width: 90%;
-    }
-  }
-
   .ant-table {
     border-radius: $table-border-radius;
     color: hsl(0deg, 0%, 30%);
@@ -96,6 +86,13 @@
   .ant-card {
     box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.07);
     border-radius: $table-border-radius;
+    max-width: 930px;
+    width: 100%;
+    margin: 2em;
+
+    @media screen and (max-width: 1000px) {
+      max-width: 90%;
+    }
   }
 
   .ant-card-body {

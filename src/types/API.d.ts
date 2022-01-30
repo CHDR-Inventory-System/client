@@ -16,4 +16,5 @@ export type User = {
   email: string;
   role: UserRole;
   nid: string;
+  fullName: string;
 };
