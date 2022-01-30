@@ -4,6 +4,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import UserTable from '../components/dashboard/UserTable';
 import InventoryTable from '../components/dashboard/InventoryTable';
+import ReservationTable from '../components/dashboard/ReservationTable';
 
 const { TabPane } = Tabs;
 
@@ -18,7 +19,9 @@ const Dashboard = (): JSX.Element => (
         <TabPane tab="Users" key="users">
           <UserTable />
         </TabPane>
-        <TabPane tab="Reservations" key="reservations" />
+        <TabPane tab="Reservations" key="reservations">
+          <ReservationTable />
+        </TabPane>
       </Tabs>
     </div>
   </div>

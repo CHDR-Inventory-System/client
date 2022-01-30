@@ -23,7 +23,6 @@ export type ItemImage = {
   ID: number;
   created: string;
   imagePath: string;
-  itemChild: number;
 };
 
 export type Item = {
@@ -34,7 +33,6 @@ export type Item = {
   created: string;
   description: string | null;
   images: Image[];
-  item: number;
   location: string;
   main: boolean;
   moveable: boolean;
@@ -45,4 +43,24 @@ export type Item = {
   type: string;
   vendorName: string | null;
   vendorPrice: number | null;
+};
+
+export type ReservationStatus =
+  | 'Approved'
+  | 'Checked Out'
+  | 'Denied'
+  | 'Late'
+  | 'Missed'
+  | 'Pending'
+  | 'Returned';
+
+export type Reservation = {
+  ID: number;
+  admin?: User;
+  created: string;
+  endDateTime: string;
+  item: Item;
+  startDateTime: string;
+  status: ReservationStatus;
+  user: User;
 };

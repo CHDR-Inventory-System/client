@@ -1,0 +1,11 @@
+.reservation-table {
+  // !important is needed here so that this value overrides the
+  // max-width set in dashboard.scss
+  max-width: 85% !important;
+
+  .cell-checkout-date,
+  .cell-return-date,
+  .cell-status {
+    white-space: nowrap;
+  }
+}

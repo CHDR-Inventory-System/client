@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { User, CreateAccountOptions, JWT, Item } from '../types/API';
+import { User, CreateAccountOptions, JWT, Item, Reservation } from '../types/API';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
@@ -42,6 +42,11 @@ class API {
 
   static async getItem(id: number): Promise<Item> {
     const response = await axios.get(`/inventory/${id}`);
+    return response.data;
+  }
+
+  static async getAllReservations(): Promise<Reservation[]> {
+    const response = await axios.get('/reservations/');
     return response.data;
   }
 }

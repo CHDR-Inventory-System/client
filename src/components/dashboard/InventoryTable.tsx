@@ -253,15 +253,14 @@ const InventoryTable = (): JSX.Element => {
         }}
         // Only allow the table to scroll if there's actually data in it
         scroll={{ x: rowCount > 0 ? true : undefined }}
-        rowClassName={
-          item =>
-            classNames({
-              'no-children': item.children?.length === 0,
-              'status-available': item.available,
-              'status-unavailable': !item.available
-            })
-          // eslint-disable-next-line react/jsx-curly-newline
-        }
+        // eslint-disable-next-line arrow-body-style
+        rowClassName={item => {
+          return classNames({
+            'no-children': item.children?.length === 0,
+            'status-available': item.available,
+            'status-unavailable': !item.available
+          });
+        }}
       />
     </Card>
   );
