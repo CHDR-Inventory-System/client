@@ -1,0 +1,195 @@
+import '../../scss/inventory-table.scss';
+import React, { useRef, useState, useEffect } from 'react';
+import { Table, Card, Input, Button } from 'antd';
+import Highlighter from 'react-highlight-words';
+import { AiOutlineSearch } from 'react-icons/ai';
+import { ColumnsType, ColumnType } from 'antd/lib/table';
+import {
+  FilterDropdownProps,
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+  TablePaginationConfig
+} from 'antd/lib/table/interface';
+import type { Item } from '../../types/API';
+import mockInventory from '../../assets/mocks/inventory.json';
+import API from '../../util/API';
+
+const InventoryTable = (): JSX.Element => {
+  const [searchedText, setSearchedText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState<keyof Item>();
+  const [isLoading, setLoading] = useState(false);
+  const [tableData, setTableData] = useState<Item[]>(mockInventory);
+  const [rowCount, setRowCount] = useState(mockInventory.length);
+  const searchInputRef = useRef<Input>();
+
+  const handleSearch = (
+    searchQuery: string,
+    confirm: () => void,
+    dataIndex: keyof Item
+  ) => {
+    setSearchedColumn(dataIndex);
+    setSearchedText(searchQuery);
+    confirm();
+  };
+
+  const handleSearchReset = (confirm: () => void, clearFilters?: () => void) => {
+    clearFilters?.();
+    setSearchedText('');
+    confirm();
+  };
+
+  /**
+   * Used to show the current table count along with the
+   * total number of items on the current page
+   */
+  const showTotal = (total: number, range: [number, number]) =>
+    `${range[0]}-${range[1]} of ${total}`;
+
+  /**
+   * Because filtering the table doesn't actually change the size of
+   * `tableData`, we'll need to manually keep track of how many rows
+   * are in the table.
+   */
+  const onTableChange = (
+    pagination: TablePaginationConfig,
+    filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<Item> | SorterResult<Item>[],
+    extra: TableCurrentDataSource<Item>
+  ) => {
+    setRowCount(extra.currentDataSource.length);
+  };
+
+  // Renders the filter search component that renders when the search icon in
+  // the table's header is clicked
+  const createFilterDropdown = (
+    dataIndex: keyof Item,
+    { setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps
+  ) => (
+    <div className="table-filter-dropdown">
+      <Input
+        // Disabled since ant's input refs don't play nicely
+        // with TypeScript's ref definition
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        ref={searchInputRef}
+        value={selectedKeys[0]}
+        enterKeyHint="search"
+        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys[0] as string, confirm, dataIndex)}
+        placeholder={`Search ${dataIndex}`}
+      />
+      <div className="filter-actions">
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys[0] as string, confirm, dataIndex)}
+        >
+          Search
+        </Button>
+        <Button type="ghost" onClick={() => handleSearchReset(confirm, clearFilters)}>
+          Reset
+        </Button>
+      </div>
+    </div>
+  );
+
+  const getColumnSearchProps = (dataIndex: keyof Item): ColumnType<Item> => ({
+    filterDropdown: props => createFilterDropdown(dataIndex, { ...props }),
+    onFilterDropdownVisibleChange: (visible: boolean) => {
+      // Focus the input after the dropdown opens
+      if (visible) {
+        setTimeout(() => searchInputRef.current?.select(), 100);
+      }
+    },
+    filterIcon: <AiOutlineSearch size="1.5em" />,
+    onFilter: (value: string | number | boolean, record: Item) =>
+      record[dataIndex]
+        ?.toString()
+        .toLowerCase()
+        .includes(value.toString().toLowerCase()) || false,
+    render: (text: string) => {
+      if (searchedColumn === dataIndex) {
+        return (
+          <Highlighter
+            searchWords={[searchedText]}
+            autoEscape
+            textToHighlight={text ? text.toString() : ''}
+          />
+        );
+      }
+
+      return text;
+    }
+  });
+
+  const columns: ColumnsType<Item> = [
+    {
+      title: 'Name',
+      key: 'name',
+      dataIndex: 'name',
+      sorter: (first, second) => first.name.localeCompare(second.name),
+      ...getColumnSearchProps('name')
+    },
+    {
+      title: 'Barcode',
+      key: 'barcode',
+      dataIndex: 'barcode',
+      sorter: (first, second) => first.barcode.localeCompare(second.barcode),
+      ...getColumnSearchProps('barcode')
+    },
+    {
+      title: 'Type',
+      key: 'type',
+      dataIndex: 'type',
+      sorter: (first, second) => first.type.localeCompare(second.type)
+    },
+    {
+      title: 'Quantity',
+      key: 'quantity',
+      dataIndex: 'quantity',
+      sorter: (first, second) => first.quantity - second.quantity
+    },
+    {
+      title: 'Location',
+      key: 'location',
+      dataIndex: 'location',
+      sorter: (first, second) => first.location.localeCompare(second.location)
+    }
+  ];
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const loadInventory = async () => {
+    setLoading(true);
+
+    try {
+      const items = await API.getAllItems();
+      setTableData(items);
+    } catch (err) {
+      // TODO: Catch errors here!!!
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    // loadInventory();
+  }, []);
+
+  return (
+    <Card bordered={false} className="inventory-table">
+      <Table
+        rowKey="ID"
+        loading={isLoading}
+        onChange={onTableChange}
+        dataSource={tableData}
+        columns={columns}
+        pagination={{ showTotal }}
+        // Only allow the table to scroll if there's actually data in it
+        scroll={{ x: rowCount > 0 ? true : undefined }}
+        rowClassName={item => (item.children?.length === 0 ? 'no-children' : '')}
+      />
+    </Card>
+  );
+};
+
+export default InventoryTable;

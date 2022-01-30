@@ -17,7 +17,7 @@ const Navbar = ({
     title={title}
     className={`navbar ${className}`}
     subTitle={subTitle}
-    extra={[<Avatar>JS</Avatar>]}
+    extra={[<Avatar key="avatar">JS</Avatar>]}
   />
 );
 

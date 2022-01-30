@@ -30,7 +30,7 @@ export type Item = {
   ID: number;
   available: boolean;
   barcode: string;
-  children: Omit<Item, 'images'>[];
+  children?: Omit<Item, 'images'>[];
   created: string;
   description: string | null;
   images: Image[];
@@ -42,7 +42,7 @@ export type Item = {
   purchaseDate: string | null;
   quantity: number;
   serial: string | null;
-  type: string | null;
+  type: string;
   vendorName: string | null;
-  vendorPrice: number;
+  vendorPrice: number | null;
 };

@@ -1,0 +1,14 @@
+@import './variables';
+
+.inventory-table {
+  // Hides the expand icon to the left of the row if
+  // the item in the row doesn't have any children
+  .no-children button.ant-table-row-expand-icon {
+    display: none;
+  }
+
+  .ant-table-row.ant-table-row-level-1,
+  .ant-table-row.ant-table-row-level-1 td {
+    background-color: map-get($colors, 'monochromatic-5');
+  }
+}
