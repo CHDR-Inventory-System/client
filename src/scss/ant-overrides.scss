@@ -201,3 +201,11 @@
 .ant-select:not(.ant-select-customize-input) .ant-select-selector {
   border-radius: 4px;
 }
+
+// Hide the tooltip on non-desktop devices since it can
+// sometimes get in the way of certain content
+.ant-tooltip {
+  @media screen and (max-width: 1000px) {
+    display: none;
+  }
+}
