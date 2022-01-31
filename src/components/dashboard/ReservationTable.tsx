@@ -31,9 +31,7 @@ const ReservationTable = (): JSX.Element => {
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState<Reservation[]>(
-    mockReservations as Reservation[]
-  );
+  const [tableData, setTableData] = useState(mockReservations as Reservation[]);
   const searchInputRef = useRef<Input>();
 
   const updateReservationStatus = (
@@ -263,7 +261,7 @@ const ReservationTable = (): JSX.Element => {
       onFilter: (value, reservation) => reservation.status.indexOf(value as string) === 0,
       sorter: (first, second) => first.status.localeCompare(second.status),
       render: (text: string, row: Reservation) => (
-        <Tooltip placement="top" title="Update status">
+        <Tooltip placement="left" title="Change this item's status">
           <Dropdown overlay={createStatusMenu(row)} trigger={['click']}>
             <div>
               {text} <AiOutlineDown />

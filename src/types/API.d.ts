@@ -14,15 +14,17 @@ export type User = {
   ID: number;
   created: string;
   email: string;
-  role: UserRole;
-  nid: string;
   fullName: string;
+  nid: string;
+  role: UserRole;
+  verified: boolean;
 };
 
 export type ItemImage = {
   ID: number;
   created: string;
   imagePath: string;
+  imageURL: string;
 };
 
 export type Item = {
@@ -32,7 +34,7 @@ export type Item = {
   children?: Omit<Item, 'images'>[];
   created: string;
   description: string | null;
-  images: Image[];
+  images: ItemImage[];
   location: string;
   main: boolean;
   moveable: boolean;
@@ -56,7 +58,7 @@ export type ReservationStatus =
 
 export type Reservation = {
   ID: number;
-  admin?: User;
+  admin: User | null;
   created: string;
   endDateTime: string;
   item: Item;

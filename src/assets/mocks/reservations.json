@@ -28,9 +28,11 @@
               "ID": 9,
               "created": "Wed, 12 Jan 2022 16:59:35 GMT",
               "imagePath": "images/samsung/stylus1.jpg",
+              "imageURL": "",
               "itemChild": 15
             }
           ],
+          "item": 11,
           "location": "321A",
           "main": false,
           "moveable": false,
@@ -50,9 +52,11 @@
           "ID": 8,
           "created": "Wed, 12 Jan 2022 16:59:35 GMT",
           "imagePath": "images/samsung/tablet1.jpg",
+          "imageURL": "",
           "itemChild": 14
         }
       ],
+      "item": 11,
       "location": "321A",
       "main": true,
       "moveable": false,
@@ -93,9 +97,11 @@
           "ID": 6,
           "created": "Wed, 12 Jan 2022 16:59:35 GMT",
           "imagePath": "images/scanner/scanner1.jpg",
+          "imageURL": "",
           "itemChild": 12
         }
       ],
+      "item": 9,
       "location": "321B",
       "main": true,
       "moveable": true,
@@ -112,11 +118,11 @@
     "user": {
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
-      "email": "cameron.cuff@Knights.ucf.edu",
+      "email": "cameron.cuff@knights.ucf.edu",
       "fullName": "Cameron Cuff",
       "nid": "cc451246",
-      "role": "Admin",
-      "verified": true
+      "role": "Super",
+      "verified": false
     }
   },
   {
@@ -136,9 +142,11 @@
           "ID": 7,
           "created": "Wed, 12 Jan 2022 16:59:35 GMT",
           "imagePath": "images/vr/oculus1.jpg",
+          "imageURL": "",
           "itemChild": 13
         }
       ],
+      "item": 10,
       "location": "321B",
       "main": true,
       "moveable": true,
@@ -155,11 +163,11 @@
     "user": {
       "ID": 3,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
-      "email": "gavin.gilbert@Knights.ucf.edu",
+      "email": "ashensilverwolf@gmail.com",
       "fullName": "Gavin Gilbert",
       "nid": "gg735235",
-      "role": "User",
-      "verified": true
+      "role": "Admin",
+      "verified": false
     }
   },
   {
@@ -179,9 +187,11 @@
           "ID": 10,
           "created": "Wed, 12 Jan 2022 16:59:35 GMT",
           "imagePath": "images/physical/rooms/study1_1.jpg",
+          "imageURL": "",
           "itemChild": 16
         }
       ],
+      "item": 12,
       "location": "321A",
       "main": true,
       "moveable": false,
@@ -198,11 +208,11 @@
     "user": {
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
-      "email": "cameron.cuff@Knights.ucf.edu",
+      "email": "cameron.cuff@knights.ucf.edu",
       "fullName": "Cameron Cuff",
       "nid": "cc451246",
-      "role": "Admin",
-      "verified": true
+      "role": "Super",
+      "verified": false
     }
   }
 ]

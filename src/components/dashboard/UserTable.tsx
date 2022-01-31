@@ -225,7 +225,7 @@ const UserTable = (): JSX.Element => {
       ],
       onFilter: (value, user) => user.role.indexOf(value as string) === 0,
       render: (text: string, row: User) => (
-        <Tooltip placement="top" title="Change this user's role">
+        <Tooltip placement="left" title="Change this user's role">
           <Dropdown overlay={createRoleMenu(row)} trigger={['click']}>
             <div>
               {text} <AiOutlineDown />
