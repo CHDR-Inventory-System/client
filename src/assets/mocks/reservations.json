@@ -39,6 +39,7 @@
           "name": "Samsung Stylus\r\n",
           "purchaseDate": "Sat, 04 May 2019 00:00:00 GMT",
           "quantity": 1,
+          "retiredDateTime": null,
           "serial": "3521245",
           "type": "Computer",
           "vendorName": "BestBuy",
@@ -63,6 +64,7 @@
       "name": "Samsung CT-P5113 tablet\r\n",
       "purchaseDate": null,
       "quantity": 1,
+      "retiredDateTime": null,
       "serial": "RFCKSOENFOAKNW",
       "type": "Computer",
       "vendorName": "BestBuy",
@@ -87,7 +89,7 @@
     "endDateTime": "Tue, 11 Jan 2022 11:00:00 GMT",
     "item": {
       "ID": 12,
-      "available": false,
+      "available": true,
       "barcode": "CHDR5212",
       "children": [],
       "created": "Wed, 12 Jan 2022 16:57:34 GMT",
@@ -108,21 +110,22 @@
       "name": "Microfilm Scanner\r\n",
       "purchaseDate": null,
       "quantity": 2,
+      "retiredDateTime": null,
       "serial": "CN-5829291-498549-293",
       "type": "Other",
       "vendorName": null,
-      "vendorPrice": 2000
+      "vendorPrice": 2000.0
     },
     "startDateTime": "Tue, 04 Jan 2022 11:00:00 GMT",
     "status": "Denied",
     "user": {
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
-      "email": "cameron.cuff@knights.ucf.edu",
+      "email": "ctcuff@knights.ucf.edu",
       "fullName": "Cameron Cuff",
-      "nid": "cc451246",
+      "nid": "ca152043",
       "role": "Super",
-      "verified": false
+      "verified": true
     }
   },
   {
@@ -153,6 +156,7 @@
       "name": "Oculus Quest\r\n",
       "purchaseDate": "Thu, 04 Jul 2019 00:00:00 GMT",
       "quantity": 1,
+      "retiredDateTime": null,
       "serial": "4678534246",
       "type": "VR",
       "vendorName": "UCF Stuff",
@@ -166,7 +170,7 @@
       "email": "ashensilverwolf@gmail.com",
       "fullName": "Gavin Gilbert",
       "nid": "gg735235",
-      "role": "Admin",
+      "role": "Super",
       "verified": false
     }
   },
@@ -177,7 +181,7 @@
     "endDateTime": "Sat, 14 Jan 2023 02:21:14 GMT",
     "item": {
       "ID": 16,
-      "available": false,
+      "available": true,
       "barcode": "CHDR9593",
       "children": [],
       "created": "Wed, 12 Jan 2022 16:57:34 GMT",
@@ -198,6 +202,7 @@
       "name": "Study Room 1\r\n",
       "purchaseDate": null,
       "quantity": 6,
+      "retiredDateTime": null,
       "serial": null,
       "type": "Room",
       "vendorName": null,
@@ -208,11 +213,11 @@
     "user": {
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
-      "email": "cameron.cuff@knights.ucf.edu",
+      "email": "ctcuff@knights.ucf.edu",
       "fullName": "Cameron Cuff",
-      "nid": "cc451246",
+      "nid": "ca152043",
       "role": "Super",
-      "verified": false
+      "verified": true
     }
   }
 ]

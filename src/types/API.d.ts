@@ -10,7 +10,7 @@ export type JWT = {
   token: string;
 };
 
-export type User = {
+export type User = JWT & {
   ID: number;
   created: string;
   email: string;
@@ -25,22 +25,31 @@ export type ItemImage = {
   created: string;
   imagePath: string;
   imageURL: string;
+  itemChild: number;
 };
 
 export type Item = {
   ID: number;
   available: boolean;
   barcode: string;
-  children?: Omit<Item, 'images'>[];
+  /**
+   * Note that item children won't have any children
+   */
+  children?: Item[];
   created: string;
   description: string | null;
   images: ItemImage[];
+  /**
+   * The ID of the base item this item refers to
+   */
+  item: number;
   location: string;
   main: boolean;
   moveable: boolean;
   name: string;
   purchaseDate: string | null;
   quantity: number;
+  retiredDateTime: string | null;
   serial: string | null;
   type: string;
   vendorName: string | null;
@@ -58,11 +67,16 @@ export type ReservationStatus =
 
 export type Reservation = {
   ID: number;
-  admin: User | null;
+  admin: Omit<User, 'token'> | null;
   created: string;
   endDateTime: string;
   item: Item;
   startDateTime: string;
   status: ReservationStatus;
-  user: User;
+  user: Omit<User, 'token'>;
+};
+
+export type ImageFormData = {
+  base64ImageData: string;
+  name: string;
 };

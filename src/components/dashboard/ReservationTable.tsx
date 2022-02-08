@@ -32,7 +32,7 @@ const ReservationTable = (): JSX.Element => {
   const [searchedColumn, setSearchedColumn] = useState('');
   const [isLoading, setLoading] = useState(false);
   const [tableData, setTableData] = useState(mockReservations as Reservation[]);
-  const searchInputRef = useRef<Input>();
+  const searchInputRef = useRef<Input>(null);
 
   const updateReservationStatus = (
     reservation: Reservation,
@@ -119,10 +119,6 @@ const ReservationTable = (): JSX.Element => {
   ) => (
     <div className="table-filter-dropdown">
       <Input
-        // Disabled since ant's input refs don't play nicely
-        // with TypeScript's ref definition
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         ref={searchInputRef}
         value={selectedKeys[0]}
         enterKeyHint="search"

@@ -20,7 +20,7 @@ const InventoryTable = (): JSX.Element => {
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof Item>();
   const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState<Item[]>(mockInventory);
+  const [tableData, setTableData] = useState<Item[]>(mockInventory as Item[]);
   const [rowCount, setRowCount] = useState(mockInventory.length);
   const searchInputRef = useRef<Input>();
 

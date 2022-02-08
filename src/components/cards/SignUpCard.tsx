@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Card, Input, Form, Button, Alert } from 'antd';
+import { Card, Input, Form, Button, Alert, notification } from 'antd';
 import { AxiosError } from 'axios';
 import { AuthError, Credentials } from './types';
-import API from '../../util/API';
+import useUser from '../../hooks/user';
+import useLoader from '../../hooks/loading';
 
 type SignUpCardProps = {
   className?: string;
@@ -11,42 +12,58 @@ type SignUpCardProps = {
 
 const SignUpCard = ({ className, description }: SignUpCardProps): JSX.Element => {
   const [form] = Form.useForm();
-  const [isLoading, setLoading] = useState(false);
+  const loader = useLoader();
   const [error, setError] = useState<AuthError | null>(null);
+  const user = useUser();
 
   const createAccount = async (credentials: Credentials): Promise<void> => {
     const email = credentials.email.toLowerCase().trim();
     const { nid, password } = credentials;
 
-    setLoading(true);
+    loader.startLoading();
     setError(null);
 
-    API.createAccount({ nid, password, email })
-      .then(() => new Error('Not Implemented'))
-      .catch((err: AxiosError) => {
-        const errorObject: AuthError = {
-          title: 'Server Error',
-          message: 'An unexpected error occurred, please try again.'
-        };
+    try {
+      await user.createAccount({ email, nid, password });
+    } catch (err) {
+      const status = (err as AxiosError).response?.status;
+      const errorObject: AuthError = {
+        title: '',
+        message: ''
+      };
 
-        switch (err.response?.status) {
-          case 404:
-            errorObject.title = 'Invalid Credentials';
-            errorObject.message =
-              'Make sure your NID and password are correct and try again.';
-            break;
-          case 409:
-            errorObject.title = 'Email Taken';
-            errorObject.message =
-              'This email address is already in use by another account.';
-            break;
-          default:
-            break;
-        }
+      switch (status) {
+        case 400:
+          errorObject.title = 'Invalid Email';
+          errorObject.message = 'Please enter a valid email address and try again.';
+          break;
+        case 401:
+          errorObject.title = 'Invalid Credentials';
+          errorObject.message =
+            'You NID or password was incorrect. Check your credentials and try again.';
+          break;
+        case 409:
+          errorObject.title = 'Email or NID Taken';
+          errorObject.message =
+            'This email address or NID is already in use by another account.';
+          break;
+        default:
+          errorObject.title = 'Server Error';
+          errorObject.message = 'An unexpected error occurred, please try again.';
+      }
 
-        setError(errorObject);
-      })
-      .finally(() => setLoading(false));
+      setError(errorObject);
+      loader.stopLoading();
+      return;
+    }
+
+    loader.stopLoading();
+
+    notification.success({
+      duration: 5,
+      message: 'Account Created',
+      description: 'Check your email for a link to verify your account.'
+    });
   };
 
   return (
@@ -110,7 +127,7 @@ const SignUpCard = ({ className, description }: SignUpCardProps): JSX.Element =>
           />
         )}
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={isLoading}>
+          <Button type="primary" htmlType="submit" disabled={loader.isLoading}>
             Create account
           </Button>
         </Form.Item>

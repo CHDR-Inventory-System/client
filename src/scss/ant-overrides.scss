@@ -28,6 +28,7 @@
     }
   }
 
+  &:hover,
   &.ant-btn-link,
   &.ant-btn-link:hover,
   &.ant-btn-link:focus,
@@ -56,7 +57,7 @@
 
   &:focus {
     border-color: map-get($colors, 'monochromatic-3');
-    box-shadow: none;
+    box-shadow: none !important;
   }
 
   &:hover {
@@ -208,4 +209,19 @@
   @media screen and (max-width: 1000px) {
     display: none;
   }
+}
+
+.ant-modal-content {
+  border-radius: 4px;
+}
+
+.ant-modal-confirm .ant-modal-confirm-btns {
+  display: flex;
+  flex-direction: row;
+}
+
+// Titles for Ant's modal and notification
+.ant-notification-notice-message,
+.ant-modal-confirm-title {
+  @include font-fallback('Gotham-Medium');
 }

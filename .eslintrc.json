@@ -65,9 +65,11 @@
     "no-unused-vars": "off",
     // Disabled to allow types to be defined at the end of a file
     "no-use-before-define": "off",
+    "no-restricted-exports": "off",
     "no-mixed-spaces-and-tabs": "error",
     "no-plusplus": "off",
     "func-names": "off",
+    "no-promise-executor-return": "off",
     "no-param-reassign": [
       "error",
       {
@@ -76,6 +78,7 @@
     ],
     "no-alert": "error",
     "operator-linebreak": "off",
+    "padded-blocks": "off",
     // This option is turned off because it conflicts with prettier
     "object-curly-newline": "off",
     // Disabled since it conflicts with prettier
@@ -132,7 +135,12 @@
         "beforeSelfClosing": "always"
       }
     ],
-    "react/jsx-wrap-multilines": "error",
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "prop": "ignore"
+      }
+    ],
     "react/self-closing-comp": "error",
     "react/no-unused-state": "error",
     "@typescript-eslint/no-use-before-define": [
