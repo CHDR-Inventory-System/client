@@ -2,16 +2,18 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = (env, argv) => ({
   plugins: [
+    new Dotenv(),
     new ESLintPlugin({
       extensions: ['ts', 'tsx', 'js', 'jsx']
     }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html'),
       favicon: path.resolve(__dirname, 'public', 'favicon.ico'),
-      title: 'CHDR Dev Sandbox'
+      title: 'CHDR Inventory'
     })
   ],
   target: 'web',
@@ -22,7 +24,7 @@ module.exports = (env, argv) => ({
     // During development, the project will be served on the path '/'
     // but we need to serve on the path '/csi' during production
     // so we can properly load static assets
-    publicPath: argv.mode === 'production' ? '/csi' : '/'
+    publicPath: argv.mode === 'production' ? '/csi/' : '/'
   },
   devServer: {
     static: {
@@ -31,6 +33,7 @@ module.exports = (env, argv) => ({
     open: false,
     port: 9000,
     hot: true,
+    historyApiFallback: true,
     // Using 0.0.0.0 allows the project to be accessed by all
     // devices on the same network as the host
     host: '0.0.0.0'

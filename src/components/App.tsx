@@ -1,61 +1,53 @@
-import '../style/app.scss';
 import React, { useEffect, useState } from 'react';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import { UserProvider } from '../contexts/UserContext';
+import useLoader from '../hooks/loading';
+import Auth from '../pages/Auth';
+import { User } from '../types/API';
+import MainPage from '../pages/MainPage';
 
-type InventoryItem = {
-  id: string;
-  moveable: boolean;
-  description: string;
-  date: string;
-  name: string;
-  quantity: number;
-};
+const App = (): JSX.Element | null => {
+  const [initialUserValue, setInitialUserValue] = useState<User | null>(null);
+  const loader = useLoader(true);
 
-const BASE_URL =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:4565' : '/csi';
+  // If the user was previously logged in, grab their credentials
+  // from localStorage, set the the user context object,
+  // then take them to the main screen
+  const loadUserFromStorage = () => {
+    const user = localStorage.getItem('user');
 
-const App = (): JSX.Element => {
-  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>([]);
+    if (!user) {
+      loader.stopLoading();
+      return;
+    }
 
-  const getAllItems = async () => {
-    fetch(`${BASE_URL}/api/inventory/`)
-      .then(resp => resp.json())
-      .then(data => setInventoryItems(data))
-      .catch(error => {
-        // eslint-disable-next-line no-console
-        console.warn(error);
-      });
+    try {
+      setInitialUserValue(JSON.parse(user));
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('Error parsing user from storage', err);
+    }
+
+    loader.stopLoading();
   };
 
   useEffect(() => {
-    getAllItems();
+    loadUserFromStorage();
   }, []);
 
+  if (loader.isLoading) {
+    return null;
+  }
+
   return (
-    <div className="app">
-      <h1>Inventory</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Movable</th>
-            <th>Name</th>
-            <th>Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {inventoryItems.map(item => (
-            <tr key={item.id}>
-              <td>{item.date}</td>
-              <td>{item.description}</td>
-              <td>{String(item.moveable)}</td>
-              <td>{item.name}</td>
-              <td>{item.quantity}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <UserProvider initialValue={initialUserValue}>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/auth" element={<Auth />} />
+        </Routes>
+      </HashRouter>
+    </UserProvider>
   );
 };
 
