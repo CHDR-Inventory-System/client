@@ -1,25 +1,42 @@
 import '../scss/auth.scss';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SignUpCard from '../components/cards/SignUpCard';
 import LogInCard from '../components/cards/LogInCard';
+import useLoader from '../hooks/loading';
+import useUser from '../hooks/user';
 
 type CardType = 'login' | 'signUp';
 
-const Auth = (): JSX.Element => {
+const Auth = (): JSX.Element | null => {
   const [card, setCard] = useState<CardType>('login');
+  const user = useUser();
+  const loader = useLoader(true);
+  const navigate = useNavigate();
 
   const cards: Record<CardType, JSX.Element> = {
     login: (
       <LogInCard
         className="auth-card"
         description={
-          // eslint-disable-next-line react/jsx-wrap-multilines
           <div className="card-description">
             <p>
               Don&apos;t have an account?{' '}
               <button onClick={() => setCard('signUp')} type="button">
                 Click here to sign up.
               </button>
+            </p>
+            <p>
+              Forgot your UCF password?
+              <a
+                href="https://mynid.ucf.edu/pages/NidCheck.aspx"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {' '}
+                Click here{' '}
+              </a>
+              to reset it.
             </p>
           </div>
         }
@@ -29,7 +46,6 @@ const Auth = (): JSX.Element => {
       <SignUpCard
         className="auth-card"
         description={
-          // eslint-disable-next-line react/jsx-wrap-multilines
           <div className="card-description">
             <p>
               Already have an account?{' '}
@@ -49,6 +65,18 @@ const Auth = (): JSX.Element => {
       />
     )
   };
+
+  useEffect(() => {
+    if (user.state.token && user.state.verified) {
+      navigate('/');
+    } else {
+      loader.stopLoading();
+    }
+  }, []);
+
+  if (loader.isLoading) {
+    return null;
+  }
 
   return (
     <div className="auth">

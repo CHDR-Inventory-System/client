@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Card, Input, Form, Button, Alert } from 'antd';
 import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { AuthError, Credentials } from './types';
-import API from '../../util/API';
+import useUser from '../../hooks/user';
+import useLoader from '../../hooks/loading';
 
 type LogInCardProps = {
   className?: string;
@@ -12,30 +14,37 @@ type LogInCardProps = {
 const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
   const [form] = Form.useForm();
   const [error, setError] = useState<AuthError | null>(null);
-  const [isLoading, setLoading] = useState(false);
+  const loader = useLoader();
+  const user = useUser();
+  const navigate = useNavigate();
 
-  const logIn = (credentials: Omit<Credentials, 'email'>) => {
+  const logIn = async (credentials: Omit<Credentials, 'email'>) => {
     const { nid, password } = credentials;
 
-    setLoading(true);
-    setError(null);
+    loader.startLoading();
 
-    API.login(nid, password)
-      .then(() => new Error('Not Implemented'))
-      .catch((err: AxiosError) => {
-        if (err.response?.status === 404) {
-          setError({
-            title: 'Invalid Credentials',
-            message: 'Make sure your NID and password are correct and try again.'
-          });
-        } else {
-          setError({
-            title: 'Server Error',
-            message: 'An unexpected error occurred, please try again.'
-          });
-        }
-      })
-      .finally(() => setLoading(false));
+    try {
+      await user.login(nid, password);
+
+      loader.stopLoading();
+
+      navigate('/');
+    } catch (err) {
+      const status = (err as AxiosError).response?.status;
+      loader.stopLoading();
+
+      if (status === 401) {
+        setError({
+          title: 'Invalid Credentials',
+          message: 'Make sure your NID and password are correct and try again.'
+        });
+      } else {
+        setError({
+          title: 'Server Error',
+          message: 'An unexpected error occurred, please try again.'
+        });
+      }
+    }
   };
 
   return (
@@ -85,7 +94,7 @@ const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
           />
         )}
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={isLoading}>
+          <Button type="primary" htmlType="submit" disabled={loader.isLoading}>
             Log in
           </Button>
         </Form.Item>

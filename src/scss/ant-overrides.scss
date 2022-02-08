@@ -19,8 +19,13 @@
     background-color: map-get($colors, 'monochromatic-1');
 
     &:hover {
+      color: white;
       background-color: map-get($colors, 'monochromatic-3');
     }
+  }
+
+  &:hover {
+    color: map-get($colors, 'monochromatic-3');
   }
 
   &:disabled,
@@ -43,7 +48,7 @@
 
   &:focus {
     border-color: map-get($colors, 'monochromatic-3');
-    box-shadow: none;
+    box-shadow: none !important;
   }
 
   &:hover {
@@ -89,5 +94,20 @@
 }
 
 .ant-alert-message {
+  @include font-fallback('Gotham-Medium');
+}
+
+.ant-modal-content {
+  border-radius: 4px;
+}
+
+.ant-modal-confirm .ant-modal-confirm-btns {
+  display: flex;
+  flex-direction: row;
+}
+
+// Titles for Ant's modal and notification
+.ant-notification-notice-message,
+.ant-modal-confirm-title {
   @include font-fallback('Gotham-Medium');
 }
