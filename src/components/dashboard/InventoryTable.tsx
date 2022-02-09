@@ -1,8 +1,8 @@
 import '../../scss/inventory-table.scss';
-import React, { useRef, useState, useEffect } from 'react';
-import { Table, Card, Input, Button, Modal, Tooltip } from 'antd';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { Table, Card, Input, Button } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { AiOutlineSearch, AiOutlineWarning } from 'react-icons/ai';
+import { AiOutlineSearch } from 'react-icons/ai';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
 import classNames from 'classnames';
 import {
@@ -15,14 +15,18 @@ import {
 import type { Item } from '../../types/API';
 import mockInventory from '../../assets/mocks/inventory.json';
 import API from '../../util/API';
+import InventoryItemModal from '../modals/InventoryItemModal';
+import useLoader from '../../hooks/loading';
 
 const InventoryTable = (): JSX.Element => {
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof Item>();
-  const [isLoading, setLoading] = useState(false);
   const [tableData, setTableData] = useState<Item[]>(mockInventory as Item[]);
   const [rowCount, setRowCount] = useState(mockInventory.length);
-  const searchInputRef = useRef<Input>();
+  const [isInventoryModalVisible, setInventoryModalVisible] = useState(false);
+  const [currentItem, setCurrentItem] = useState<Item>({} as Item);
+  const loader = useLoader();
+  const searchInputRef = useRef<Input>(null);
 
   const handleSearch = (
     searchQuery: string,
@@ -38,11 +42,6 @@ const InventoryTable = (): JSX.Element => {
     clearFilters?.();
     setSearchedText('');
     confirm();
-  };
-
-  const updateItemStatus = (item: Item) => {
-    // eslint-disable-next-line no-console
-    console.log(`New availability => ${!item.available}`, item);
   };
 
   /**
@@ -66,36 +65,6 @@ const InventoryTable = (): JSX.Element => {
     setRowCount(extra.currentDataSource.length);
   };
 
-  const onMenuItemClick = (item: Item) => {
-    const body = item.available ? (
-      <>
-        Marking an item as <b>unavailable</b> will prevent users from placing reservations
-        on this item. It will no longer show up in user&apos;s searches, but will not be
-        deleted.
-      </>
-    ) : (
-      <>
-        Marking an item as <b>available</b> will allow users to search for and reserve
-        this item.
-      </>
-    );
-
-    Modal.confirm({
-      title: "Are you sure you want to change this item's status?",
-      content: <p>{body}</p>,
-      okText: 'Change Availability',
-      cancelText: 'Cancel',
-      onOk: () => updateItemStatus(item),
-      maskClosable: true,
-      centered: true,
-      icon: (
-        <span className="anticon">
-          <AiOutlineWarning color="#000" />
-        </span>
-      )
-    });
-  };
-
   /**
    * Renders the filter search component that renders when the
    * search icon in the table's header is clicked
@@ -106,10 +75,6 @@ const InventoryTable = (): JSX.Element => {
   ) => (
     <div className="table-filter-dropdown">
       <Input
-        // Disabled since ant's input refs don't play nicely
-        // with TypeScript's ref definition
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         ref={searchInputRef}
         value={selectedKeys[0]}
         enterKeyHint="search"
@@ -212,19 +177,13 @@ const InventoryTable = (): JSX.Element => {
       sorter: (first, second) => +first.available - +second.available,
       onFilter: (value, item) => item.available === (value as boolean),
       className: 'row-status',
-      render: (value: boolean, row: Item) => (
-        <Tooltip placement="top" title="Update this item's status">
-          <button onClick={() => onMenuItemClick(row)} type="button">
-            {value ? 'Available' : 'Unavailable'}
-          </button>
-        </Tooltip>
-      )
+      render: (value: boolean) => <span>{value ? 'Available' : 'Unavailable'}</span>
     }
   ];
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadInventory = async () => {
-    setLoading(true);
+    loader.startLoading();
 
     try {
       const items = await API.getAllItems();
@@ -233,8 +192,18 @@ const InventoryTable = (): JSX.Element => {
       // TODO: Catch errors here!!!
     }
 
-    setLoading(false);
+    loader.stopLoading();
   };
+
+  // eslint-disable-next-line arrow-body-style
+  const onRowClick = useCallback((item: Item) => {
+    return {
+      onClick: () => {
+        setCurrentItem(item);
+        setInventoryModalVisible(true);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     // loadInventory();
@@ -242,9 +211,14 @@ const InventoryTable = (): JSX.Element => {
 
   return (
     <Card bordered={false} className="inventory-table">
+      <InventoryItemModal
+        item={currentItem}
+        visible={isInventoryModalVisible}
+        onClose={() => setInventoryModalVisible(false)}
+      />
       <Table
         rowKey="ID"
-        loading={isLoading}
+        loading={loader.isLoading}
         onChange={onTableChange}
         dataSource={tableData}
         columns={columns}
@@ -252,6 +226,7 @@ const InventoryTable = (): JSX.Element => {
           showTotal: renderTableCount,
           showSizeChanger: true
         }}
+        onRow={onRowClick}
         // Only allow the table to scroll if there's actually data in it
         scroll={{ x: rowCount > 0 ? true : undefined }}
         // eslint-disable-next-line arrow-body-style

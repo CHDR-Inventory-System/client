@@ -54,14 +54,14 @@
 .ant-btn.ant-btn.ant-btn-primary,
 .ant-input-affix-wrapper {
   border-radius: 6px;
+  box-shadow: none !important;
 
   &:focus {
     border-color: map-get($colors, 'monochromatic-3');
-    box-shadow: none !important;
   }
 
   &:hover {
-    border-color: map-get($colors, 'monochromatic-3') !important;
+    border-color: map-get($colors, 'monochromatic-3');
   }
 }
 
@@ -148,12 +148,51 @@
   color: hsl(0deg, 0%, 30%);
 }
 
+.ant-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+}
+
 .ant-modal-content {
   border-radius: 6px;
 }
 
 .ant-modal-confirm-btns {
   display: flex;
+}
+
+.ant-modal-content {
+  border-radius: 4px;
+}
+
+.ant-modal-header,
+.ant-modal-footer {
+  border: none;
+}
+
+.ant-modal-footer {
+  gap: 8px;
+  padding-top: 0;
+  padding-bottom: 24px;
+}
+
+.ant-modal-confirm .ant-modal-confirm-btns {
+  display: flex;
+  flex-direction: row;
+}
+
+.ant-modal-title {
+  font-size: 1.5em;
+}
+
+.ant-modal-header {
+  padding-top: 2em;
+}
+
+.ant-modal-content,
+.ant-modal-header {
+  border-radius: 6px;
 }
 
 .ant-modal-confirm-content {
@@ -211,17 +250,23 @@
   }
 }
 
-.ant-modal-content {
-  border-radius: 4px;
-}
-
-.ant-modal-confirm .ant-modal-confirm-btns {
-  display: flex;
-  flex-direction: row;
-}
-
 // Titles for Ant's modal and notification
+.ant-modal-title,
 .ant-notification-notice-message,
 .ant-modal-confirm-title {
   @include font-fallback('Gotham-Medium');
+}
+
+.ant-picker-focused {
+  box-shadow: none;
+  border-color: map-get($colors, 'monochromatic-2');
+}
+
+.ant-picker {
+  width: 100%;
+  border-radius: 6px;
+
+  &:hover {
+    border-color: map-get($colors, 'monochromatic-2');
+  }
 }

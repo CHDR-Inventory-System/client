@@ -21,6 +21,16 @@
   }
 }
 
+// This is the styling for the message that gets displayed
+// under the <Select /> dropdown. Because this renders outside
+// of the root react app, it needs to be outside of .dashboard
+.select-menu-details {
+  margin: 0;
+  padding: 6px 12px;
+  color: map-get($colors, 'text-muted');
+  cursor: default;
+}
+
 .dashboard {
   $table-border-radius: 8px;
 
