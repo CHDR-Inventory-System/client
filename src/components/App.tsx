@@ -6,6 +6,7 @@ import Auth from '../pages/Auth';
 import { User } from '../types/API';
 import MainPage from '../pages/MainPage';
 import Dashboard from '../pages/Dashboard';
+import { InventoryProvider } from '../contexts/InventoryContext';
 
 const App = (): JSX.Element | null => {
   const [initialUserValue, setInitialUserValue] = useState<User | null>(null);
@@ -41,15 +42,17 @@ const App = (): JSX.Element | null => {
   }
 
   return (
-    <UserProvider initialValue={initialUserValue}>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </HashRouter>
-    </UserProvider>
+    <InventoryProvider>
+      <UserProvider initialValue={initialUserValue}>
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </HashRouter>
+      </UserProvider>
+    </InventoryProvider>
   );
 };
 

@@ -1,6 +1,7 @@
+/* eslint-disable */
 import '../../scss/inventory-table.scss';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { Table, Card, Input, Button } from 'antd';
+import { Table, Card, Input, Button, notification } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
@@ -14,15 +15,15 @@ import {
 } from 'antd/lib/table/interface';
 import type { Item } from '../../types/API';
 import mockInventory from '../../assets/mocks/inventory.json';
-import API from '../../util/API';
 import InventoryItemModal from '../modals/InventoryItemModal';
 import useLoader from '../../hooks/loading';
+import useInventory from '../../hooks/inventory';
 
 const InventoryTable = (): JSX.Element => {
+  const inventory = useInventory();
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof Item>();
-  const [tableData, setTableData] = useState<Item[]>(mockInventory as Item[]);
-  const [rowCount, setRowCount] = useState(mockInventory.length);
+  const [rowCount, setRowCount] = useState(inventory.items.length);
   const [isInventoryModalVisible, setInventoryModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState<Item>({} as Item);
   const loader = useLoader();
@@ -181,21 +182,25 @@ const InventoryTable = (): JSX.Element => {
     }
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadInventory = async () => {
     loader.startLoading();
 
     try {
-      const items = await API.getAllItems();
-      setTableData(items);
+      await inventory.init();
     } catch (err) {
-      // TODO: Catch errors here!!!
+      notification.error({
+        duration: 0,
+        message: 'Error',
+        description: `
+          An unexpected error occurred loading inventory.
+          Refresh the page to try again.
+        `
+      });
     }
 
     loader.stopLoading();
   };
 
-  // eslint-disable-next-line arrow-body-style
   const onRowClick = useCallback((item: Item) => {
     return {
       onClick: () => {
@@ -206,7 +211,7 @@ const InventoryTable = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    // loadInventory();
+    loadInventory();
   }, []);
 
   return (
@@ -220,7 +225,8 @@ const InventoryTable = (): JSX.Element => {
         rowKey="ID"
         loading={loader.isLoading}
         onChange={onTableChange}
-        dataSource={tableData}
+        dataSource={inventory.items}
+        // dataSource={mockInventory}
         columns={columns}
         pagination={{
           showTotal: renderTableCount,
@@ -229,7 +235,6 @@ const InventoryTable = (): JSX.Element => {
         onRow={onRowClick}
         // Only allow the table to scroll if there's actually data in it
         scroll={{ x: rowCount > 0 ? true : undefined }}
-        // eslint-disable-next-line arrow-body-style
         rowClassName={item => {
           return classNames({
             'no-children': item.children?.length === 0,

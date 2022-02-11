@@ -41,6 +41,7 @@
     "build/**/*"
   ],
   "rules": {
+    "arrow-body-style":"off",
     "eqeqeq": [
       "error",
       "always"
@@ -69,6 +70,7 @@
     "no-mixed-spaces-and-tabs": "error",
     "no-plusplus": "off",
     "func-names": "off",
+    "lines-between-class-members": "off",
     "no-promise-executor-return": "off",
     "no-param-reassign": [
       "error",

@@ -1,11 +1,24 @@
 /* eslint-disable */
 import '../../scss/inventory-item-modal.scss';
 import React, { useEffect } from 'react';
-import { Modal, Form, Input, Select, DatePicker, Divider } from 'antd';
+import {
+  Modal,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  Divider,
+  Button,
+  notification
+} from 'antd';
 import { Item } from '../../types/API';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import moment from 'moment';
+import useInventory from '../../hooks/inventory';
+import { AtLeast } from '../../util/types';
+import useLoader from '../../hooks/loading';
+import APIError from '../../util/APIError';
 
 type InventoryModalProps = {
   visible: boolean;
@@ -35,10 +48,9 @@ const itemSchema = yup.object({
     .nullable(true)
     // Because trying to parse an empty string to a number would result in an
     // error, we have to instead return null since the schema allows it
-    .transform((value: string, originalValue: string) => {
-      console.log({ originalValue, value });
-      return originalValue === '' ? null : value;
-    })
+    .transform((value: string, originalValue: string) =>
+      originalValue === '' ? null : value
+    )
 });
 
 const InventoryItemModal = ({
@@ -56,30 +68,53 @@ const InventoryItemModal = ({
     enableReinitialize: true,
     onSubmit: item => updateItem(item)
   });
+  const inventory = useInventory();
+  const loader = useLoader();
 
-  const updateItem = (item: Item) => {
+  const updateItem = async (item: Item) => {
+    loader.startLoading();
+
     try {
       const parsedItem = itemSchema.validateSync(item, { abortEarly: false });
-      console.log('Updated', JSON.stringify(parsedItem, null, 3));
+      await inventory.updateItem(parsedItem as AtLeast<Item, 'ID'>);
     } catch (err) {
-      const validationError = err as yup.ValidationError;
+      if (err instanceof yup.ValidationError) {
+        const validationError = err as yup.ValidationError;
 
-      form.setFields(
-        validationError.inner.map(error => ({
-          name: error.path || '',
-          errors: [error.message]
-        }))
-      );
+        // Because error are handled by Formik, we need to make sure Ant's form
+        // knows about errors
+        form.setFields(
+          validationError.inner.map(error => ({
+            name: error.path || '',
+            errors: [error.message]
+          }))
+        );
+      }
 
+      if (err instanceof APIError) {
+        notification.error({
+          duration: 5,
+          message: 'Error Updating',
+          description: `
+            An error occurred while updating this item.
+            Pleas try again.
+          `
+        });
+      }
+
+      loader.stopLoading();
       return;
     }
 
+    // Reset all errors in the form
     form.setFields(
       Object.keys(item).map(key => ({
         name: key,
         errors: []
       }))
     );
+
+    onClose();
   };
 
   const renderDropdownWithMessage = (menu: React.ReactElement, message: string) => (
@@ -96,16 +131,19 @@ const InventoryItemModal = ({
 
   return (
     <Modal
-      className="inventory-item-modal"
-      maskClosable
-      destroyOnClose
       centered
+      className="inventory-item-modal"
+      maskClosable={false}
       title={item.name}
       visible={visible}
       onCancel={onClose}
       onOk={() => updateItem(formik.values)}
       okText="Save"
-      okButtonProps={{ htmlType: 'submit' }}
+      okButtonProps={{
+        loading: loader.isLoading,
+        disabled: loader.isLoading,
+        htmlType: 'submit'
+      }}
       cancelText="Close"
     >
       <Form layout="vertical" form={form}>
@@ -115,18 +153,60 @@ const InventoryItemModal = ({
         <Form.Item label="Description" name="description">
           <Input.TextArea onChange={formik.handleChange('description')} />
         </Form.Item>
-        <Form.Item required label="Location" name="location">
-          <Input type="text" onChange={formik.handleChange('location')} />
+        <Form.Item
+          required
+          label="Location"
+          name="location"
+          help={
+            !item.main ? 'This value can only be updated through the parent item.' : ''
+          }
+        >
+          <Input
+            type="text"
+            onChange={formik.handleChange('location')}
+            disabled={!item.main}
+          />
         </Form.Item>
-        <Form.Item required label="Barcode" name="barcode">
-          <Input type="text" onChange={formik.handleChange('barcode')} />
+        <Form.Item
+          required
+          label="Barcode"
+          name="barcode"
+          help={
+            !item.main ? 'This value can only be updated through the parent item.' : ''
+          }
+        >
+          <Input
+            type="text"
+            onChange={formik.handleChange('barcode')}
+            disabled={!item.main}
+          />
         </Form.Item>
-        <Form.Item required label="Quantity" name="quantity">
-          <Input type="number" onChange={formik.handleChange('quantity')} min={0} />
+        <Form.Item
+          required
+          label="Quantity"
+          name="quantity"
+          help={
+            !item.main ? 'This value can only be updated through the parent item.' : ''
+          }
+        >
+          <Input
+            type="number"
+            onChange={formik.handleChange('quantity')}
+            min={0}
+            disabled={!item.main}
+          />
         </Form.Item>
 
-        <Form.Item required label="Availability" name="available">
+        <Form.Item
+          required
+          label="Availability"
+          name="available"
+          help={
+            !item.main ? 'This value can only be updated through the parent item.' : ''
+          }
+        >
           <Select
+            disabled={!item.main}
             onChange={(value: boolean) => formik.setFieldValue('available', value)}
             dropdownRender={menu =>
               renderDropdownWithMessage(
@@ -145,8 +225,16 @@ const InventoryItemModal = ({
           </Select>
         </Form.Item>
 
-        <Form.Item required label="Movable" name="moveable">
+        <Form.Item
+          required
+          label="Movable"
+          name="moveable"
+          help={
+            !item.main ? 'This value can only be updated through the parent item.' : ''
+          }
+        >
           <Select
+            disabled={!item.main}
             onChange={(value: boolean) => formik.setFieldValue('moveable', value)}
             dropdownRender={menu =>
               renderDropdownWithMessage(
@@ -189,6 +277,15 @@ const InventoryItemModal = ({
         <Form.Item label="Vendor Price" name="vendorPrice">
           <Input type="number" onChange={formik.handleChange('vendorPrice')} min={0} />
         </Form.Item>
+
+        <div className="form-actions">
+          <Button danger className="form-action-button">
+            Delete
+          </Button>
+          <Button type="primary" className="form-action-button">
+            Retire
+          </Button>
+        </div>
       </Form>
     </Modal>
   );
