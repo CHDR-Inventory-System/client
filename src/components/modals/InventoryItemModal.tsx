@@ -1,4 +1,3 @@
-/* eslint-disable */
 import '../../scss/inventory-item-modal.scss';
 import React, { useEffect } from 'react';
 import {
@@ -11,10 +10,10 @@ import {
   Button,
   notification
 } from 'antd';
-import { Item } from '../../types/API';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import moment from 'moment';
+import { Item } from '../../types/API';
 import useInventory from '../../hooks/inventory';
 import { AtLeast } from '../../util/types';
 import useLoader from '../../hooks/loading';
@@ -48,9 +47,9 @@ const itemSchema = yup.object({
     .nullable(true)
     // Because trying to parse an empty string to a number would result in an
     // error, we have to instead return null since the schema allows it
-    .transform((value: string, originalValue: string) =>
-      originalValue === '' ? null : value
-    )
+    .transform((value: string, originalValue: string) => {
+      return originalValue === '' ? null : value;
+    })
 });
 
 const InventoryItemModal = ({
@@ -58,24 +57,20 @@ const InventoryItemModal = ({
   onClose,
   item
 }: InventoryModalProps): JSX.Element | null => {
-  if (Object.keys(item).length === 0) {
-    return null;
-  }
-
   const [form] = Form.useForm();
   const formik = useFormik<Item>({
     initialValues: item,
     enableReinitialize: true,
-    onSubmit: item => updateItem(item)
+    onSubmit: values => updateItem(values)
   });
   const inventory = useInventory();
   const loader = useLoader();
 
-  const updateItem = async (item: Item) => {
+  const updateItem = async (values: Item) => {
     loader.startLoading();
 
     try {
-      const parsedItem = itemSchema.validateSync(item, { abortEarly: false });
+      const parsedItem = itemSchema.validateSync(values, { abortEarly: false });
       await inventory.updateItem(parsedItem as AtLeast<Item, 'ID'>);
     } catch (err) {
       if (err instanceof yup.ValidationError) {
@@ -95,10 +90,7 @@ const InventoryItemModal = ({
         notification.error({
           duration: 5,
           message: 'Error Updating',
-          description: `
-            An error occurred while updating this item.
-            Pleas try again.
-          `
+          description: 'An error occurred while updating this item. Please try again.'
         });
       }
 
@@ -108,7 +100,7 @@ const InventoryItemModal = ({
 
     // Reset all errors in the form
     form.setFields(
-      Object.keys(item).map(key => ({
+      Object.keys(values).map(key => ({
         name: key,
         errors: []
       }))
@@ -128,6 +120,10 @@ const InventoryItemModal = ({
   useEffect(() => {
     form.setFieldsValue(item);
   }, [item]);
+
+  if (Object.keys(item).length === 0) {
+    return null;
+  }
 
   return (
     <Modal
@@ -216,7 +212,7 @@ const InventoryItemModal = ({
               )
             }
           >
-            <Select.Option key="available" value={true}>
+            <Select.Option key="available" value>
               Available
             </Select.Option>
             <Select.Option key="unavailable" value={false}>
@@ -244,7 +240,7 @@ const InventoryItemModal = ({
               )
             }
           >
-            <Select.Option key="movable" value={true}>
+            <Select.Option key="movable" value>
               Yes
             </Select.Option>
             <Select.Option key="immovable" value={false}>

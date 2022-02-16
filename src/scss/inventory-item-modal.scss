@@ -1,6 +1,10 @@
 @import './mixins';
 
 .inventory-item-modal {
+  // Need important here because ant uses inline styles that have
+  // high specificity
+  width: 600px !important;
+
   .form-actions {
     display: flex;
     margin-top: 3em;

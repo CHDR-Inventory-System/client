@@ -1,4 +1,3 @@
-/* eslint-disable */
 import '../../scss/inventory-table.scss';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Table, Card, Input, Button, notification } from 'antd';
@@ -14,7 +13,6 @@ import {
   TablePaginationConfig
 } from 'antd/lib/table/interface';
 import type { Item } from '../../types/API';
-import mockInventory from '../../assets/mocks/inventory.json';
 import InventoryItemModal from '../modals/InventoryItemModal';
 import useLoader from '../../hooks/loading';
 import useInventory from '../../hooks/inventory';
@@ -186,7 +184,8 @@ const InventoryTable = (): JSX.Element => {
     loader.startLoading();
 
     try {
-      await inventory.init();
+      const items = await inventory.init();
+      setRowCount(items.length);
     } catch (err) {
       notification.error({
         duration: 0,
