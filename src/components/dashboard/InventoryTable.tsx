@@ -1,8 +1,9 @@
+/* eslint-disable */
 import '../../scss/inventory-table.scss';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Table, Card, Input, Button, notification } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
 import classNames from 'classnames';
 import {
@@ -12,10 +13,13 @@ import {
   TableCurrentDataSource,
   TablePaginationConfig
 } from 'antd/lib/table/interface';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { RenderExpandIconProps } from 'rc-table/lib/interface';
 import type { Item } from '../../types/API';
 import InventoryItemDrawer from './InventoryItemDrawer';
 import useLoader from '../../hooks/loading';
 import useInventory from '../../hooks/inventory';
+import mockInventory from '../../assets/mocks/inventory.json';
 
 const InventoryTable = (): JSX.Element => {
   const inventory = useInventory();
@@ -129,6 +133,7 @@ const InventoryTable = (): JSX.Element => {
       title: 'Name',
       key: 'name',
       dataIndex: 'name',
+      ellipsis: true,
       sorter: (first, second) => first.name.localeCompare(second.name),
       ...getColumnSearchProps('name')
     },
@@ -210,8 +215,34 @@ const InventoryTable = (): JSX.Element => {
     };
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const expandedRowRenderer = (item: Item) => (
+    <Button type="ghost" className="add-child-button">
+      Add child item
+    </Button>
+  );
+
+  const renderExpandIcon = ({ record: item, onExpand }: RenderExpandIconProps<Item>) => {
+    if (!item.main) {
+      return null;
+    }
+
+    return (
+      <Button
+        className="row-action"
+        onClick={event => {
+          onExpand(item, event);
+          event.stopPropagation();
+        }}
+      >
+        <AiOutlineDown />
+      </Button>
+    );
+  };
+
   useEffect(() => {
-    loadInventory();
+    // loadInventory();
+    inventory.setItems(mockInventory);
   }, []);
 
   return (
@@ -231,9 +262,15 @@ const InventoryTable = (): JSX.Element => {
           showTotal: renderTableCount,
           showSizeChanger: true
         }}
+        expandable={{
+          expandedRowRender: expandedRowRenderer,
+          expandIcon: renderExpandIcon,
+          fixed: 'left'
+        }}
         onRow={onRowClick}
         // Only allow the table to scroll if there's actually data in it
-        scroll={{ x: rowCount > 0 ? true : undefined }}
+        // scroll={{ x: rowCount > 0 ? true : undefined }}
+        scroll={{ x: true }}
         rowClassName={item => {
           return classNames({
             'no-children': item.children?.length === 0,

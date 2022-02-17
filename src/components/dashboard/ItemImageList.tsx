@@ -53,7 +53,7 @@ const ItemImageList = ({ itemId, loader }: ItemImageListProps): JSX.Element => {
       />
       <p className="title">Images</p>
       {images.length > 0 ? (
-        <SimpleBar forceVisible>
+        <SimpleBar>
           <div className="images">
             <Image.PreviewGroup>
               {images.map(image => (
