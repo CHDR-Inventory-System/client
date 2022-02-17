@@ -1,9 +1,15 @@
 @import './mixins';
 
-.inventory-item-modal {
+.inventory-item-drawer {
   // Need important here because ant uses inline styles that have
   // high specificity
-  width: 600px !important;
+  .ant-drawer-content-wrapper {
+    width: 600px !important;
+
+    @media screen and (max-width: 600px) {
+      width: 100% !important;
+    }
+  }
 
   .form-actions {
     display: flex;

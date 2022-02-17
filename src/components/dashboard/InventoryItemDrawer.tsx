@@ -1,14 +1,14 @@
-import '../../scss/inventory-item-modal.scss';
+import '../../scss/inventory-item-drawer.scss';
 import React, { useEffect } from 'react';
 import {
-  Modal,
   Form,
   Input,
   Select,
   DatePicker,
   Divider,
   Button,
-  notification
+  notification,
+  Drawer
 } from 'antd';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -52,7 +52,7 @@ const itemSchema = yup.object({
     })
 });
 
-const InventoryItemModal = ({
+const InventoryItemDrawer = ({
   visible,
   onClose,
   item
@@ -68,6 +68,14 @@ const InventoryItemModal = ({
 
   const updateItem = async (values: Item) => {
     loader.startLoading();
+
+    // Reset all errors in the form
+    form.setFields(
+      Object.keys(values).map(key => ({
+        name: key,
+        errors: []
+      }))
+    );
 
     try {
       const parsedItem = itemSchema.validateSync(values, { abortEarly: false });
@@ -98,15 +106,13 @@ const InventoryItemModal = ({
       return;
     }
 
-    // Reset all errors in the form
-    form.setFields(
-      Object.keys(values).map(key => ({
-        name: key,
-        errors: []
-      }))
-    );
+    notification.success({
+      message: 'Success',
+      description: `${item.name} was updated`
+    });
 
     onClose();
+    loader.stopLoading();
   };
 
   const renderDropdownWithMessage = (menu: React.ReactElement, message: string) => (
@@ -126,21 +132,23 @@ const InventoryItemModal = ({
   }
 
   return (
-    <Modal
-      centered
-      className="inventory-item-modal"
-      maskClosable={false}
+    <Drawer
       title={item.name}
+      onClose={onClose}
+      maskClosable={false}
       visible={visible}
-      onCancel={onClose}
-      onOk={() => updateItem(formik.values)}
-      okText="Save"
-      okButtonProps={{
-        loading: loader.isLoading,
-        disabled: loader.isLoading,
-        htmlType: 'submit'
-      }}
-      cancelText="Close"
+      placement="right"
+      className="inventory-item-drawer"
+      extra={
+        <Button
+          type="primary"
+          onClick={() => formik.submitForm()}
+          loading={loader.isLoading}
+          disabled={loader.isLoading}
+        >
+          Save
+        </Button>
+      }
     >
       <Form layout="vertical" form={form}>
         <Form.Item required label="Name" name="name">
@@ -154,7 +162,9 @@ const InventoryItemModal = ({
           label="Location"
           name="location"
           help={
-            !item.main ? 'This value can only be updated through the parent item.' : ''
+            !item.main
+              ? 'This value can only be updated through the parent item.'
+              : undefined
           }
         >
           <Input
@@ -168,7 +178,9 @@ const InventoryItemModal = ({
           label="Barcode"
           name="barcode"
           help={
-            !item.main ? 'This value can only be updated through the parent item.' : ''
+            !item.main
+              ? 'This value can only be updated through the parent item.'
+              : undefined
           }
         >
           <Input
@@ -182,7 +194,9 @@ const InventoryItemModal = ({
           label="Quantity"
           name="quantity"
           help={
-            !item.main ? 'This value can only be updated through the parent item.' : ''
+            !item.main
+              ? 'This value can only be updated through the parent item.'
+              : undefined
           }
         >
           <Input
@@ -198,7 +212,9 @@ const InventoryItemModal = ({
           label="Availability"
           name="available"
           help={
-            !item.main ? 'This value can only be updated through the parent item.' : ''
+            !item.main
+              ? 'This value can only be updated through the parent item.'
+              : undefined
           }
         >
           <Select
@@ -226,7 +242,9 @@ const InventoryItemModal = ({
           label="Movable"
           name="moveable"
           help={
-            !item.main ? 'This value can only be updated through the parent item.' : ''
+            !item.main
+              ? 'This value can only be updated through the parent item.'
+              : undefined
           }
         >
           <Select
@@ -275,16 +293,20 @@ const InventoryItemModal = ({
         </Form.Item>
 
         <div className="form-actions">
-          <Button danger className="form-action-button">
+          <Button danger className="form-action-button" disabled={loader.isLoading}>
             Delete
           </Button>
-          <Button type="primary" className="form-action-button">
+          <Button
+            type="primary"
+            className="form-action-button"
+            disabled={loader.isLoading}
+          >
             Retire
           </Button>
         </div>
       </Form>
-    </Modal>
+    </Drawer>
   );
 };
 
-export default InventoryItemModal;
+export default InventoryItemDrawer;

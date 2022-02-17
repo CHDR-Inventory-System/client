@@ -197,6 +197,7 @@
   flex-direction: row;
 }
 
+.ant-drawer-title,
 .ant-modal-title {
   font-size: 1.5em;
 }
@@ -262,7 +263,7 @@
   }
 }
 
-// Titles for Ant's modal and notification
+.ant-drawer-title,
 .ant-modal-title,
 .ant-notification-notice-message,
 .ant-modal-confirm-title {
@@ -282,4 +283,8 @@
   &:hover {
     border-color: map-get($colors, 'monochromatic-2');
   }
+}
+
+.ant-drawer-header {
+  border-bottom: none;
 }

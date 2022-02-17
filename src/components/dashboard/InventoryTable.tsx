@@ -13,7 +13,7 @@ import {
   TablePaginationConfig
 } from 'antd/lib/table/interface';
 import type { Item } from '../../types/API';
-import InventoryItemModal from '../modals/InventoryItemModal';
+import InventoryItemDrawer from './InventoryItemDrawer';
 import useLoader from '../../hooks/loading';
 import useInventory from '../../hooks/inventory';
 
@@ -215,7 +215,7 @@ const InventoryTable = (): JSX.Element => {
 
   return (
     <Card bordered={false} className="inventory-table">
-      <InventoryItemModal
+      <InventoryItemDrawer
         item={currentItem}
         visible={isInventoryModalVisible}
         onClose={() => setInventoryModalVisible(false)}
@@ -225,7 +225,6 @@ const InventoryTable = (): JSX.Element => {
         loading={loader.isLoading}
         onChange={onTableChange}
         dataSource={inventory.items}
-        // dataSource={mockInventory}
         columns={columns}
         pagination={{
           showTotal: renderTableCount,
