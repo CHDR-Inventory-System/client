@@ -43,7 +43,7 @@
     color: white;
   }
 
-  &.ant-btn-dangerous {
+  &.ant-btn-dangerous:not(:disabled) {
     $danger-color: map-get($colors, 'danger');
     color: $danger-color;
     background-color: lighten($danger-color, 50%);
@@ -205,7 +205,6 @@
 .ant-modal-header {
   padding-top: 2em;
   border-radius: 6px 6px 0 0;
-  border-bottom: 1px solid hsl(0deg, 0%, 94%);
 }
 
 .ant-modal-confirm-content {
@@ -258,7 +257,7 @@
 // Hide the tooltip on non-desktop devices since it can
 // sometimes get in the way of certain content
 .ant-tooltip {
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: 800px) {
     display: none;
   }
 }

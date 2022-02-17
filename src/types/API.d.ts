@@ -1,3 +1,5 @@
+import type { CancelToken } from 'axios';
+
 export type CreateAccountOptions = {
   nid: string;
   email: string;
@@ -76,7 +78,9 @@ export type Reservation = {
   user: Omit<User, 'token'>;
 };
 
-export type ImageFormData = {
-  base64ImageData: string;
-  name: string;
+export type ImageUploadParams = {
+  itemId: number;
+  image: File;
+  cancelToken?: CancelToken;
+  onUploadProgress?: (event: ProgressEvent<EventTarget>) => void;
 };

@@ -4,9 +4,9 @@
   // Need important here because ant uses inline styles that have
   // high specificity
   .ant-drawer-content-wrapper {
-    width: 600px !important;
+    width: 650px !important;
 
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 650px) {
       width: 100% !important;
     }
   }

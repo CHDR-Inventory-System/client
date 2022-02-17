@@ -1,3 +1,4 @@
+import 'simplebar/dist/simplebar.min.css';
 import 'antd/dist/antd.css';
 import './scss/ant-overrides.scss';
 import './scss/index.scss';

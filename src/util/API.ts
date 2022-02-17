@@ -4,7 +4,8 @@ import {
   CreateAccountOptions,
   Item,
   Reservation,
-  ImageFormData
+  ItemImage,
+  ImageUploadParams
 } from '../types/API';
 import APIError from './APIError';
 import { AtLeast } from './types';
@@ -22,7 +23,10 @@ axios.interceptors.response.use(
   error => {
     if (axios.isCancel(error)) {
       // 499 represents a request that was cancelled by the user
-      throw new APIError({ status: 499 });
+      throw new APIError({
+        cancelled: true,
+        status: 499
+      });
     }
 
     throw new APIError(error.response.data);
@@ -109,13 +113,21 @@ class API {
     return response.data;
   }
 
-  static async uploadImage(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    itemId: number,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    image: ImageFormData
-  ): Promise<{ imageID: number }> {
-    throw new Error('Not implemented');
+  static async uploadImage({
+    itemId,
+    image,
+    onUploadProgress,
+    cancelToken
+  }: ImageUploadParams): Promise<ItemImage> {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const response = await axios.post(`/inventory/${itemId}/uploadImage`, formData, {
+      onUploadProgress,
+      cancelToken
+    });
+
+    return response.data;
   }
 
   static async deleteImage(imageId: number): Promise<void> {

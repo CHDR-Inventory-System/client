@@ -1,0 +1,18 @@
+.image-upload-modal {
+  .ant-upload-list.ant-upload-list-picture {
+    margin: 1em 0;
+  }
+
+  .ant-upload.ant-upload-drag p.ant-upload-text {
+    font-size: 14px;
+  }
+
+  .ant-upload-span {
+    cursor: pointer;
+  }
+
+  .ant-modal-body {
+    padding-bottom: 0;
+    overflow-y: hidden;
+  }
+}

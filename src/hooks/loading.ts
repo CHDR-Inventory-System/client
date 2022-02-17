@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-type UseLoadingHook = {
+export type UseLoadingHook = {
   readonly isLoading: boolean;
   startLoading: () => void;
   stopLoading: () => void;

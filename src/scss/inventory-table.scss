@@ -31,4 +31,8 @@
   .ant-table-row.ant-table-row-level-1 td {
     background-color: map-get($colors, 'monochromatic-5');
   }
+
+  .ant-spin-nested-loading {
+    overflow: hidden;
+  }
 }

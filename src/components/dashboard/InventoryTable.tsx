@@ -189,7 +189,8 @@ const InventoryTable = (): JSX.Element => {
     } catch (err) {
       notification.error({
         duration: 0,
-        message: 'Error',
+        message: "Couldn't Load Inventory",
+        key: 'inventory-load-error',
         description: `
           An unexpected error occurred loading inventory.
           Refresh the page to try again.

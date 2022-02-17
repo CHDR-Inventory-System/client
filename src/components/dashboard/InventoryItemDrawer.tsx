@@ -18,6 +18,7 @@ import useInventory from '../../hooks/inventory';
 import { AtLeast } from '../../util/types';
 import useLoader from '../../hooks/loading';
 import APIError from '../../util/APIError';
+import ItemImageList from './ItemImageList';
 
 type InventoryModalProps = {
   visible: boolean;
@@ -133,9 +134,9 @@ const InventoryItemDrawer = ({
 
   return (
     <Drawer
+      maskClosable
       title={item.name}
       onClose={onClose}
-      maskClosable={false}
       visible={visible}
       placement="right"
       className="inventory-item-drawer"
@@ -150,6 +151,7 @@ const InventoryItemDrawer = ({
         </Button>
       }
     >
+      <ItemImageList itemId={item.ID} loader={loader} />
       <Form layout="vertical" form={form}>
         <Form.Item required label="Name" name="name">
           <Input type="text" onChange={formik.handleChange('name')} />
