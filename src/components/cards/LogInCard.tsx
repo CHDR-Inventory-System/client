@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Card, Input, Form, Button, Alert } from 'antd';
+import React from 'react';
+import { Card, Input, Form, Button, notification } from 'antd';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { AuthError, Credentials } from './types';
+import { Credentials } from './types';
 import useUser from '../../hooks/user';
 import useLoader from '../../hooks/loading';
 
@@ -13,18 +13,17 @@ type LogInCardProps = {
 
 const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
   const [form] = Form.useForm();
-  const [error, setError] = useState<AuthError | null>(null);
   const loader = useLoader();
   const user = useUser();
   const navigate = useNavigate();
 
-  const logIn = async (credentials: Omit<Credentials, 'email'>) => {
-    const { nid, password } = credentials;
+  const logIn = async (credentials: Pick<Credentials, 'email' | 'password'>) => {
+    const { email, password } = credentials;
 
     loader.startLoading();
 
     try {
-      await user.login(nid, password);
+      await user.login(email, password);
 
       loader.stopLoading();
 
@@ -34,21 +33,24 @@ const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
       loader.stopLoading();
 
       if (status === 401) {
-        setError({
-          title: 'Invalid Credentials',
-          message: 'Make sure your NID and password are correct and try again.'
+        notification.error({
+          key: 'login-error',
+          message: 'Invalid Credentials',
+          description: 'Make sure your email and password are correct and try again.'
         });
       } else {
-        setError({
-          title: 'Server Error',
-          message: 'An unexpected error occurred, please try again.'
+        notification.error({
+          duration: 0,
+          key: 'login-error',
+          message: 'Error Logging In',
+          description: 'An unexpected error occurred, please try again.'
         });
       }
     }
   };
 
   return (
-    <Card bordered={false} title="Log In With Your NID" className={className}>
+    <Card bordered={false} title="Log In With Your Email" className={className}>
       <Card.Meta description={description} />
       <Form
         form={form}
@@ -61,16 +63,16 @@ const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
         autoCapitalize="off"
       >
         <Form.Item
-          label="NID"
-          name="nid"
+          label="Email"
+          name="email"
           rules={[
             {
               required: true,
-              message: 'An NID is required'
+              message: 'An email is required'
             }
           ]}
         >
-          <Input type="text" enterKeyHint="go" />
+          <Input type="email" enterKeyHint="go" />
         </Form.Item>
         <Form.Item
           label="Password"
@@ -84,15 +86,6 @@ const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
         >
           <Input.Password enterKeyHint="go" />
         </Form.Item>
-        {error && (
-          <Alert
-            closable
-            onClose={() => setError(null)}
-            type="error"
-            message={error.title}
-            description={error.message}
-          />
-        )}
         <Form.Item>
           <Button type="primary" htmlType="submit" disabled={loader.isLoading}>
             Log in

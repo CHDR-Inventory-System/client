@@ -22,10 +22,10 @@
   }
 
   .auth-card {
-    max-width: 510px;
+    width: 550px;
     margin-bottom: 5em;
 
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 650px) {
       max-width: 90%;
     }
 
