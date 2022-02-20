@@ -159,6 +159,7 @@ const UserTable = (): JSX.Element => {
 
   const columns: ColumnsType<BaseUser> = [
     {
+      ellipsis: true,
       title: 'Name',
       key: 'fullName',
       dataIndex: 'fullName',
@@ -203,6 +204,7 @@ const UserTable = (): JSX.Element => {
       )
     },
     {
+      ellipsis: true,
       title: 'Date Registered',
       key: 'created',
       dataIndex: 'created',
@@ -248,6 +250,7 @@ const UserTable = (): JSX.Element => {
           showTotal: renderTableCount,
           showSizeChanger: true
         }}
+        scroll={{ x: true }}
       />
     </Card>
   );

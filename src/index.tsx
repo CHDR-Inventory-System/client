@@ -1,5 +1,5 @@
 import 'simplebar/dist/simplebar.min.css';
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.min.css';
 import './scss/ant-overrides.scss';
 import './scss/index.scss';
 import React from 'react';
