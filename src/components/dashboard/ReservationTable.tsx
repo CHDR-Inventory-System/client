@@ -1,5 +1,3 @@
-import '../../scss/reservation-table.scss';
-import '../../scss/inventory-table.scss';
 import React, { useRef, useState, useEffect } from 'react';
 import { Table, Card, Input, Button, Menu, Modal, Tooltip, Dropdown } from 'antd';
 // Disabled so we don't have to install an extra library just
@@ -26,6 +24,12 @@ const formatDate = (date: string) =>
     hour: 'numeric',
     minute: 'numeric'
   });
+
+const renderDate = (value: string) => <span>{formatDate(value)}</span>;
+
+const createDateSorter = (first: Reservation, second: Reservation) => {
+  return Date.parse(first.endDateTime) - Date.parse(second.endDateTime);
+};
 
 const ReservationTable = (): JSX.Element => {
   const [searchedText, setSearchedText] = useState('');
@@ -87,6 +91,7 @@ const ReservationTable = (): JSX.Element => {
   const createStatusMenu = (reservation: Reservation) => {
     const statuses: ReservationStatus[] = [
       'Approved',
+      'Cancelled',
       'Checked Out',
       'Denied',
       'Late',
@@ -182,23 +187,17 @@ const ReservationTable = (): JSX.Element => {
     }
   });
 
-  const renderDate = (value: string) => <span>{formatDate(value)}</span>;
-  const createDateSorter = (first: Reservation, second: Reservation) => {
-    const firstDate = +new Date(first.endDateTime);
-    const secondDate = +new Date(second.endDateTime);
-
-    return firstDate - secondDate;
-  };
-
   const columns: ColumnsType<Reservation> = [
     {
       title: 'Item Name',
       key: 'itemName',
+      ellipsis: true,
       dataIndex: ['item', 'name'],
       sorter: (first, second) => first.item.name.localeCompare(second.item.name),
       ...getColumnSearchProps('item.name', 'item name')
     },
     {
+      ellipsis: true,
       title: 'Name',
       key: 'userFullName',
       dataIndex: ['user', 'fullName'],
@@ -213,13 +212,7 @@ const ReservationTable = (): JSX.Element => {
       ...getColumnSearchProps('user.email', 'user email')
     },
     {
-      title: 'NID',
-      key: 'nid',
-      dataIndex: ['user', 'nid'],
-      sorter: (first, second) => first.user.nid.localeCompare(second.user.nid),
-      ...getColumnSearchProps('user.nid', 'user NID')
-    },
-    {
+      ellipsis: true,
       title: 'Status',
       key: 'status',
       dataIndex: 'status',
@@ -227,6 +220,10 @@ const ReservationTable = (): JSX.Element => {
         {
           value: 'Approved',
           text: 'Approved'
+        },
+        {
+          value: 'Cancelled',
+          text: 'Cancelled'
         },
         {
           value: 'Checked Out',
@@ -267,6 +264,7 @@ const ReservationTable = (): JSX.Element => {
       )
     },
     {
+      ellipsis: true,
       title: 'Check Out',
       key: 'checkOutDate',
       dataIndex: 'startDateTime',
@@ -275,6 +273,7 @@ const ReservationTable = (): JSX.Element => {
       sorter: createDateSorter
     },
     {
+      ellipsis: true,
       title: 'Return',
       key: 'return Date',
       dataIndex: 'endDateTime',

@@ -7,18 +7,19 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineDown, AiOutlineUser, AiOutlineSearch } from 'react-icons/ai';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
-import {
-  FilterDropdownProps,
-  FilterValue,
-  SorterResult,
-  TableCurrentDataSource,
-  TablePaginationConfig
-} from 'antd/lib/table/interface';
-import type { User, UserRole } from '../../types/API';
+import { FilterDropdownProps } from 'antd/lib/table/interface';
+import type { BaseUser, UserRole } from '../../types/API';
 import mockUsers from '../../assets/mocks/users.json';
 import API from '../../util/API';
 
-const mockDataSource: User[] = (mockUsers as User[]).map(user => ({
+/**
+ * Used to show the current table count along with the
+ * total number of items on the current page
+ */
+const renderTableCount = (total: number, range: [number, number]) =>
+  `${range[0]}-${range[1]} of ${total}`;
+
+const mockDataSource: BaseUser[] = (mockUsers as BaseUser[]).map(user => ({
   ...user,
   created: new Date(user.created).toLocaleDateString('en-US', {
     month: 'short',
@@ -30,13 +31,12 @@ const mockDataSource: User[] = (mockUsers as User[]).map(user => ({
 
 const UserTable = (): JSX.Element => {
   const [searchedText, setSearchedText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState<keyof User>();
+  const [searchedColumn, setSearchedColumn] = useState<keyof BaseUser>();
   const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState<User[]>(mockDataSource);
-  const [rowCount, setRowCount] = useState(mockDataSource.length);
-  const searchInputRef = useRef<Input>();
+  const [tableData, setTableData] = useState<BaseUser[]>(mockDataSource);
+  const searchInputRef = useRef<Input>(null);
 
-  const updateUserRole = (user: User, role: UserRole) => {
+  const updateUserRole = (user: BaseUser, role: UserRole) => {
     // eslint-disable-next-line no-console
     console.log(`New role => ${role}`, user);
   };
@@ -44,7 +44,7 @@ const UserTable = (): JSX.Element => {
   const handleSearch = (
     searchQuery: string,
     confirm: () => void,
-    dataIndex: keyof User
+    dataIndex: keyof BaseUser
   ) => {
     setSearchedColumn(dataIndex);
     setSearchedText(searchQuery);
@@ -57,28 +57,7 @@ const UserTable = (): JSX.Element => {
     confirm();
   };
 
-  /**
-   * Used to show the current table count along with the
-   * total number of items on the current page
-   */
-  const renderTableCount = (total: number, range: [number, number]) =>
-    `${range[0]}-${range[1]} of ${total}`;
-
-  /**
-   * Because filtering the table doesn't actually change the size of
-   * `tableData`, we'll need to manually keep track of how many rows
-   * are in the table.
-   */
-  const onTableChange = (
-    pagination: TablePaginationConfig,
-    filters: Record<string, FilterValue | null>,
-    sorter: SorterResult<User> | SorterResult<User>[],
-    extra: TableCurrentDataSource<User>
-  ) => {
-    setRowCount(extra.currentDataSource.length);
-  };
-
-  const onMenuItemClick = (user: User, role: UserRole) => {
+  const onMenuItemClick = (user: BaseUser, role: UserRole) => {
     Modal.confirm({
       title: "Are you sure you want to change this user's role?",
       content: (
@@ -103,7 +82,7 @@ const UserTable = (): JSX.Element => {
   /**
    * Renders the menu that drops down when a user's role is clicked
    */
-  const createRoleMenu = (user: User) => {
+  const createRoleMenu = (user: BaseUser) => {
     const userRoles: UserRole[] = ['User', 'Admin', 'Super'];
 
     return (
@@ -126,15 +105,11 @@ const UserTable = (): JSX.Element => {
    * search icon in the table's header is clicked
    */
   const createFilterDropdown = (
-    dataIndex: keyof User,
+    dataIndex: keyof BaseUser,
     { setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps
   ) => (
     <div className="table-filter-dropdown">
       <Input
-        // Disabled since ant's input refs don't play nicely
-        // with TypeScript's ref definition
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         ref={searchInputRef}
         value={selectedKeys[0]}
         enterKeyHint="search"
@@ -156,7 +131,7 @@ const UserTable = (): JSX.Element => {
     </div>
   );
 
-  const getColumnSearchProps = (dataIndex: keyof User): ColumnType<User> => ({
+  const getColumnSearchProps = (dataIndex: keyof BaseUser): ColumnType<BaseUser> => ({
     filterDropdown: props => createFilterDropdown(dataIndex, { ...props }),
     onFilterDropdownVisibleChange: (visible: boolean) => {
       // Focus the input after the dropdown opens
@@ -165,7 +140,7 @@ const UserTable = (): JSX.Element => {
       }
     },
     filterIcon: <AiOutlineSearch size="1.5em" />,
-    onFilter: (value: string | number | boolean, record: User) =>
+    onFilter: (value: string | number | boolean, record: BaseUser) =>
       record[dataIndex].toString().toLowerCase().includes(value.toString().toLowerCase()),
     render: (text: string) => {
       if (searchedColumn === dataIndex) {
@@ -182,7 +157,7 @@ const UserTable = (): JSX.Element => {
     }
   });
 
-  const columns: ColumnsType<User> = [
+  const columns: ColumnsType<BaseUser> = [
     {
       title: 'Name',
       key: 'fullName',
@@ -195,13 +170,6 @@ const UserTable = (): JSX.Element => {
       dataIndex: 'email',
       sorter: (first, second) => first.email.localeCompare(second.email),
       ...getColumnSearchProps('email')
-    },
-    {
-      title: 'NID',
-      key: 'nid',
-      dataIndex: 'nid',
-      sorter: (first, second) => first.nid.localeCompare(second.nid),
-      ...getColumnSearchProps('nid')
     },
     {
       title: 'Role',
@@ -224,7 +192,7 @@ const UserTable = (): JSX.Element => {
         }
       ],
       onFilter: (value, user) => user.role.indexOf(value as string) === 0,
-      render: (text: string, row: User) => (
+      render: (text: string, row: BaseUser) => (
         <Tooltip placement="left" title="Change this user's role">
           <Dropdown overlay={createRoleMenu(row)} trigger={['click']}>
             <div>
@@ -233,6 +201,12 @@ const UserTable = (): JSX.Element => {
           </Dropdown>
         </Tooltip>
       )
+    },
+    {
+      title: 'Date Registered',
+      key: 'created',
+      dataIndex: 'created',
+      sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created)
     }
   ];
 
@@ -268,15 +242,12 @@ const UserTable = (): JSX.Element => {
     <Card bordered={false}>
       <Table
         loading={isLoading}
-        onChange={onTableChange}
         dataSource={tableData}
         columns={columns}
         pagination={{
           showTotal: renderTableCount,
           showSizeChanger: true
         }}
-        // Only allow the table to scroll if there's actually data in it
-        scroll={{ x: rowCount > 0 ? true : undefined }}
       />
     </Card>
   );

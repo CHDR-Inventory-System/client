@@ -1,0 +1,26 @@
+@import './variables';
+
+.sign-up-card {
+  .password-checklist {
+    margin-bottom: 1em;
+  }
+
+  .checklist-icon {
+    margin-right: 1em;
+    flex-shrink: 0;
+
+    &.valid,
+    &.invalid {
+      width: 18px;
+      height: 18px;
+    }
+
+    &.valid {
+      color: map-get($colors, 'danger');
+    }
+
+    &.invalid {
+      color: map-get($colors, 'success');
+    }
+  }
+}

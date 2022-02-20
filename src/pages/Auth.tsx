@@ -26,18 +26,6 @@ const Auth = (): JSX.Element | null => {
                 Click here to sign up.
               </button>
             </p>
-            <p>
-              Forgot your UCF password?
-              <a
-                href="https://mynid.ucf.edu/pages/NidCheck.aspx"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {' '}
-                Click here{' '}
-              </a>
-              to reset it.
-            </p>
           </div>
         }
       />
@@ -52,13 +40,6 @@ const Auth = (): JSX.Element | null => {
               <button onClick={() => setCard('login')} type="button">
                 Click here to log in.
               </button>
-            </p>
-            <p>
-              Your NID and password should be the same combination you use to sign into{' '}
-              <a href="https://my.ucf.edu/" target="_blank" rel="noreferrer">
-                myUCF
-              </a>
-              .
             </p>
           </div>
         }

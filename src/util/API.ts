@@ -5,7 +5,8 @@ import {
   Item,
   Reservation,
   ItemImage,
-  ImageUploadParams
+  ImageUploadParams,
+  BaseUser
 } from '../types/API';
 import APIError from './APIError';
 import { AtLeast } from './types';
@@ -43,15 +44,9 @@ class API {
     return response.data;
   }
 
-  static async createAccount({
-    nid,
-    email,
-    password
-  }: CreateAccountOptions): Promise<void> {
+  static async createAccount(opts: CreateAccountOptions): Promise<void> {
     const response = await axios.post('/users/register', {
-      nid,
-      email,
-      password
+      ...opts
     });
 
     return response.data;
@@ -66,7 +61,7 @@ class API {
     return response.data;
   }
 
-  static async getAllUsers(): Promise<User[]> {
+  static async getAllUsers(): Promise<BaseUser[]> {
     const response = await axios.get('/users/');
     return response.data;
   }

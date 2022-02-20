@@ -1,7 +1,8 @@
 import type { CancelToken } from 'axios';
 
 export type CreateAccountOptions = {
-  nid: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 };
@@ -17,10 +18,11 @@ export type User = JWT & {
   created: string;
   email: string;
   fullName: string;
-  nid: string;
   role: UserRole;
   verified: boolean;
 };
+
+export type BaseUser = Omit<User, 'token'>;
 
 export type ItemImage = {
   ID: number;
@@ -60,6 +62,7 @@ export type Item = {
 
 export type ReservationStatus =
   | 'Approved'
+  | 'Cancelled'
   | 'Checked Out'
   | 'Denied'
   | 'Late'
