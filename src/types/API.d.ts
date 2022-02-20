@@ -16,7 +16,6 @@ export type User = JWT & {
   created: string;
   email: string;
   fullName: string;
-  nid: string;
   role: UserRole;
   verified: boolean;
 };
