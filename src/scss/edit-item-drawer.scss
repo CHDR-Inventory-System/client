@@ -1,12 +1,12 @@
 @import './mixins';
 
-.inventory-item-drawer {
+.edit-item-drawer {
   // Need important here because ant uses inline styles that have
   // high specificity
   .ant-drawer-content-wrapper {
-    width: 650px !important;
+    width: 600px !important;
 
-    @media screen and (max-width: 650px) {
+    @media screen and (max-width: 600px) {
       width: 100% !important;
     }
   }
@@ -15,6 +15,7 @@
     display: flex;
     margin-top: 3em;
   }
+
   .form-action-button {
     @include font-fallback('Gotham-Medium');
     width: 100%;

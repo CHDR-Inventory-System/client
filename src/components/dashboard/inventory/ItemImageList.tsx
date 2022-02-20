@@ -1,9 +1,9 @@
-import '../../scss/item-image-list.scss';
+import '../../../scss/item-image-list.scss';
 import React, { useMemo, useState } from 'react';
 import { Image, Button, Modal, notification } from 'antd';
 import SimpleBar from 'simplebar-react';
-import useInventory from '../../hooks/inventory';
-import { UseLoadingHook } from '../../hooks/loading';
+import useInventory from '../../../hooks/inventory';
+import { UseLoadingHook } from '../../../hooks/loading';
 import ImageUploadModal from './ImageUploadModal';
 
 type ItemImageListProps = {
@@ -64,7 +64,7 @@ const ItemImageList = ({ itemId, loader }: ItemImageListProps): JSX.Element => {
                     className="item-image"
                     src={image.imageURL}
                     // eslint-disable-next-line global-require
-                    fallback={require('../../assets/images/no-image-placeholder.png')}
+                    fallback={require('../../../assets/images/no-image-placeholder.png')}
                   />
                   <Button
                     danger

@@ -1,12 +1,12 @@
-import '../../scss/image-upload-modal.scss';
+import '../../../scss/image-upload-modal.scss';
 import React, { useEffect, useState } from 'react';
 import { Modal, notification, Progress, Tooltip, Upload } from 'antd';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { UploadFile } from 'antd/lib/upload/interface';
 import axios from 'axios';
-import useLoader from '../../hooks/loading';
-import useInventory from '../../hooks/inventory';
-import APIError from '../../util/APIError';
+import useLoader from '../../../hooks/loading';
+import useInventory from '../../../hooks/inventory';
+import APIError from '../../../util/APIError';
 
 type ImageUploadModalProps = {
   visible: boolean;
@@ -155,7 +155,7 @@ const ImageUploadModal = ({
     if (uploadProgress === 100) {
       setTimeout(() => {
         notification.close(PROGRESS_NOTIFICATION_KEY);
-      }, 2000);
+      }, 1000);
     }
   }, [uploadProgress]);
 

@@ -1,4 +1,4 @@
-import '../../scss/inventory-item-drawer.scss';
+import '../../../scss/edit-item-drawer.scss';
 import React, { useEffect } from 'react';
 import {
   Form,
@@ -13,14 +13,14 @@ import {
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import moment from 'moment';
-import { Item } from '../../types/API';
-import useInventory from '../../hooks/inventory';
-import { AtLeast } from '../../util/types';
-import useLoader from '../../hooks/loading';
-import APIError from '../../util/APIError';
+import { Item } from '../../../types/API';
+import useInventory from '../../../hooks/inventory';
+import { AtLeast } from '../../../util/types';
+import useLoader from '../../../hooks/loading';
+import APIError from '../../../util/APIError';
 import ItemImageList from './ItemImageList';
 
-type InventoryModalProps = {
+type EditItemDrawerProps = {
   visible: boolean;
   onClose: () => void;
   item: Item;
@@ -53,11 +53,11 @@ const itemSchema = yup.object({
     })
 });
 
-const InventoryItemDrawer = ({
+const EditItemDrawer = ({
   visible,
   onClose,
   item
-}: InventoryModalProps): JSX.Element | null => {
+}: EditItemDrawerProps): JSX.Element | null => {
   const [form] = Form.useForm();
   const formik = useFormik<Item>({
     initialValues: item,
@@ -85,8 +85,8 @@ const InventoryItemDrawer = ({
       if (err instanceof yup.ValidationError) {
         const validationError = err as yup.ValidationError;
 
-        // Because error are handled by Formik, we need to make sure Ant's form
-        // knows about errors
+        // Because errors are handled by Formik, we need to make sure Ant's form
+        // knows about Formik's errors
         form.setFields(
           validationError.inner.map(error => ({
             name: error.path || '',
@@ -98,6 +98,7 @@ const InventoryItemDrawer = ({
       if (err instanceof APIError) {
         notification.error({
           duration: 5,
+          key: 'error-updating',
           message: 'Error Updating',
           description: 'An error occurred while updating this item. Please try again.'
         });
@@ -108,7 +109,8 @@ const InventoryItemDrawer = ({
     }
 
     notification.success({
-      message: 'Success',
+      key: 'item-updated',
+      message: 'Item Updated',
       description: `${item.name} was updated`
     });
 
@@ -128,18 +130,14 @@ const InventoryItemDrawer = ({
     form.setFieldsValue(item);
   }, [item]);
 
-  if (Object.keys(item).length === 0) {
-    return null;
-  }
-
   return (
     <Drawer
       maskClosable
-      title={item.name}
+      title={`Edit - ${item.name}`}
       onClose={onClose}
       visible={visible}
       placement="right"
-      className="inventory-item-drawer"
+      className="edit-item-drawer"
       extra={
         <Button
           type="primary"
@@ -291,24 +289,31 @@ const InventoryItemDrawer = ({
         </Form.Item>
 
         <Form.Item label="Vendor Price" name="vendorPrice">
-          <Input type="number" onChange={formik.handleChange('vendorPrice')} min={0} />
+          <Input
+            type="number"
+            onChange={formik.handleChange('vendorPrice')}
+            min={0}
+            prefix="$"
+          />
         </Form.Item>
 
         <div className="form-actions">
           <Button danger className="form-action-button" disabled={loader.isLoading}>
             Delete
           </Button>
-          <Button
-            type="primary"
-            className="form-action-button"
-            disabled={loader.isLoading}
-          >
-            Retire
-          </Button>
+          {item.main && (
+            <Button
+              type="primary"
+              className="form-action-button"
+              disabled={loader.isLoading}
+            >
+              Retire
+            </Button>
+          )}
         </div>
       </Form>
     </Drawer>
   );
 };
 
-export default InventoryItemDrawer;
+export default EditItemDrawer;

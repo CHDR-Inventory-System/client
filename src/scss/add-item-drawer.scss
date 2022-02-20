@@ -1,0 +1,33 @@
+@import './mixins';
+@import './variables';
+
+.add-item-drawer {
+  // Need important here because ant uses inline styles that have
+  // high specificity
+  .ant-drawer-content-wrapper {
+    width: 650px !important;
+
+    @media screen and (max-width: 650px) {
+      width: 100% !important;
+    }
+  }
+
+  .ant-drawer-header {
+    padding-bottom: 0.5em;
+  }
+
+  .drawer-header-message {
+    margin-bottom: 1.5em;
+    color: map-get($colors, 'text-muted');
+
+    p {
+      margin-bottom: 0.5em;
+    }
+
+    span {
+      @include font-fallback('Gotham-Medium');
+      text-decoration: underline;
+      text-decoration-style: dashed;
+    }
+  }
+}

@@ -1,35 +1,55 @@
-/* eslint-disable */
-import '../../scss/inventory-table.scss';
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import '../../../scss/inventory-table.scss';
+import React, { useRef, useState, useEffect } from 'react';
 import { Table, Card, Input, Button, notification } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai';
+import { AiOutlineSearch, AiOutlineDown, AiOutlineLoading } from 'react-icons/ai';
+import { BsBoxSeam } from 'react-icons/bs';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
 import classNames from 'classnames';
-import {
-  FilterDropdownProps,
-  FilterValue,
-  SorterResult,
-  TableCurrentDataSource,
-  TablePaginationConfig
-} from 'antd/lib/table/interface';
+import { FilterDropdownProps } from 'antd/lib/table/interface';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RenderExpandIconProps } from 'rc-table/lib/interface';
-import type { Item } from '../../types/API';
-import InventoryItemDrawer from './InventoryItemDrawer';
-import useLoader from '../../hooks/loading';
-import useInventory from '../../hooks/inventory';
-import mockInventory from '../../assets/mocks/inventory.json';
+import moment from 'moment';
+import EditItemDrawer from './EditItemDrawer';
+import useLoader from '../../../hooks/loading';
+import useInventory from '../../../hooks/inventory';
+import AddItemDrawer from './AddItemDrawer';
+import type { Item } from '../../../types/API';
+
+const EmptyInventoryList = (): JSX.Element => (
+  <div className="empty-inventory-list">
+    <BsBoxSeam size={84} />
+    <p>No items in inventory.</p>
+  </div>
+);
+
+const TableLoadingSpinner = (): JSX.Element => (
+  <div className="ant-spin-dot">
+    <AiOutlineLoading size={52} className="table-loading-icon" />
+  </div>
+);
+
+/**
+ * Used to show the current table count along with the
+ * total number of items on the current page
+ */
+const renderTableCount = (total: number, range: [number, number]) =>
+  `${range[0]}-${range[1]} of ${total}`;
 
 const InventoryTable = (): JSX.Element => {
   const inventory = useInventory();
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof Item>();
-  const [rowCount, setRowCount] = useState(inventory.items.length);
-  const [isInventoryModalVisible, setInventoryModalVisible] = useState(false);
-  const [currentItem, setCurrentItem] = useState<Item>({} as Item);
+  const [isEditDrawerVisible, setEditDrawerVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
+  const [isAddItemDrawerVisible, setAddItemDrawerVisible] = useState(false);
   const loader = useLoader();
   const searchInputRef = useRef<Input>(null);
+
+  const openAddItemDrawer = () => setAddItemDrawerVisible(true);
+  const closeAddItemDrawer = () => setAddItemDrawerVisible(false);
+  const openEditItemDrawer = () => setEditDrawerVisible(true);
+  const closeEditItemDrawer = () => setEditDrawerVisible(false);
 
   const handleSearch = (
     searchQuery: string,
@@ -45,27 +65,6 @@ const InventoryTable = (): JSX.Element => {
     clearFilters?.();
     setSearchedText('');
     confirm();
-  };
-
-  /**
-   * Used to show the current table count along with the
-   * total number of items on the current page
-   */
-  const renderTableCount = (total: number, range: [number, number]) =>
-    `${range[0]}-${range[1]} of ${total}`;
-
-  /**
-   * Because filtering the table doesn't actually change the size of
-   * `tableData`, we'll need to manually keep track of how many rows
-   * are in the table.
-   */
-  const onTableChange = (
-    pagination: TablePaginationConfig,
-    filters: Record<string, FilterValue | null>,
-    sorter: SorterResult<Item> | SorterResult<Item>[],
-    extra: TableCurrentDataSource<Item>
-  ) => {
-    setRowCount(extra.currentDataSource.length);
   };
 
   /**
@@ -181,7 +180,18 @@ const InventoryTable = (): JSX.Element => {
       sorter: (first, second) => +first.available - +second.available,
       onFilter: (value, item) => item.available === (value as boolean),
       className: 'row-status',
-      render: (value: boolean) => <span>{value ? 'Available' : 'Unavailable'}</span>
+      render: (available: boolean) => (
+        <span>{available ? 'Available' : 'Unavailable'}</span>
+      )
+    },
+    {
+      title: 'Created',
+      key: 'created',
+      dataIndex: 'created',
+      ellipsis: true,
+      defaultSortOrder: 'descend',
+      sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
+      render: (created: string) => <span>{moment(created).format('MMMM Do YYYY')}</span>
     }
   ];
 
@@ -189,8 +199,7 @@ const InventoryTable = (): JSX.Element => {
     loader.startLoading();
 
     try {
-      const items = await inventory.init();
-      setRowCount(items.length);
+      await inventory.init();
     } catch (err) {
       notification.error({
         duration: 0,
@@ -206,18 +215,24 @@ const InventoryTable = (): JSX.Element => {
     loader.stopLoading();
   };
 
-  const onRowClick = useCallback((item: Item) => {
+  const onRowClick = (item: Item) => {
     return {
       onClick: () => {
-        setCurrentItem(item);
-        setInventoryModalVisible(true);
+        setSelectedItem(item);
+        openEditItemDrawer();
       }
     };
-  }, []);
+  };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const expandedRowRenderer = (item: Item) => (
-    <Button type="ghost" className="add-child-button">
+    <Button
+      type="ghost"
+      className="add-child-button"
+      onClick={() => {
+        setSelectedItem(item);
+        openAddItemDrawer();
+      }}
+    >
       Add child item
     </Button>
   );
@@ -230,34 +245,40 @@ const InventoryTable = (): JSX.Element => {
     return (
       <Button
         className="row-action"
+        icon={<AiOutlineDown />}
         onClick={event => {
           onExpand(item, event);
           event.stopPropagation();
         }}
-      >
-        <AiOutlineDown />
-      </Button>
+      />
     );
   };
 
   useEffect(() => {
-    // loadInventory();
-    inventory.setItems(mockInventory);
+    loadInventory();
   }, []);
 
   return (
     <Card bordered={false} className="inventory-table">
-      <InventoryItemDrawer
-        item={currentItem}
-        visible={isInventoryModalVisible}
-        onClose={() => setInventoryModalVisible(false)}
+      <EditItemDrawer
+        item={selectedItem}
+        visible={isEditDrawerVisible}
+        onClose={closeEditItemDrawer}
+      />
+      <AddItemDrawer
+        visible={isAddItemDrawerVisible}
+        onClose={closeAddItemDrawer}
+        parentItem={selectedItem}
       />
       <Table
         rowKey="ID"
-        loading={loader.isLoading}
-        onChange={onTableChange}
+        loading={{
+          spinning: loader.isLoading,
+          indicator: <TableLoadingSpinner />
+        }}
         dataSource={inventory.items}
         columns={columns}
+        locale={{ emptyText: <EmptyInventoryList /> }}
         pagination={{
           showTotal: renderTableCount,
           showSizeChanger: true
@@ -269,7 +290,6 @@ const InventoryTable = (): JSX.Element => {
         }}
         onRow={onRowClick}
         // Only allow the table to scroll if there's actually data in it
-        // scroll={{ x: rowCount > 0 ? true : undefined }}
         scroll={{ x: true }}
         rowClassName={item => {
           return classNames({

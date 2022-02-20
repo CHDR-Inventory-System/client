@@ -287,3 +287,9 @@
 .ant-drawer-header {
   border-bottom: none;
 }
+
+.ant-select-selector {
+  // Important is needed here because Ant has has a ridiculously long selector
+  // with high specificity
+  box-shadow: none !important;
+}
