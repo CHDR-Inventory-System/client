@@ -1,11 +1,6 @@
-// Types that are shared across card components
-export type Credentials = {
-  nid: string;
-  email: string;
-  password: string;
-};
+// Contains types that are shared across card components
+import { CreateAccountOptions } from '../../types/API';
 
-export type AuthError = {
-  title: string;
-  message: string;
+export type Credentials = CreateAccountOptions & {
+  confirmedPassword: string;
 };

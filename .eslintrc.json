@@ -41,6 +41,11 @@
     "build/**/*"
   ],
   "rules": {
+    "arrow-body-style": "off",
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
     "arrow-parens": [
       "error",
       "as-needed"
@@ -65,6 +70,7 @@
     "no-mixed-spaces-and-tabs": "error",
     "no-plusplus": "off",
     "func-names": "off",
+    "lines-between-class-members": "off",
     "no-promise-executor-return": "off",
     "no-param-reassign": [
       "error",
@@ -77,6 +83,8 @@
     "padded-blocks": "off",
     // This option is turned off because it conflicts with prettier
     "object-curly-newline": "off",
+    // Disabled since it conflicts with prettier
+    "implicit-arrow-linebreak": "off",
     "import/extensions": [
       "error",
       "never"
@@ -94,6 +102,7 @@
     "react/destructuring-assignment": "off",
     "react/jsx-one-expression-per-line": "off",
     "react/prop-types": "off",
+    "react/jsx-curly-newline": "off",
     "react/jsx-curly-spacing": [
       "error",
       {
@@ -137,9 +146,6 @@
     ],
     "react/self-closing-comp": "error",
     "react/no-unused-state": "error",
-    "@typescript-eslint/no-use-before-define": [
-      "error"
-    ],
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/explicit-module-boundary-types": "error",
     "@typescript-eslint/no-unused-vars": [
