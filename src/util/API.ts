@@ -129,6 +129,13 @@ class API {
     const response = await axios.delete(`/inventory/image/${imageId}`);
     return response.data;
   }
+
+  static async retireItem(itemId: number, retiredDate: Date | null): Promise<void> {
+    const response = await axios.put(`/inventory/${itemId}/retire`, {
+      date: retiredDate?.toLocaleDateString() || null
+    });
+    return response.data;
+  }
 }
 
 export default API;

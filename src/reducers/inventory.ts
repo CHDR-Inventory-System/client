@@ -38,6 +38,13 @@ export type InventoryAction =
         itemId: number;
         image: ItemImage;
       };
+    }
+  | {
+      type: 'RETIRE';
+      payload: {
+        itemId: number;
+        retiredDate: Date | null;
+      };
     };
 
 /**
@@ -211,6 +218,33 @@ const inventoryReducer = (state: Item[], action: InventoryAction): Item[] => {
           item.children?.forEach(child => {
             if (child.ID === updatedItem.ID) {
               child.images.push(image);
+            }
+          });
+        }
+
+        return item;
+      });
+    }
+    case 'RETIRE': {
+      const { itemId, retiredDate } = action.payload;
+      const date = retiredDate?.toLocaleDateString() || null;
+      let wasItemUpdated = false;
+
+      return state.map(item => {
+        if (item.ID === itemId) {
+          item.retiredDateTime = date;
+
+          item.children?.forEach(child => {
+            child.retiredDateTime = date;
+          });
+
+          wasItemUpdated = true;
+        }
+
+        if (!wasItemUpdated) {
+          item.children?.forEach(child => {
+            if (child.ID === itemId) {
+              child.retiredDateTime = date;
             }
           });
         }

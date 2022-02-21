@@ -41,7 +41,7 @@ const InventoryTable = (): JSX.Element => {
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof Item>();
   const [isEditDrawerVisible, setEditDrawerVisible] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Item>({} as Item);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [isAddItemDrawerVisible, setAddItemDrawerVisible] = useState(false);
   const loader = useLoader();
   const searchInputRef = useRef<Input>(null);
@@ -260,16 +260,20 @@ const InventoryTable = (): JSX.Element => {
 
   return (
     <Card bordered={false} className="inventory-table">
-      <EditItemDrawer
-        item={selectedItem}
-        visible={isEditDrawerVisible}
-        onClose={closeEditItemDrawer}
-      />
-      <AddItemDrawer
-        visible={isAddItemDrawerVisible}
-        onClose={closeAddItemDrawer}
-        parentItem={selectedItem}
-      />
+      {selectedItem && (
+        <>
+          <EditItemDrawer
+            itemId={selectedItem.ID}
+            visible={isEditDrawerVisible}
+            onClose={closeEditItemDrawer}
+          />
+          <AddItemDrawer
+            visible={isAddItemDrawerVisible}
+            onClose={closeAddItemDrawer}
+            parentItem={selectedItem}
+          />
+        </>
+      )}
       <Table
         rowKey="ID"
         loading={{

@@ -1,5 +1,5 @@
 import '../../../scss/edit-item-drawer.scss';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   Form,
   Input,
@@ -8,7 +8,8 @@ import {
   Divider,
   Button,
   notification,
-  Drawer
+  Drawer,
+  Modal
 } from 'antd';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -23,7 +24,7 @@ import ItemImageList from './ItemImageList';
 type EditItemDrawerProps = {
   visible: boolean;
   onClose: () => void;
-  item: Item;
+  itemId: number;
 };
 
 const itemSchema = yup.object({
@@ -53,18 +54,30 @@ const itemSchema = yup.object({
     })
 });
 
+const renderDropdownWithMessage = (menuElement: React.ReactElement, message: string) => (
+  <div>
+    {menuElement}
+    <Divider style={{ margin: '4px 0' }} />
+    <p className="select-menu-details">{message}</p>
+  </div>
+);
+
 const EditItemDrawer = ({
   visible,
   onClose,
-  item
+  itemId
 }: EditItemDrawerProps): JSX.Element | null => {
+  const inventory = useInventory();
+  // In this case, the parent that renders the component makes sure that the
+  // id of the item is always valid so we can safely cast to Item to get
+  // rid of the undefined type.
+  const item = useMemo(() => inventory.getItem(itemId), [itemId]) as Item;
   const [form] = Form.useForm();
   const formik = useFormik<Item>({
-    initialValues: item,
+    initialValues: item || ({} as Item),
     enableReinitialize: true,
     onSubmit: values => updateItem(values)
   });
-  const inventory = useInventory();
   const loader = useLoader();
 
   const updateItem = async (values: Item) => {
@@ -118,13 +131,98 @@ const EditItemDrawer = ({
     loader.stopLoading();
   };
 
-  const renderDropdownWithMessage = (menu: React.ReactElement, message: string) => (
-    <div>
-      {menu}
-      <Divider style={{ margin: '4px 0' }} />
-      <p className="select-menu-details">{message}</p>
-    </div>
-  );
+  const deleteItem = async () => {
+    loader.startLoading();
+
+    try {
+      await inventory.deleteItem(item.ID);
+    } catch (err) {
+      loader.stopLoading();
+      notification.error({
+        key: 'delete-error',
+        message: 'Error Deleting Item',
+        description: 'An error occurred while deleting this item, please try again.'
+      });
+      return;
+    }
+
+    notification.success({
+      key: 'delete-success',
+      message: 'Item Deleted',
+      description: `${item.name} was successfully deleted.`
+    });
+
+    loader.stopLoading();
+    onClose();
+  };
+
+  const handleItemRetire = async () => {
+    const wasRetired = !!item.retiredDateTime;
+    loader.startLoading();
+
+    try {
+      await inventory.retireItem(item.ID, wasRetired ? null : new Date());
+    } catch (err) {
+      loader.stopLoading();
+      notification.error({
+        key: 'retire-error',
+        message: 'Unexpected Error',
+        description: 'An error occurred while performing this action, please try again.'
+      });
+      return;
+    }
+
+    notification.success({
+      key: 'retire-success',
+      message: wasRetired ? 'Undo Retire' : 'Item Retired',
+      description: wasRetired
+        ? `${item.name} is no longer marked as "retired".`
+        : `${item.name} is now marked as "retired"`
+    });
+
+    loader.stopLoading();
+  };
+
+  const confirmDelete = () => {
+    Modal.confirm({
+      centered: true,
+      maskStyle: {
+        backgroundColor: 'rgba(0, 0, 0, 50%)'
+      },
+      title: 'Delete Item',
+      content: (
+        <p>
+          Are you sure you want to delete <b>{item.name}</b>? This action cannot be
+          undone.
+        </p>
+      ),
+      okText: 'Delete',
+      okButtonProps: {
+        className: 'ant-btn-dangerous'
+      },
+      onOk: () => deleteItem()
+    });
+  };
+
+  const confirmRetire = () => {
+    Modal.confirm({
+      centered: true,
+      maskStyle: {
+        backgroundColor: 'rgba(0, 0, 0, 50%)'
+      },
+      title: item.retiredDateTime ? 'Undo Retire' : 'Retire Item',
+      content: (
+        <p>
+          Are you sure you want to {item.retiredDateTime ? 'undo retiring' : 'retire'}{' '}
+          <b>{item.name}</b>? Retired items cannot be checked out and will not appear in
+          user searches (the item will not be deleted). This action can always be undone
+          later.
+        </p>
+      ),
+      okText: item.retiredDateTime ? 'Undo Retire' : 'Retire',
+      onOk: () => handleItemRetire()
+    });
+  };
 
   useEffect(() => {
     form.setFieldsValue(item);
@@ -298,7 +396,12 @@ const EditItemDrawer = ({
         </Form.Item>
 
         <div className="form-actions">
-          <Button danger className="form-action-button" disabled={loader.isLoading}>
+          <Button
+            danger
+            className="form-action-button"
+            disabled={loader.isLoading}
+            onClick={confirmDelete}
+          >
             Delete
           </Button>
           {item.main && (
@@ -306,8 +409,9 @@ const EditItemDrawer = ({
               type="primary"
               className="form-action-button"
               disabled={loader.isLoading}
+              onClick={confirmRetire}
             >
-              Retire
+              {item.retiredDateTime ? 'Undo Retire' : 'Retire'}
             </Button>
           )}
         </div>

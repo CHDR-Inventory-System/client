@@ -20,7 +20,7 @@ type UseInventoryHook = {
   getImages: (itemId: number) => ItemImage[];
   uploadImage: (params: ImageUploadParams) => Promise<ItemImage>;
   deleteItem: (itemId: number) => Promise<void>;
-  addItem: (item: Partial<Item>) => Promise<void>;
+  addItem: (item: Partial<Item>) => Promise<Item>;
   /**
    * @param parentId The ID of the parent item this child item belongs to
    * @param itemId Refers to the ID of the item in the `item` table, NOT
@@ -32,6 +32,7 @@ type UseInventoryHook = {
     itemId: number,
     item: AtLeast<Item, 'name' | 'type'>
   ) => Promise<void>;
+  retireItem: (itemId: number, retiredDate: Date | null) => Promise<void>;
 };
 
 /**
@@ -75,7 +76,7 @@ const useInventory = (): UseInventoryHook => {
     return items;
   };
 
-  const updateItem = async (item: AtLeast<Item, 'ID'>) => {
+  const updateItem = async (item: AtLeast<Item, 'ID'>): Promise<void> => {
     await API.updateItem(item);
 
     dispatch({
@@ -95,7 +96,7 @@ const useInventory = (): UseInventoryHook => {
     return state.flatMap(({ children }) => children).find(child => child?.ID === itemId);
   };
 
-  const deleteImage = async (itemId: number, imageId: number) => {
+  const deleteImage = async (itemId: number, imageId: number): Promise<void> => {
     await API.deleteImage(imageId);
 
     dispatch({
@@ -123,7 +124,7 @@ const useInventory = (): UseInventoryHook => {
     return image;
   };
 
-  const deleteItem = async (itemId: number) => {
+  const deleteItem = async (itemId: number): Promise<void> => {
     await API.deleteItem(itemId);
 
     dispatch({
@@ -132,13 +133,15 @@ const useInventory = (): UseInventoryHook => {
     });
   };
 
-  const addItem = async (item: Partial<Item>) => {
+  const addItem = async (item: Partial<Item>): Promise<Item> => {
     const response = await API.addItem(item);
 
     dispatch({
       type: 'ADD_ITEM',
       payload: response
     });
+
+    return response;
   };
 
   const addChildItem = async (
@@ -157,6 +160,18 @@ const useInventory = (): UseInventoryHook => {
     });
   };
 
+  const retireItem = async (itemId: number, retiredDate: Date | null): Promise<void> => {
+    await API.retireItem(itemId, retiredDate);
+
+    dispatch({
+      type: 'RETIRE',
+      payload: {
+        retiredDate,
+        itemId
+      }
+    });
+  };
+
   return {
     items: state,
     init,
@@ -168,7 +183,8 @@ const useInventory = (): UseInventoryHook => {
     uploadImage,
     deleteItem,
     addItem,
-    addChildItem
+    addChildItem,
+    retireItem
   };
 };
 
