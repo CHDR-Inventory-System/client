@@ -1,3 +1,5 @@
+import type { CancelToken } from 'axios';
+
 export type CreateAccountOptions = {
   firstName: string;
   lastName: string;
@@ -20,11 +22,14 @@ export type User = JWT & {
   verified: boolean;
 };
 
+export type BaseUser = Omit<User, 'token'>;
+
 export type ItemImage = {
   ID: number;
   created: string;
   imagePath: string;
   imageURL: string;
+  itemChild: number;
 };
 
 export type Item = {
@@ -57,6 +62,7 @@ export type Item = {
 
 export type ReservationStatus =
   | 'Approved'
+  | 'Cancelled'
   | 'Checked Out'
   | 'Denied'
   | 'Late'
@@ -66,16 +72,18 @@ export type ReservationStatus =
 
 export type Reservation = {
   ID: number;
-  admin: User | null;
+  admin: Omit<User, 'token'> | null;
   created: string;
   endDateTime: string;
   item: Item;
   startDateTime: string;
   status: ReservationStatus;
-  user: User;
+  user: Omit<User, 'token'>;
 };
 
-export type ImageFormData = {
-  base64ImageData: string;
-  name: string;
+export type ImageUploadParams = {
+  itemId: number;
+  image: File;
+  cancelToken?: CancelToken;
+  onUploadProgress?: (event: ProgressEvent<EventTarget>) => void;
 };

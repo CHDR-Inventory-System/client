@@ -1,6 +1,15 @@
 import axios from 'axios';
-import { User, CreateAccountOptions } from '../types/API';
+import {
+  User,
+  CreateAccountOptions,
+  Item,
+  Reservation,
+  ItemImage,
+  ImageUploadParams,
+  BaseUser
+} from '../types/API';
 import APIError from './APIError';
+import { AtLeast } from './types';
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
@@ -49,6 +58,82 @@ class API {
       email
     });
 
+    return response.data;
+  }
+
+  static async getAllUsers(): Promise<BaseUser[]> {
+    const response = await axios.get('/users/');
+    return response.data;
+  }
+
+  static async getAllItems(): Promise<Item[]> {
+    const response = await axios.get('/inventory/');
+    return response.data;
+  }
+
+  static async getItem(id: number): Promise<Item> {
+    const response = await axios.get(`/inventory/${id}`);
+    return response.data;
+  }
+
+  static async addItem(item: Partial<Item>): Promise<Item> {
+    const response = await axios.post('/inventory/add', { ...item });
+    return response.data;
+  }
+
+  static async addChildItem(
+    itemId: number,
+    item: AtLeast<Item, 'name' | 'type'>
+  ): Promise<Item> {
+    const response = await axios.post(`/inventory/${itemId}/addChild`, {
+      ...item
+    });
+    return response.data;
+  }
+
+  static async deleteItem(id: number): Promise<void> {
+    const response = await axios.delete(`/inventory/${id}`);
+    return response.data;
+  }
+
+  static async updateItem(item: AtLeast<Item, 'ID'>): Promise<void> {
+    const response = await axios.put(`/inventory/${item.ID}`, {
+      ...item
+    });
+    return response.data;
+  }
+
+  static async getAllReservations(): Promise<Reservation[]> {
+    const response = await axios.get('/reservations/');
+    return response.data;
+  }
+
+  static async uploadImage({
+    itemId,
+    image,
+    onUploadProgress,
+    cancelToken
+  }: ImageUploadParams): Promise<ItemImage> {
+    const formData = new FormData();
+    formData.append('image', image);
+
+    const response = await axios.post(`/inventory/${itemId}/uploadImage`, formData, {
+      onUploadProgress,
+      cancelToken
+    });
+
+    return response.data;
+  }
+
+  static async deleteImage(imageId: number): Promise<void> {
+    const response = await axios.delete(`/inventory/image/${imageId}`);
+    return response.data;
+  }
+
+  static async retireItem(itemId: number, retiredDate: Date | null): Promise<void> {
+    const response = await axios.put(`/inventory/${itemId}/retire`, {
+      date: retiredDate?.toLocaleDateString() || null
+    });
     return response.data;
   }
 }

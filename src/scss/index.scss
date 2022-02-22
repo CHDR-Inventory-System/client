@@ -3,23 +3,23 @@
 
 @font-face {
   font-family: 'Gotham-Bold';
-  src: url('../assets/fonts/Gotham-Bold.ttf');
+  src: url('../assets/fonts/Gotham-Bold.woff');
 }
 
 @font-face {
   font-family: 'Gotham-Book';
-  src: url('../assets/fonts/Gotham-Book.ttf');
+  src: url('../assets/fonts/Gotham-Book.woff');
 }
 
 @font-face {
   font-family: 'Gotham-Medium';
-  src: url('../assets/fonts/Gotham-Medium.ttf');
+  src: url('../assets/fonts/Gotham-Medium.woff');
 }
 
 body {
   @include font-fallback('Gotham-Book');
-  color: hsl(0deg, 0%, 15%);
-  background-color: hsl(0, 0%, 98%);
+  color: hsl(0deg, 0%, 30%);
+  background-color: $body-color;
   margin: 0;
 }
 
@@ -33,4 +33,28 @@ a {
   &:hover {
     color: map-get($colors, 'monochromatic-3');
   }
+}
+
+mark {
+  background-color: #ffc069;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: white;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(0, 0%, 50%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(0, 0%, 40%);
 }

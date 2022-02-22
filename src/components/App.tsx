@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { UserProvider } from '../contexts/UserContext';
 import useLoader from '../hooks/loading';
-import Auth from '../pages/Auth';
 import { User } from '../types/API';
-import MainPage from '../pages/MainPage';
+import { InventoryProvider } from '../contexts/InventoryContext';
+
+const MainPage = lazy(() => import('../pages/MainPage'));
+const Auth = lazy(() => import('../pages/Auth'));
+const Dashboard = lazy(() => import('../pages/Dashboard'));
 
 const App = (): JSX.Element | null => {
   const [initialUserValue, setInitialUserValue] = useState<User | null>(null);
@@ -40,14 +43,38 @@ const App = (): JSX.Element | null => {
   }
 
   return (
-    <UserProvider initialValue={initialUserValue}>
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/auth" element={<Auth />} />
-        </Routes>
-      </HashRouter>
-    </UserProvider>
+    <InventoryProvider>
+      <UserProvider initialValue={initialUserValue}>
+        <HashRouter>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Suspense fallback={<div />}>
+                  <MainPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/auth"
+              element={
+                <Suspense fallback={<div />}>
+                  <Auth />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <Suspense fallback={<div />}>
+                  <Dashboard />
+                </Suspense>
+              }
+            />
+          </Routes>
+        </HashRouter>
+      </UserProvider>
+    </InventoryProvider>
   );
 };
 

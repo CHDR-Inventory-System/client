@@ -15,6 +15,10 @@
   justify-content: center;
   align-items: center;
 
+  &:hover {
+    color: map-get($colors, 'monochromatic-2');
+  }
+
   &.ant-btn-primary {
     background-color: map-get($colors, 'monochromatic-1');
 
@@ -24,7 +28,12 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &.ant-btn-link,
+  &.ant-btn-link:hover,
+  &.ant-btn-link:focus,
+  &.ant-btn-ghost:hover,
+  &.ant-btn-ghost:focus {
     color: map-get($colors, 'monochromatic-3');
   }
 
@@ -33,11 +42,25 @@
     background-color: hsl(0deg, 0%, 60%);
     color: white;
   }
+
+  &.ant-btn-dangerous:not(:disabled) {
+    $danger-color: map-get($colors, 'danger');
+    color: $danger-color;
+    background-color: lighten($danger-color, 50%);
+
+    &:hover {
+      background-color: $danger-color;
+      color: lighten($danger-color, 50%);
+    }
+  }
 }
 
+.ant-form-item-explain-success,
 .ant-form-item-explain.ant-form-item-explain-connected,
 .ant-form-item-explain-error {
+  margin-top: 0.2em;
   margin-bottom: 0.5em;
+  margin-left: 2px;
 }
 
 // Refers to inputs as well as the password input in a form
@@ -45,10 +68,10 @@
 .ant-btn.ant-btn.ant-btn-primary,
 .ant-input-affix-wrapper {
   border-radius: 6px;
+  box-shadow: none !important;
 
   &:focus {
     border-color: map-get($colors, 'monochromatic-3');
-    box-shadow: none !important;
   }
 
   &:hover {
@@ -72,7 +95,9 @@
   @include font-fallback('Gotham-Medium');
 }
 
-.ant-input {
+.ant-input,
+.ant-input-affix-wrapper {
+  padding: 5px 11px;
   // Increase the input size on mobile to prevent the device
   // from zooming into the field by default
   @media screen and (max-width: 500px) {
@@ -97,8 +122,75 @@
   @include font-fallback('Gotham-Medium');
 }
 
+.ant-avatar {
+  @include font-fallback('Gotham-Medium');
+
+  background-color: map-get($colors, 'monochromatic-1');
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.25em;
+
+  @media screen and (max-width: 600px) {
+    width: 32px;
+    height: 32px;
+    font-size: 1em;
+  }
+}
+
+.ant-tabs-tab {
+  @include font-fallback('Gotham-Medium');
+
+  &:hover {
+    color: map-get($colors, 'monochromatic-3');
+  }
+
+  &.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: map-get($colors, 'monochromatic-3');
+    text-shadow: 0 0 0.25px map-get($colors, 'monochromatic-3');
+  }
+}
+
+.ant-tabs-ink-bar,
+.ant-tabs-ink-bar-animated {
+  background: map-get($colors, 'monochromatic-3');
+}
+
+.ant-dropdown-menu-item {
+  padding: 8px 12px;
+  color: hsl(0deg, 0%, 30%);
+}
+
+.ant-modal-body {
+  overflow: auto;
+  max-height: 550px;
+}
+
+.ant-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+}
+
 .ant-modal-content {
-  border-radius: 4px;
+  border-radius: 6px;
+}
+
+.ant-modal-confirm-btns {
+  display: flex;
+}
+
+.ant-modal-header,
+.ant-modal-footer {
+  border: none;
+}
+
+.ant-modal-footer {
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 .ant-modal-confirm .ant-modal-confirm-btns {
@@ -106,8 +198,120 @@
   flex-direction: row;
 }
 
-// Titles for Ant's modal and notification
+.ant-drawer-title,
+.ant-modal-title {
+  font-size: 1.5em;
+}
+
+.ant-modal-header {
+  padding-top: 2em;
+  border-radius: 6px 6px 0 0;
+}
+
+.ant-modal-confirm-content {
+  b {
+    @include font-fallback('Gotham-Medium');
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.ant-dropdown-menu-item-disabled {
+  color: rgba(0, 0, 0, 25%);
+}
+
+.ant-table-filter-dropdown {
+  @media screen and (min-width: 700px) {
+    min-width: 250px;
+  }
+}
+
+// Applies to Menu item options and Select item options
+.ant-select-item:hover,
+.ant-dropdown-menu-item:hover,
+.ant-select-item.ant-select-item-option-selected,
+.ant-dropdown-menu-item-selected {
+  background-color: map-get($colors, 'monochromatic-5');
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: map-get($colors, 'monochromatic-3');
+  border-color: map-get($colors, 'monochromatic-3');
+}
+
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: map-get($colors, 'monochromatic-3');
+}
+
+// prettier-ignore
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: map-get($colors, 'monochromatic-3');
+  box-shadow: none;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-radius: 4px;
+}
+
+// Hide the tooltip on non-desktop devices since it can
+// sometimes get in the way of certain content
+.ant-tooltip {
+  @media screen and (max-width: 800px) {
+    display: none;
+  }
+}
+
+.ant-drawer-title,
+.ant-modal-title,
 .ant-notification-notice-message,
 .ant-modal-confirm-title {
   @include font-fallback('Gotham-Medium');
+}
+
+.ant-picker-focused {
+  box-shadow: none;
+  border-color: map-get($colors, 'monochromatic-2');
+}
+
+.ant-picker {
+  width: 100%;
+  padding: 6px 11px;
+  border-radius: 6px;
+
+  &:hover {
+    border-color: map-get($colors, 'monochromatic-2');
+  }
+}
+
+.ant-drawer-header {
+  border-bottom: none;
+}
+
+.ant-select-selector {
+  // Important is needed here because Ant has has a ridiculously long selector
+  // with high specificity
+  box-shadow: none !important;
+}
+
+.ant-picker-today-btn {
+  color: map-get($colors, 'monochromatic-2');
+
+  &:hover {
+    color: map-get($colors, 'monochromatic-3');
+  }
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner:before {
+  border-color: map-get($colors, 'monochromatic-2');
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: map-get($colors, 'monochromatic-2');
+}
+
+// Removes the gray background color when a table's column is selected
+td.ant-table-column-sort {
+  background: unset;
 }

@@ -1,0 +1,101 @@
+@import './variables';
+
+.inventory-table {
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  // Hides the expand icon to the left of the row if
+  // the item in the row doesn't have any children
+  .no-children button.ant-table-row-expand-icon {
+    display: none;
+  }
+
+  // Hides the expand button for child items in the table since
+  // children won't have children
+  .indent-level-1 + .ant-table-row-expand-icon {
+    display: none;
+  }
+
+  .status-available .row-status {
+    color: map-get($colors, 'success');
+  }
+
+  .status-unavailable .row-status {
+    color: map-get($colors, 'danger');
+  }
+
+  .row-status button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .empty-inventory-list {
+    padding: 2em 0;
+
+    p {
+      margin-top: 1em;
+      color: map-get($colors, 'text-muted');
+    }
+  }
+
+  .table-loading-icon {
+    animation: spin 1s forwards linear infinite;
+    color: map-get($colors, 'monochromatic-3');
+  }
+
+  .ant-spin-nested-loading {
+    overflow: hidden;
+  }
+
+  .ant-table-row.ant-table-row-level-1,
+  .ant-table-row.ant-table-row-level-1 td {
+    background-color: lighten(map-get($colors, 'monochromatic-5'), 2%);
+    border-bottom: 1px solid hsl(0, 0%, 89%);
+  }
+
+  .row-action {
+    border: 1px solid hsl(0deg, 0%, 80%);
+    padding: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+
+    svg {
+      width: 0.8em;
+      height: 0.8em;
+      fill: hsl(0deg, 0%, 40%);
+    }
+  }
+
+  .add-child-button {
+    width: 100%;
+    border-radius: 0;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    color: map-get($colors, 'monochromatic-2');
+    background-color: map-get($colors, 'monochromatic-5');
+
+    &:hover {
+      color: map-get($colors, 'monochromatic-5');
+      background-color: map-get($colors, 'monochromatic-2');
+    }
+  }
+
+  .ant-table-expanded-row-fixed {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  // Applies to the "Add child item" button
+  .ant-table-tbody > tr > td[colspan='8'] {
+    padding: 0;
+  }
+}
