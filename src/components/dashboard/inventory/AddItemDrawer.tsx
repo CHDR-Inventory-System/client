@@ -138,6 +138,8 @@ const AddItemDrawer = ({
   };
 
   useEffect(() => {
+    form.resetFields();
+
     if (parentItem) {
       form.setFieldsValue({
         location: parentItem.location,

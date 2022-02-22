@@ -75,7 +75,7 @@
   }
 
   &:hover {
-    border-color: map-get($colors, 'monochromatic-3');
+    border-color: map-get($colors, 'monochromatic-3') !important;
   }
 }
 
@@ -95,8 +95,9 @@
   @include font-fallback('Gotham-Medium');
 }
 
-.ant-input {
-  padding: 6px 11px;
+.ant-input,
+.ant-input-affix-wrapper {
+  padding: 5px 11px;
   // Increase the input size on mobile to prevent the device
   // from zooming into the field by default
   @media screen and (max-width: 500px) {
@@ -292,4 +293,25 @@
   // Important is needed here because Ant has has a ridiculously long selector
   // with high specificity
   box-shadow: none !important;
+}
+
+.ant-picker-today-btn {
+  color: map-get($colors, 'monochromatic-2');
+
+  &:hover {
+    color: map-get($colors, 'monochromatic-3');
+  }
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner:before {
+  border-color: map-get($colors, 'monochromatic-2');
+}
+
+.ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: map-get($colors, 'monochromatic-2');
+}
+
+// Removes the gray background color when a table's column is selected
+td.ant-table-column-sort {
+  background: unset;
 }
