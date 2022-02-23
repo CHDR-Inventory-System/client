@@ -17,6 +17,9 @@ type UseUserHook = {
   readonly state: Readonly<User>;
 };
 
+/**
+ * Handles managing state and API calls for the current user
+ */
 const useUser = (): UseUserHook => {
   const context = useContext(UserContext);
 

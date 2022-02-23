@@ -14,7 +14,7 @@ export type UserAction = UserInitAction | UserLogoutAction;
 const userReducer = (state: User, action: UserAction): User => {
   switch (action.type) {
     case 'LOG_IN':
-      return { ...action.payload };
+      return action.payload;
     case 'LOG_OUT':
       return {} as User;
     default:

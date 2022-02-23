@@ -21,7 +21,7 @@ const Dashboard = (): JSX.Element => {
       <Navbar title="CHDR - Inventory" subTitle="Admin" />
       <AddItemDrawer onClose={closeAddItemDrawer} visible={isAddItemDrawerVisible} />
       <div className="content">
-        <Tabs defaultActiveKey="inventory">
+        <Tabs defaultActiveKey="users">
           <TabPane tab="Inventory" key="inventory">
             <div className="tab-content">
               <div className="table-actions">

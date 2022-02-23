@@ -1,16 +1,6 @@
 @import './variables';
 
 .inventory-table {
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
   // Hides the expand icon to the left of the row if
   // the item in the row doesn't have any children
   .no-children button.ant-table-row-expand-icon {
@@ -35,20 +25,6 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-  }
-
-  .empty-inventory-list {
-    padding: 2em 0;
-
-    p {
-      margin-top: 1em;
-      color: map-get($colors, 'text-muted');
-    }
-  }
-
-  .table-loading-icon {
-    animation: spin 1s forwards linear infinite;
-    color: map-get($colors, 'monochromatic-3');
   }
 
   .ant-spin-nested-loading {
