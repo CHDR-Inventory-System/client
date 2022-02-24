@@ -1,0 +1,73 @@
+@import './variables';
+@import './mixins';
+
+.verify-account {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  header {
+    text-align: center;
+    margin: 3em 1em 1.5em 1em;
+
+    h1 {
+      font-size: 3.5em;
+      margin-bottom: 0.25em;
+      line-height: 1.2;
+    }
+
+    p {
+      color: map-get($colors, 'text-muted');
+    }
+  }
+
+  .verified-card {
+    width: 500px;
+    margin-top: 2em;
+
+    @media screen and (max-width: 650px) {
+      max-width: 90%;
+    }
+
+    &.ant-card {
+      box-shadow: 0px 4px 41px 8px hsla(0deg, 0%, 0%, 0.07);
+      padding: 2em;
+      border-radius: 16px;
+
+      @media screen and (max-width: 500px) {
+        padding: 1.5em;
+      }
+    }
+
+    .ant-card-head {
+      border: none;
+    }
+
+    .ant-card-head-title {
+      @include font-fallback('Gotham-Bold');
+      padding: 8px 0;
+      font-size: 1.5em;
+      padding-bottom: 0;
+      white-space: normal;
+    }
+
+    .ant-card-meta-detail {
+      margin-bottom: 2em;
+    }
+
+    .ant-card-body {
+      padding-bottom: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .ant-alert {
+      margin-bottom: 1em;
+    }
+
+    button[type='submit'] {
+      margin-top: 0.5em;
+      width: 100%;
+    }
+  }
+}

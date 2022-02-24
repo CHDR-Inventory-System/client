@@ -1,20 +1,23 @@
 import { useContext } from 'react';
 import UserContext from '../contexts/UserContext';
 import API from '../util/API';
-import { CreateAccountOptions, User } from '../types/API';
+import type { CreateAccountOptions, User, ResetPasswordOpts } from '../types/API';
 
 type UseUserHook = {
+  readonly state: Readonly<User>;
   /**
    * Makes a call to the API to log a user in. If successful, this also sets
    * the `user` field in {@link AsyncStorage} to the value of the current user.
    *
    * @throws {AxiosError} Will throw an error if login was unsuccessful
    */
-  login: (nid: string, password: string) => Promise<User>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
   createAccount: (opts: CreateAccountOptions) => Promise<void>;
-  resendVerificationEmail: (userId: number, email: string) => Promise<void>;
-  readonly state: Readonly<User>;
+  resendVerificationEmail: (email: string) => Promise<void>;
+  verifyAccount: (userId: number, verificationCode: string) => Promise<void>;
+  sendPasswordResetEmail: (email: string) => Promise<void>;
+  resetPassword: (opts: ResetPasswordOpts) => Promise<void>;
 };
 
 const useUser = (): UseUserHook => {
@@ -29,8 +32,8 @@ const useUser = (): UseUserHook => {
 
   const { state, dispatch } = context;
 
-  const login = async (nid: string, password: string): Promise<User> => {
-    const user = await API.login(nid, password);
+  const login = async (email: string, password: string): Promise<User> => {
+    const user = await API.login(email, password);
 
     localStorage.setItem('user', JSON.stringify(user));
 
@@ -51,11 +54,23 @@ const useUser = (): UseUserHook => {
     await API.createAccount(opts);
   };
 
-  const resendVerificationEmail = async (
+  const verifyAccount = async (
     userId: number,
-    email: string
+    verificationCode: string
   ): Promise<void> => {
-    await API.resendVerificationEmail(userId, email);
+    await API.verifyAccount(userId, verificationCode);
+  };
+
+  const resendVerificationEmail = async (email: string): Promise<void> => {
+    await API.resendVerificationEmail(email);
+  };
+
+  const sendPasswordResetEmail = async (email: string): Promise<void> => {
+    await API.sendPasswordResetEmail(email);
+  };
+
+  const resetPassword = async (opts: ResetPasswordOpts): Promise<void> => {
+    await API.resetPassword(opts);
   };
 
   return {
@@ -63,7 +78,10 @@ const useUser = (): UseUserHook => {
     login,
     logout,
     createAccount,
-    resendVerificationEmail
+    resendVerificationEmail,
+    verifyAccount,
+    sendPasswordResetEmail,
+    resetPassword
   };
 };
 

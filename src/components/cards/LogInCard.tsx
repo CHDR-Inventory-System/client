@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Input, Form, Button, notification } from 'antd';
-import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Credentials } from './types';
+import { CardProps, Credentials } from './types';
 import useUser from '../../hooks/user';
 import useLoader from '../../hooks/loading';
+import VerifyEmailModal from '../modals/VerifyEmailModal';
+import APIError from '../../util/APIError';
 
-type LogInCardProps = {
-  className?: string;
-  description: JSX.Element;
-};
-
-const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
+const LogInCard = ({ className, description }: CardProps): JSX.Element => {
   const [form] = Form.useForm();
+  const [isVerifyModalVisible, setVerifyModalVisible] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const loader = useLoader();
   const user = useUser();
   const navigate = useNavigate();
@@ -20,16 +18,23 @@ const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
   const logIn = async (credentials: Pick<Credentials, 'email' | 'password'>) => {
     const { email, password } = credentials;
 
+    setUserEmail(email);
     loader.startLoading();
 
     try {
-      await user.login(email, password);
+      const response = await user.login(email, password);
+
+      if (!response.verified) {
+        setVerifyModalVisible(true);
+        loader.stopLoading();
+        return;
+      }
 
       loader.stopLoading();
 
       navigate('/');
     } catch (err) {
-      const status = (err as AxiosError).response?.status;
+      const { status } = err as APIError;
       loader.stopLoading();
 
       if (status === 401) {
@@ -40,7 +45,6 @@ const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
         });
       } else {
         notification.error({
-          duration: 0,
           key: 'login-error',
           message: 'Error Logging In',
           description: 'An unexpected error occurred, please try again.'
@@ -51,6 +55,11 @@ const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
 
   return (
     <Card bordered={false} title="Log In With Your Email" className={className}>
+      <VerifyEmailModal
+        email={userEmail}
+        visible={isVerifyModalVisible}
+        onClose={() => setVerifyModalVisible(false)}
+      />
       <Card.Meta description={description} />
       <Form
         form={form}
@@ -87,7 +96,12 @@ const LogInCard = ({ className, description }: LogInCardProps): JSX.Element => {
           <Input.Password enterKeyHint="go" />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={loader.isLoading}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={loader.isLoading}
+            loading={loader.isLoading}
+          >
             Log in
           </Button>
         </Form.Item>

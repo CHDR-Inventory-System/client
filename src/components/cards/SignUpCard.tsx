@@ -6,15 +6,10 @@ import { useFormik } from 'formik';
 import PasswordChecklist from 'react-password-checklist';
 import { AiFillCloseCircle, AiFillCheckCircle } from 'react-icons/ai';
 import { ArgsProps } from 'antd/lib/notification';
-import { Credentials } from './types';
+import { CardProps, Credentials } from './types';
 import useUser from '../../hooks/user';
 import useLoader from '../../hooks/loading';
 import APIError from '../../util/APIError';
-
-type SignUpCardProps = {
-  className?: string;
-  description: JSX.Element;
-};
 
 const userSchema = yup.object({
   email: yup
@@ -37,11 +32,11 @@ const userSchema = yup.object({
     .required('You need to confirm your password')
 });
 
-const SignUpCard = ({ className, description }: SignUpCardProps): JSX.Element => {
+const SignUpCard = ({ className, description }: CardProps): JSX.Element => {
+  const [form] = Form.useForm();
   const [isPasswordValid, setPasswordValid] = useState(false);
   const loader = useLoader();
   const user = useUser();
-  const [form] = Form.useForm();
   const formik = useFormik<Credentials>({
     initialValues: {
       firstName: '',
@@ -103,19 +98,13 @@ const SignUpCard = ({ className, description }: SignUpCardProps): JSX.Element =>
         const errorObject: Partial<ArgsProps> = {
           key: 'sign-up-error',
           message: '',
-          description: '',
-          duration: 0
+          description: ''
         };
 
         switch (status) {
           case 400:
             errorObject.message = 'Invalid Email';
             errorObject.description = 'Please enter a valid email address and try again.';
-            break;
-          case 401:
-            errorObject.message = 'Invalid Credentials';
-            errorObject.description =
-              'You email or password was incorrect, check your credentials and try again.';
             break;
           case 409:
             errorObject.message = 'Email In Use';
@@ -137,7 +126,6 @@ const SignUpCard = ({ className, description }: SignUpCardProps): JSX.Element =>
     loader.stopLoading();
     notification.close('sign-up-error');
     notification.success({
-      duration: 0,
       message: 'Account Created',
       description: 'Check your email for a link to verify your account.'
     });
@@ -194,6 +182,7 @@ const SignUpCard = ({ className, description }: SignUpCardProps): JSX.Element =>
             type="primary"
             htmlType="submit"
             disabled={loader.isLoading}
+            loading={loader.isLoading}
             onClick={() => formik.submitForm()}
           >
             Create account
