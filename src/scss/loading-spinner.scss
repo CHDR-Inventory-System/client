@@ -11,6 +11,11 @@
     }
   }
 
+  &.ant-spin-dot {
+    width: unset;
+    height: unset;
+  }
+
   .loading-icon {
     animation: spin 1s forwards linear infinite;
     color: map-get($colors, 'monochromatic-3');

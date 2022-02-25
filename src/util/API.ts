@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import {
   User,
   CreateAccountOptions,
@@ -7,6 +7,7 @@ import {
   ItemImage,
   ImageUploadParams,
   BaseUser,
+  ResetPasswordOpts,
   UserRole
 } from '../types/API';
 import APIError from './APIError';
@@ -22,8 +23,8 @@ axios.defaults.baseURL =
     : process.env.PROD_API_URL;
 
 axios.interceptors.response.use(
-  response => response,
-  error => {
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
     if (axios.isCancel(error)) {
       // 499 represents a request that was cancelled by the user
       throw new APIError({
@@ -32,14 +33,17 @@ axios.interceptors.response.use(
       });
     }
 
-    throw new APIError(error.response.data);
+    throw new APIError({
+      description: error.response?.data.error || '',
+      status: error.response?.status
+    });
   }
 );
 
 class API {
-  static async login(nid: string, password: string): Promise<User> {
+  static async login(email: string, password: string): Promise<User> {
     const response = await axios.post('/users/login', {
-      nid,
+      email,
       password
     });
 
@@ -47,16 +51,12 @@ class API {
   }
 
   static async createAccount(opts: CreateAccountOptions): Promise<void> {
-    const response = await axios.post('/users/register', {
-      ...opts
-    });
-
+    const response = await axios.post('/users/register', opts);
     return response.data;
   }
 
-  static async resendVerificationEmail(userId: number, email: string): Promise<void> {
+  static async resendVerificationEmail(email: string): Promise<void> {
     const response = await axios.post('/users/resendVerificationEmail', {
-      userId,
       email
     });
 
@@ -141,6 +141,24 @@ class API {
 
   static async updateUserRole(userId: number, role: UserRole): Promise<void> {
     const response = await axios.patch(`/users/${userId}/role`, { role });
+    return response.data;
+  }
+
+  static async verifyAccount(userId: number, verificationCode: string): Promise<void> {
+    const response = await axios.patch('/users/verify', {
+      userId,
+      verificationCode
+    });
+    return response.data;
+  }
+
+  static async sendPasswordResetEmail(email: string): Promise<void> {
+    const response = await axios.post('/users/sendPasswordResetEmail', { email });
+    return response.data;
+  }
+
+  static async resetPassword(opts: ResetPasswordOpts): Promise<void> {
+    const response = await axios.post('/users/resetPassword', opts);
     return response.data;
   }
 }

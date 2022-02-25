@@ -1,6 +1,6 @@
 import '../scss/dashboard.scss';
 import { Button, Tabs } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Navbar from '../components/Navbar';
 import UserTable from '../components/dashboard/UserTable';
@@ -15,6 +15,10 @@ const Dashboard = (): JSX.Element => {
 
   const openAddItemDrawer = () => setAddItemDrawerVisible(true);
   const closeAddItemDrawer = () => setAddItemDrawerVisible(false);
+
+  useEffect(() => {
+    document.title = 'CHDR Inventory - Dashboard';
+  }, []);
 
   return (
     <div className="dashboard">
