@@ -14,11 +14,11 @@ import {
 // Disabled so we don't have to install an extra library just
 // to access this type. It's a dependency of Ant Design
 // eslint-disable-next-line import/no-extraneous-dependencies
-import type { MenuInfo } from 'rc-menu/lib/interface';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineDown, AiOutlineUser, AiOutlineSearch } from 'react-icons/ai';
-import { ColumnsType, ColumnType } from 'antd/lib/table';
-import { FilterDropdownProps } from 'antd/lib/table/interface';
+import type { MenuInfo } from 'rc-menu/lib/interface';
+import type { ColumnsType, ColumnType } from 'antd/lib/table';
+import type { FilterDropdownProps } from 'antd/lib/table/interface';
 import type { BaseUser, UserRole } from '../../types/API';
 import useRegisteredUsers from '../../hooks/registeredUsers';
 import useLoader from '../../hooks/loading';
@@ -256,6 +256,7 @@ const UserTable = (): JSX.Element => {
   return (
     <Card bordered={false}>
       <Table
+        rowKey="ID"
         className="user-table"
         loading={{
           spinning: loader.isLoading,

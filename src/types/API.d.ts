@@ -93,3 +93,24 @@ export type ResetPasswordOpts = {
   password: string;
   verificationCode: string;
 };
+
+export type CreateReservationOpts = {
+  email: string;
+  /**
+   * This refers to the ID of the item in the item table.
+   */
+  item: number;
+  checkoutDate: string;
+  returnDate: string;
+  status: ReservationStatus;
+  adminId: number;
+};
+
+export type UpdateReservationStatusOpts = {
+  reservationId: number;
+  status: ReservationStatus;
+  /**
+   * The ID of the admin who changed the status of this reservation
+   */
+  adminId?: number;
+};
