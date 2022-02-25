@@ -4,7 +4,7 @@ import { Image, Button, Modal, notification } from 'antd';
 import SimpleBar from 'simplebar-react';
 import useInventory from '../../../hooks/inventory';
 import { UseLoadingHook } from '../../../hooks/loading';
-import ImageUploadModal from './ImageUploadModal';
+import ImageUploadModal from '../../modals/ImageUploadModal';
 
 type ItemImageListProps = {
   itemId: number;

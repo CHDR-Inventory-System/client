@@ -195,6 +195,11 @@ class API {
     });
     return response.data;
   }
+
+  static async getReservationsForItem(itemId: number): Promise<Reservation[]> {
+    const response = await axios.get(`/reservations/item/${itemId}`);
+    return response.data;
+  }
 }
 
 export default API;

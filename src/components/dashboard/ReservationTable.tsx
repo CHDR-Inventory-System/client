@@ -239,6 +239,28 @@ const ReservationTable = (): JSX.Element => {
     },
     {
       ellipsis: true,
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
+      filters: STATUSES.map(status => ({
+        value: status,
+        text: status
+      })),
+      className: 'cell-status',
+      onFilter: (value, reservation) => reservation.status.indexOf(value as string) === 0,
+      sorter: (first, second) => first.status.localeCompare(second.status),
+      render: (text: string, row: Reservation) => (
+        <Tooltip placement="top" title="Change this reservation's status">
+          <Dropdown overlay={createStatusMenu(row)} trigger={['click']}>
+            <div>
+              {text} <AiOutlineDown />
+            </div>
+          </Dropdown>
+        </Tooltip>
+      )
+    },
+    {
+      ellipsis: true,
       title: 'Name',
       key: 'userFullName',
       dataIndex: ['user', 'fullName'],
@@ -259,28 +281,6 @@ const ReservationTable = (): JSX.Element => {
       dataIndex: ['user', 'email'],
       sorter: (first, second) => first.user.email.localeCompare(second.user.email),
       ...getColumnSearchProps('user.email', 'user email')
-    },
-    {
-      ellipsis: true,
-      title: 'Status',
-      key: 'status',
-      dataIndex: 'status',
-      filters: STATUSES.map(status => ({
-        value: status,
-        text: status
-      })),
-      className: 'cell-status',
-      onFilter: (value, reservation) => reservation.status.indexOf(value as string) === 0,
-      sorter: (first, second) => first.status.localeCompare(second.status),
-      render: (text: string, row: Reservation) => (
-        <Tooltip placement="left" title="Change this item's status">
-          <Dropdown overlay={createStatusMenu(row)} trigger={['click']}>
-            <div>
-              {text} <AiOutlineDown />
-            </div>
-          </Dropdown>
-        </Tooltip>
-      )
     }
   ];
 
@@ -326,7 +326,8 @@ const ReservationTable = (): JSX.Element => {
         columns={columns}
         pagination={{
           showTotal: renderTableCount,
-          showSizeChanger: true
+          showSizeChanger: true,
+          pageSize: 50
         }}
         scroll={{ x: true }}
       />

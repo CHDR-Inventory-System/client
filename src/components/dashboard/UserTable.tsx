@@ -24,6 +24,7 @@ import useRegisteredUsers from '../../hooks/registeredUsers';
 import useLoader from '../../hooks/loading';
 import LoadingSpinner from '../LoadingSpinner';
 import EmptyTableContent from './EmptyTableContent';
+import useUser from '../../hooks/user';
 
 /**
  * Used to show the current table count along with the
@@ -37,11 +38,16 @@ const USER_ROLES: UserRole[] = ['User', 'Admin', 'Super'];
 const UserTable = (): JSX.Element => {
   const registeredUsers = useRegisteredUsers();
   const loader = useLoader();
+  const currentUser = useUser();
   const searchInputRef = useRef<Input>(null);
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof BaseUser>();
 
   const updateUserRole = async (user: BaseUser, role: UserRole) => {
+    if (currentUser.state.ID === user.ID) {
+      return;
+    }
+
     const previousRole = user.role;
     loader.startLoading();
 
@@ -208,10 +214,18 @@ const UserTable = (): JSX.Element => {
         text: role
       })),
       onFilter: (value, user) => user.role.indexOf(value as string) === 0,
-      render: (text: string, row: BaseUser) => (
-        <Tooltip placement="right" title="Change this user's role">
+      render: (text: string, user: BaseUser) => (
+        <Tooltip
+          placement="right"
+          title={
+            currentUser.state.ID === user.ID
+              ? 'Cannot change your own role'
+              : "Change this user's role"
+          }
+        >
           <Dropdown
-            overlay={createRoleMenu(row)}
+            disabled={currentUser.state.ID === user.ID}
+            overlay={createRoleMenu(user)}
             trigger={['click']}
             className="user-role-dropdown"
           >
@@ -274,7 +288,8 @@ const UserTable = (): JSX.Element => {
         columns={columns}
         pagination={{
           showTotal: renderTableCount,
-          showSizeChanger: true
+          showSizeChanger: true,
+          pageSize: 50
         }}
         scroll={{ x: true }}
       />

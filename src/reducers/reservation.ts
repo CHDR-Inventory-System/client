@@ -25,7 +25,7 @@ const reservationReducer = (
     case 'SET_RESERVATIONS':
       return action.payload;
     case 'ADD_RESERVATION':
-      return state.concat(action.payload);
+      return [action.payload, ...state];
     case 'UPDATE_STATUS':
       return state.map(reservation => {
         if (reservation.ID === action.payload.reservationId) {

@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import moment from 'moment';
 import ReservationContext from '../contexts/ReservationContext';
 import type {
   CreateReservationOpts,
@@ -12,16 +13,15 @@ type UserReservationHook = {
   createReservation: (opts: CreateReservationOpts) => Promise<Reservation>;
   initAllReservations: () => Promise<Reservation[]>;
   updateStatus: (opts: UpdateReservationStatusOpts) => Promise<void>;
+  /**
+   * @param itemId Refers to the ID of the item in the `item` table
+   */
+  getReservationsForItem: (itemId: number) => Promise<Reservation[]>;
 };
 
+// The server returns GMT dates so we need to add 5 hours to convert it to EST
 const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-  });
+  moment(date).add({ hours: 5 }).format('MMM D, YYYY, hh:mm A');
 
 const useReservations = (): UserReservationHook => {
   const context = useContext(ReservationContext);
@@ -38,6 +38,9 @@ const useReservations = (): UserReservationHook => {
   const createReservation = async (opts: CreateReservationOpts): Promise<Reservation> => {
     const reservation = await API.createReservation(opts);
 
+    reservation.startDateTime = formatDate(reservation.startDateTime);
+    reservation.endDateTime = formatDate(reservation.endDateTime);
+
     dispatch({
       type: 'ADD_RESERVATION',
       payload: reservation
@@ -49,9 +52,11 @@ const useReservations = (): UserReservationHook => {
   const initAllReservations = async (): Promise<Reservation[]> => {
     const reservations = await API.getAllReservations();
 
+    reservations.sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
+
     reservations.forEach(reservation => {
       reservation.startDateTime = formatDate(reservation.startDateTime);
-      reservation.endDateTime = formatDate(reservation.startDateTime);
+      reservation.endDateTime = formatDate(reservation.endDateTime);
     });
 
     dispatch({
@@ -74,11 +79,17 @@ const useReservations = (): UserReservationHook => {
     });
   };
 
+  const getReservationsForItem = async (itemId: number): Promise<Reservation[]> => {
+    const reservations = await API.getReservationsForItem(itemId);
+    return reservations;
+  };
+
   return {
     state,
     createReservation,
     initAllReservations,
-    updateStatus
+    updateStatus,
+    getReservationsForItem
   };
 };
 
