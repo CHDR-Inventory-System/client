@@ -27,6 +27,10 @@ h1 {
   @include font-fallback('Gotham-Bold');
 }
 
+b {
+  @include font-fallback('Gotham-Medium');
+}
+
 a {
   color: map-get($colors, 'monochromatic-2');
 

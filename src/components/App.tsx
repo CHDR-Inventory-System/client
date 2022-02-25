@@ -8,6 +8,8 @@ import { InventoryProvider } from '../contexts/InventoryContext';
 const MainPage = lazy(() => import('../pages/MainPage'));
 const Auth = lazy(() => import('../pages/Auth'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
+const VerifyAccountPage = lazy(() => import('../pages/VerifyAccountPage'));
+const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
 
 const App = (): JSX.Element | null => {
   const [initialUserValue, setInitialUserValue] = useState<User | null>(null);
@@ -68,6 +70,22 @@ const App = (): JSX.Element | null => {
               element={
                 <Suspense fallback={<div />}>
                   <Dashboard />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/verify"
+              element={
+                <Suspense fallback={<div />}>
+                  <VerifyAccountPage />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <Suspense fallback={<div />}>
+                  <ResetPasswordPage />
                 </Suspense>
               }
             />

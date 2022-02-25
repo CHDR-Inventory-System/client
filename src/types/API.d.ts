@@ -87,3 +87,9 @@ export type ImageUploadParams = {
   cancelToken?: CancelToken;
   onUploadProgress?: (event: ProgressEvent<EventTarget>) => void;
 };
+
+export type ResetPasswordOpts = {
+  userId: number;
+  password: string;
+  verificationCode: string;
+};
