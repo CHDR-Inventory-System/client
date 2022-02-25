@@ -2,7 +2,7 @@ import '../../../scss/inventory-table.scss';
 import React, { useRef, useState, useEffect } from 'react';
 import { Table, Card, Input, Button, notification } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { AiOutlineSearch, AiOutlineDown, AiOutlineLoading } from 'react-icons/ai';
+import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
 import classNames from 'classnames';
@@ -14,20 +14,9 @@ import EditItemDrawer from './EditItemDrawer';
 import useLoader from '../../../hooks/loading';
 import useInventory from '../../../hooks/inventory';
 import AddItemDrawer from './AddItemDrawer';
+import LoadingSpinner from '../../LoadingSpinner';
+import EmptyTableContent from '../EmptyTableContent';
 import type { Item } from '../../../types/API';
-
-const EmptyInventoryList = (): JSX.Element => (
-  <div className="empty-inventory-list">
-    <BsBoxSeam size={84} />
-    <p>No items in inventory.</p>
-  </div>
-);
-
-const TableLoadingSpinner = (): JSX.Element => (
-  <div className="ant-spin-dot">
-    <AiOutlineLoading size={52} className="table-loading-icon" />
-  </div>
-);
 
 /**
  * Used to show the current table count along with the
@@ -278,11 +267,18 @@ const InventoryTable = (): JSX.Element => {
         rowKey="ID"
         loading={{
           spinning: loader.isLoading,
-          indicator: <TableLoadingSpinner />
+          indicator: <LoadingSpinner />
         }}
         dataSource={inventory.items}
         columns={columns}
-        locale={{ emptyText: <EmptyInventoryList /> }}
+        locale={{
+          emptyText: (
+            <EmptyTableContent
+              icon={<BsBoxSeam size={84} />}
+              text="No items in inventory."
+            />
+          )
+        }}
         pagination={{
           showTotal: renderTableCount,
           showSizeChanger: true

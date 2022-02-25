@@ -20,6 +20,9 @@ type UseUserHook = {
   resetPassword: (opts: ResetPasswordOpts) => Promise<void>;
 };
 
+/**
+ * Handles managing state and API calls for the current user
+ */
 const useUser = (): UseUserHook => {
   const context = useContext(UserContext);
 

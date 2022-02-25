@@ -208,14 +208,8 @@
   border-radius: 6px 6px 0 0;
 }
 
-.ant-modal-confirm-content {
-  b {
-    @include font-fallback('Gotham-Medium');
-  }
-
-  p {
-    margin-bottom: 0;
-  }
+.ant-modal-confirm-content p {
+  margin-bottom: 0;
 }
 
 .ant-dropdown-menu-item-disabled {

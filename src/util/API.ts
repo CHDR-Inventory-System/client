@@ -7,7 +7,8 @@ import {
   ItemImage,
   ImageUploadParams,
   BaseUser,
-  ResetPasswordOpts
+  ResetPasswordOpts,
+  UserRole
 } from '../types/API';
 import APIError from './APIError';
 import { AtLeast } from './types';
@@ -15,6 +16,7 @@ import { AtLeast } from './types';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
+axios.defaults.headers.delete['Content-Type'] = 'application/json';
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'development'
     ? process.env.DEBUG_API_URL
@@ -58,11 +60,6 @@ class API {
       email
     });
 
-    return response.data;
-  }
-
-  static async getAllUsers(): Promise<BaseUser[]> {
-    const response = await axios.get('/users/');
     return response.data;
   }
 
@@ -134,6 +131,16 @@ class API {
     const response = await axios.put(`/inventory/${itemId}/retire`, {
       date: retiredDate?.toLocaleDateString() || null
     });
+    return response.data;
+  }
+
+  static async getAllUsers(): Promise<BaseUser[]> {
+    const response = await axios.get('/users/');
+    return response.data;
+  }
+
+  static async updateUserRole(userId: number, role: UserRole): Promise<void> {
+    const response = await axios.patch(`/users/${userId}/role`, { role });
     return response.data;
   }
 

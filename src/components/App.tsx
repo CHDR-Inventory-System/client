@@ -4,12 +4,58 @@ import { UserProvider } from '../contexts/UserContext';
 import useLoader from '../hooks/loading';
 import { User } from '../types/API';
 import { InventoryProvider } from '../contexts/InventoryContext';
+import { RegisteredUsersProvider } from '../contexts/RegisteredUsers';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
 const Auth = lazy(() => import('../pages/Auth'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 const VerifyAccountPage = lazy(() => import('../pages/VerifyAccountPage'));
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
+
+const routes = (
+  <Routes>
+    <Route
+      path="/"
+      element={
+        <Suspense fallback={<div />}>
+          <MainPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/auth"
+      element={
+        <Suspense fallback={<div />}>
+          <Auth />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/dashboard"
+      element={
+        <Suspense fallback={<div />}>
+          <Dashboard />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/verify"
+      element={
+        <Suspense fallback={<div />}>
+          <VerifyAccountPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/reset-password"
+      element={
+        <Suspense fallback={<div />}>
+          <ResetPasswordPage />
+        </Suspense>
+      }
+    />
+  </Routes>
+);
 
 const App = (): JSX.Element | null => {
   const [initialUserValue, setInitialUserValue] = useState<User | null>(null);
@@ -47,50 +93,9 @@ const App = (): JSX.Element | null => {
   return (
     <InventoryProvider>
       <UserProvider initialValue={initialUserValue}>
-        <HashRouter>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <Suspense fallback={<div />}>
-                  <MainPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/auth"
-              element={
-                <Suspense fallback={<div />}>
-                  <Auth />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <Suspense fallback={<div />}>
-                  <Dashboard />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/verify"
-              element={
-                <Suspense fallback={<div />}>
-                  <VerifyAccountPage />
-                </Suspense>
-              }
-            />
-            <Route
-              path="/reset-password"
-              element={
-                <Suspense fallback={<div />}>
-                  <ResetPasswordPage />
-                </Suspense>
-              }
-            />
-          </Routes>
-        </HashRouter>
+        <RegisteredUsersProvider>
+          <HashRouter>{routes}</HashRouter>
+        </RegisteredUsersProvider>
       </UserProvider>
     </InventoryProvider>
   );

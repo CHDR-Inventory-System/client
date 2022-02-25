@@ -1,0 +1,10 @@
+@import './variables';
+
+.empty-inventory-list {
+  padding: 2em 0;
+
+  p {
+    margin-top: 1em;
+    color: map-get($colors, 'text-muted');
+  }
+}

@@ -1,5 +1,16 @@
+import '../../scss/user-table.scss';
 import React, { useRef, useState, useEffect } from 'react';
-import { Table, Card, Menu, Dropdown, Tooltip, Modal, Input, Button } from 'antd';
+import {
+  Table,
+  Card,
+  Menu,
+  Dropdown,
+  Tooltip,
+  Modal,
+  Input,
+  Button,
+  notification
+} from 'antd';
 // Disabled so we don't have to install an extra library just
 // to access this type. It's a dependency of Ant Design
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -9,8 +20,10 @@ import { AiOutlineDown, AiOutlineUser, AiOutlineSearch } from 'react-icons/ai';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
 import type { BaseUser, UserRole } from '../../types/API';
-import mockUsers from '../../assets/mocks/users.json';
-import API from '../../util/API';
+import useRegisteredUsers from '../../hooks/registeredUsers';
+import useLoader from '../../hooks/loading';
+import LoadingSpinner from '../LoadingSpinner';
+import EmptyTableContent from './EmptyTableContent';
 
 /**
  * Used to show the current table count along with the
@@ -19,26 +32,41 @@ import API from '../../util/API';
 const renderTableCount = (total: number, range: [number, number]) =>
   `${range[0]}-${range[1]} of ${total}`;
 
-const mockDataSource: BaseUser[] = (mockUsers as BaseUser[]).map(user => ({
-  ...user,
-  created: new Date(user.created).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  }),
-  key: user.ID
-}));
+const USER_ROLES: UserRole[] = ['User', 'Admin', 'Super'];
 
 const UserTable = (): JSX.Element => {
+  const registeredUsers = useRegisteredUsers();
+  const loader = useLoader();
+  const searchInputRef = useRef<Input>(null);
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof BaseUser>();
-  const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState<BaseUser[]>(mockDataSource);
-  const searchInputRef = useRef<Input>(null);
 
-  const updateUserRole = (user: BaseUser, role: UserRole) => {
-    // eslint-disable-next-line no-console
-    console.log(`New role => ${role}`, user);
+  const updateUserRole = async (user: BaseUser, role: UserRole) => {
+    const previousRole = user.role;
+    loader.startLoading();
+
+    try {
+      await registeredUsers.updateRole(user.ID, role);
+      notification.success({
+        key: 'update-role-success',
+        message: 'Role Changed',
+        description: (
+          <p>
+            <b>{user.email}</b>&apos;s role was changed from <b>{previousRole}</b> to{' '}
+            <b>{role}</b>
+          </p>
+        )
+      });
+    } catch {
+      notification.error({
+        key: 'update-role-error',
+        message: "Couldn't Change Role",
+        description:
+          "An error occurred while changing this user's role, please try again."
+      });
+    }
+
+    loader.stopLoading();
   };
 
   const handleSearch = (
@@ -73,7 +101,7 @@ const UserTable = (): JSX.Element => {
       centered: true,
       icon: (
         <span className="anticon">
-          <AiOutlineUser color="#000" />
+          <AiOutlineUser color="#000" size={24} />
         </span>
       )
     });
@@ -82,23 +110,19 @@ const UserTable = (): JSX.Element => {
   /**
    * Renders the menu that drops down when a user's role is clicked
    */
-  const createRoleMenu = (user: BaseUser) => {
-    const userRoles: UserRole[] = ['User', 'Admin', 'Super'];
-
-    return (
-      <Menu>
-        {userRoles.map(role => (
-          <Menu.Item
-            key={role}
-            disabled={user.role === role}
-            onClick={(info: MenuInfo) => onMenuItemClick(user, info.key as UserRole)}
-          >
-            {role}
-          </Menu.Item>
-        ))}
-      </Menu>
-    );
-  };
+  const createRoleMenu = (user: BaseUser) => (
+    <Menu>
+      {USER_ROLES.map(role => (
+        <Menu.Item
+          key={role}
+          disabled={user.role === role}
+          onClick={(info: MenuInfo) => onMenuItemClick(user, info.key as UserRole)}
+        >
+          {role}
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
 
   /**
    * Renders the filter search component that renders when the
@@ -146,8 +170,8 @@ const UserTable = (): JSX.Element => {
       if (searchedColumn === dataIndex) {
         return (
           <Highlighter
-            searchWords={[searchedText]}
             autoEscape
+            searchWords={[searchedText]}
             textToHighlight={text ? text.toString() : ''}
           />
         );
@@ -163,6 +187,7 @@ const UserTable = (): JSX.Element => {
       title: 'Name',
       key: 'fullName',
       dataIndex: 'fullName',
+      ...getColumnSearchProps('fullName'),
       sorter: (first, second) => first.fullName.localeCompare(second.fullName)
     },
     {
@@ -178,24 +203,18 @@ const UserTable = (): JSX.Element => {
       dataIndex: 'role',
       sorter: (first, second) => first.role.localeCompare(second.role),
       sortDirections: ['ascend', 'descend'],
-      filters: [
-        {
-          value: 'User',
-          text: 'User'
-        },
-        {
-          value: 'Admin',
-          text: 'Admin'
-        },
-        {
-          value: 'Super',
-          text: 'Super'
-        }
-      ],
+      filters: USER_ROLES.map(role => ({
+        value: role,
+        text: role
+      })),
       onFilter: (value, user) => user.role.indexOf(value as string) === 0,
       render: (text: string, row: BaseUser) => (
-        <Tooltip placement="left" title="Change this user's role">
-          <Dropdown overlay={createRoleMenu(row)} trigger={['click']}>
+        <Tooltip placement="right" title="Change this user's role">
+          <Dropdown
+            overlay={createRoleMenu(row)}
+            trigger={['click']}
+            className="user-role-dropdown"
+          >
             <div>
               {text} <AiOutlineDown />
             </div>
@@ -212,39 +231,45 @@ const UserTable = (): JSX.Element => {
     }
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadUsers = async () => {
-    setLoading(true);
+    loader.startLoading();
 
     try {
-      const allUsers = await API.getAllUsers();
-      const tableDataSource = allUsers.map(user => ({
-        ...user,
-        created: new Date(user.created).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        }),
-        key: user.ID
-      }));
-
-      setTableData(tableDataSource);
-    } catch (err) {
-      // TODO: Catch errors here!!!
+      await registeredUsers.init();
+    } catch {
+      notification.error({
+        duration: 0,
+        key: 'load-error',
+        message: "Couldn't Load Users",
+        description:
+          'An error occurred while loading users. Refresh the page to try again.'
+      });
     }
 
-    setLoading(false);
+    loader.stopLoading();
   };
 
   useEffect(() => {
-    // loadUsers();
+    loadUsers();
   }, []);
 
   return (
     <Card bordered={false}>
       <Table
-        loading={isLoading}
-        dataSource={tableData}
+        className="user-table"
+        loading={{
+          spinning: loader.isLoading,
+          indicator: <LoadingSpinner />
+        }}
+        dataSource={registeredUsers.state}
+        locale={{
+          emptyText: (
+            <EmptyTableContent
+              icon={<AiOutlineUser size={84} />}
+              text="No users to display."
+            />
+          )
+        }}
         columns={columns}
         pagination={{
           showTotal: renderTableCount,
