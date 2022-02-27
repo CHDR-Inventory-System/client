@@ -20,7 +20,7 @@ import { AtLeast } from '../../util/types';
 import useLoader from '../../hooks/loading';
 import APIError from '../../util/APIError';
 import ItemImageList from '../dashboard/inventory/ItemImageList';
-import useDrawer from '../../hooks/useDrawer';
+import useDrawer from '../../hooks/drawer';
 import CreateReservationDrawer from './CreateReservationDrawer';
 
 type EditItemDrawerProps = {

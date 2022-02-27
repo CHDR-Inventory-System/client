@@ -9,6 +9,10 @@
     @include font-fallback('Gotham-Bold');
     font-size: 2em;
 
+    a {
+      color: unset;
+    }
+
     @media screen and (max-width: 600px) {
       font-size: 1.5em;
     }

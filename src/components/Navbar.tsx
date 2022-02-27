@@ -1,6 +1,8 @@
 import '../scss/navbar.scss';
 import React from 'react';
-import { Avatar, PageHeader } from 'antd';
+import { PageHeader } from 'antd';
+import { Link } from 'react-router-dom';
+import ProfileAvatar from './ProfileAvatar';
 
 type NavbarProps = {
   title?: string;
@@ -14,10 +16,10 @@ const Navbar = ({
   subTitle
 }: NavbarProps): JSX.Element => (
   <PageHeader
-    title={title}
+    title={<Link to="/">{title}</Link>}
     className={`navbar ${className}`}
     subTitle={subTitle}
-    extra={[<Avatar key="avatar">JS</Avatar>]}
+    extra={[<ProfileAvatar key="avatar" />]}
   />
 );
 

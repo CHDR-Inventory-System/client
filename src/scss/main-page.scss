@@ -1,0 +1,38 @@
+.main-page {
+  .items {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  .search-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 72%;
+    margin: 1em auto 2em auto;
+
+    h2 {
+      font-size: 1.7em;
+    }
+
+    @media screen and (max-width: 900px) {
+      width: 85%;
+    }
+  }
+
+  .search-input {
+    align-self: center;
+  }
+
+  .empty-inventory-list {
+    margin-top: 5em;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    p {
+      font-size: 1.2em;
+    }
+  }
+}

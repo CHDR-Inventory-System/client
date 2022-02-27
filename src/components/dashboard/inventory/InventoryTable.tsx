@@ -17,7 +17,7 @@ import AddItemDrawer from '../../drawers/AddItemDrawer';
 import LoadingSpinner from '../../LoadingSpinner';
 import EmptyTableContent from '../EmptyTableContent';
 import type { Item } from '../../../types/API';
-import useDrawer from '../../../hooks/useDrawer';
+import useDrawer from '../../../hooks/drawer';
 
 /**
  * Used to show the current table count along with the

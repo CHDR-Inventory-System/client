@@ -20,7 +20,7 @@ import type { MenuInfo } from 'rc-menu/lib/interface';
 import type { ColumnsType, ColumnType } from 'antd/lib/table';
 import type { FilterDropdownProps } from 'antd/lib/table/interface';
 import type { BaseUser, UserRole } from '../../types/API';
-import useRegisteredUsers from '../../hooks/registeredUsers';
+import useRegisteredUsers from '../../hooks/registered-users';
 import useLoader from '../../hooks/loading';
 import LoadingSpinner from '../LoadingSpinner';
 import EmptyTableContent from './EmptyTableContent';

@@ -8,7 +8,7 @@ import UserTable from '../components/dashboard/UserTable';
 import InventoryTable from '../components/dashboard/inventory/InventoryTable';
 import ReservationTable from '../components/dashboard/ReservationTable';
 import AddItemDrawer from '../components/drawers/AddItemDrawer';
-import useDrawer from '../hooks/useDrawer';
+import useDrawer from '../hooks/drawer';
 
 type TabKey = 'inventory' | 'users' | 'reservations';
 
