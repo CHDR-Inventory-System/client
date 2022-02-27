@@ -283,6 +283,7 @@
   border-bottom: none;
 }
 
+.ant-form-item-has-error .ant-picker-focused,
 .ant-select-selector {
   // Important is needed here because Ant has has a ridiculously long selector
   // with high specificity
@@ -308,4 +309,25 @@
 // Removes the gray background color when a table's column is selected
 td.ant-table-column-sort {
   background: unset;
+}
+
+// Need important here because ant uses inline styles that have
+// high specificity
+.ant-drawer-content-wrapper {
+  width: 550px !important;
+
+  @media screen and (max-width: 550px) {
+    width: 100% !important;
+  }
+}
+
+// Applies to the help message underneath the input component
+.ant-form-item-explain.ant-form-item-explain-connected > div[role='alert'] {
+  margin-bottom: 0.5em;
+}
+
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-checked:after,
+.ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: map-get($colors, 'monochromatic-3');
 }

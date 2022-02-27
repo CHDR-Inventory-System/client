@@ -2,54 +2,84 @@ import '../scss/dashboard.scss';
 import { Button, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import UserTable from '../components/dashboard/UserTable';
 import InventoryTable from '../components/dashboard/inventory/InventoryTable';
 import ReservationTable from '../components/dashboard/ReservationTable';
-import AddItemDrawer from '../components/dashboard/inventory/AddItemDrawer';
+import AddItemDrawer from '../components/drawers/AddItemDrawer';
+import useDrawer from '../hooks/useDrawer';
+
+type TabKey = 'inventory' | 'users' | 'reservations';
 
 const { TabPane } = Tabs;
 
 const Dashboard = (): JSX.Element => {
-  const [isAddItemDrawerVisible, setAddItemDrawerVisible] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const openAddItemDrawer = () => setAddItemDrawerVisible(true);
-  const closeAddItemDrawer = () => setAddItemDrawerVisible(false);
+  const [activeTab, setActiveTab] = useState<TabKey>(() => {
+    const tab = (searchParams.get('tab') || 'inventory') as TabKey;
+    return ['inventory', 'users', 'reservations'].includes(tab) ? tab : 'inventory';
+  });
+
+  const drawer = useDrawer({
+    addItem: false,
+    createReservation: false
+  });
+
+  const inventoryTabContent = (
+    <div className="tab-content">
+      <div className="table-actions">
+        <Button
+          type="primary"
+          icon={<AiOutlinePlus />}
+          className="table-action"
+          onClick={() => drawer.open('addItem')}
+        >
+          Add Item
+        </Button>
+      </div>
+      <InventoryTable />
+    </div>
+  );
+
+  const userTabContent = (
+    <div className="tab-content">
+      <UserTable />
+    </div>
+  );
+
+  const reservationTabContent = (
+    <div className="tab-content">
+      <ReservationTable />
+    </div>
+  );
 
   useEffect(() => {
     document.title = 'CHDR Inventory - Dashboard';
   }, []);
 
+  useEffect(() => {
+    setSearchParams({ tab: activeTab }, { replace: true });
+  }, [activeTab]);
+
   return (
     <div className="dashboard">
       <Navbar title="CHDR - Inventory" subTitle="Admin" />
-      <AddItemDrawer onClose={closeAddItemDrawer} visible={isAddItemDrawerVisible} />
+      <AddItemDrawer
+        onClose={() => drawer.close('addItem')}
+        visible={drawer.state.addItem}
+      />
       <div className="content">
-        <Tabs defaultActiveKey="users">
+        <Tabs defaultActiveKey={activeTab} onChange={key => setActiveTab(key as TabKey)}>
           <TabPane tab="Inventory" key="inventory">
-            <div className="tab-content">
-              <div className="table-actions">
-                <Button
-                  type="primary"
-                  icon={<AiOutlinePlus />}
-                  className="table-action"
-                  onClick={openAddItemDrawer}
-                >
-                  Add Item
-                </Button>
-              </div>
-              <InventoryTable />
-            </div>
+            {inventoryTabContent}
           </TabPane>
           <TabPane tab="Users" key="users">
-            <div className="tab-content">
-              <UserTable />
-            </div>
+            {userTabContent}
           </TabPane>
           <TabPane tab="Reservations" key="reservations">
-            <div className="tab-content">
-              <ReservationTable />
-            </div>
+            {reservationTabContent}
           </TabPane>
         </Tabs>
       </div>

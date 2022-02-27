@@ -1,26 +1,32 @@
-import '../../../scss/add-item-drawer.scss';
-import React, { useEffect } from 'react';
+import '../../scss/edit-item-drawer.scss';
+import React, { useEffect, useMemo } from 'react';
 import {
-  Button,
-  Drawer,
   Form,
   Input,
   Select,
   DatePicker,
   Divider,
-  notification
+  Button,
+  notification,
+  Drawer,
+  Modal
 } from 'antd';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Item } from '../../../types/API';
-import useLoader from '../../../hooks/loading';
-import APIError from '../../../util/APIError';
-import useInventory from '../../../hooks/inventory';
+import moment from 'moment';
+import { Item } from '../../types/API';
+import useInventory from '../../hooks/inventory';
+import { AtLeast } from '../../util/types';
+import useLoader from '../../hooks/loading';
+import APIError from '../../util/APIError';
+import ItemImageList from '../dashboard/inventory/ItemImageList';
+import useDrawer from '../../hooks/useDrawer';
+import CreateReservationDrawer from './CreateReservationDrawer';
 
-type AddItemDrawerProps = {
+type EditItemDrawerProps = {
   visible: boolean;
   onClose: () => void;
-  parentItem?: Item;
+  itemId: number;
 };
 
 const itemSchema = yup.object({
@@ -31,8 +37,6 @@ const itemSchema = yup.object({
   location: yup.string().trim().required('Location is required'),
   type: yup.string().trim().required('Type is required'),
   serial: yup.string().trim().optional().nullable(true),
-  available: yup.boolean().required('Availability is required'),
-  moveable: yup.boolean().required('Movability is required'),
   quantity: yup
     .number()
     .required('Quantity is required')
@@ -52,53 +56,47 @@ const itemSchema = yup.object({
     })
 });
 
-const AddItemDrawer = ({
-  onClose,
+const renderDropdownWithMessage = (menuElement: React.ReactElement, message: string) => (
+  <div>
+    {menuElement}
+    <Divider style={{ margin: '4px 0' }} />
+    <p className="select-menu-details">{message}</p>
+  </div>
+);
+
+const EditItemDrawer = ({
   visible,
-  parentItem
-}: AddItemDrawerProps): JSX.Element => {
+  onClose,
+  itemId
+}: EditItemDrawerProps): JSX.Element | null => {
+  const inventory = useInventory();
+  // In this case, the parent that renders the component makes sure that the
+  // id of the item is always valid so we can safely cast to Item to get
+  // rid of the undefined type.
+  const item = useMemo(() => inventory.getItem(itemId), [itemId]) as Item;
   const [form] = Form.useForm();
-  const formik = useFormik<Partial<Item>>({
-    initialValues: {
-      location: parentItem?.location,
-      barcode: parentItem?.barcode,
-      quantity: parentItem?.quantity,
-      available: parentItem?.available,
-      moveable: parentItem?.moveable
-    },
+  const drawer = useDrawer({ reservation: false });
+  const formik = useFormik<Item>({
+    initialValues: item || ({} as Item),
     enableReinitialize: true,
-    onSubmit: values => addItem(values)
+    onSubmit: values => updateItem(values)
   });
   const loader = useLoader();
-  const inventory = useInventory();
 
-  const renderDropdownWithMessage = (menu: React.ReactElement, message: string) => (
-    <div>
-      {menu}
-      <Divider style={{ margin: '4px 0' }} />
-      <p className="select-menu-details">{message}</p>
-    </div>
-  );
-
-  const addItem = async (item: Partial<Item>) => {
+  const updateItem = async (values: Item) => {
     loader.startLoading();
 
     // Reset all errors in the form
     form.setFields(
-      Object.keys(item).map(key => ({
+      Object.keys(values).map(key => ({
         name: key,
         errors: []
       }))
     );
 
     try {
-      const parsedItem = await itemSchema.validate(item, { abortEarly: false });
-
-      if (parentItem) {
-        await inventory.addChildItem(parentItem.ID, parentItem.item, parsedItem);
-      } else {
-        await inventory.addItem(parsedItem);
-      }
+      const parsedItem = itemSchema.validateSync(values, { abortEarly: false });
+      await inventory.updateItem(parsedItem as AtLeast<Item, 'ID'>);
     } catch (err) {
       if (err instanceof yup.ValidationError) {
         const validationError = err as yup.ValidationError;
@@ -116,9 +114,9 @@ const AddItemDrawer = ({
       if (err instanceof APIError) {
         notification.error({
           duration: 5,
-          key: 'error-adding',
-          message: 'Error Adding',
-          description: 'An error occurred while adding this item. Please try again.'
+          key: 'error-updating',
+          message: 'Error Updating',
+          description: 'An error occurred while updating this item. Please try again.'
         });
       }
 
@@ -126,59 +124,138 @@ const AddItemDrawer = ({
       return;
     }
 
-    loader.stopLoading();
-
     notification.success({
-      key: 'item-added',
-      message: 'New Item Added',
-      description: `${item.name} was added to inventory.`
+      key: 'item-updated',
+      message: 'Item Updated',
+      description: `${item.name} was updated`
     });
 
     onClose();
+    loader.stopLoading();
+  };
+
+  const deleteItem = async () => {
+    loader.startLoading();
+
+    try {
+      await inventory.deleteItem(item.ID);
+    } catch (err) {
+      loader.stopLoading();
+      notification.error({
+        key: 'delete-error',
+        message: 'Error Deleting Item',
+        description: 'An error occurred while deleting this item, please try again.'
+      });
+      return;
+    }
+
+    notification.success({
+      key: 'delete-success',
+      message: 'Item Deleted',
+      description: `${item.name} was successfully deleted.`
+    });
+
+    loader.stopLoading();
+    onClose();
+  };
+
+  const handleItemRetire = async () => {
+    const wasRetired = !!item.retiredDateTime;
+    loader.startLoading();
+
+    try {
+      await inventory.retireItem(item.ID, wasRetired ? null : new Date());
+    } catch (err) {
+      loader.stopLoading();
+      notification.error({
+        key: 'retire-error',
+        message: 'Unexpected Error',
+        description: 'An error occurred while performing this action, please try again.'
+      });
+      return;
+    }
+
+    notification.success({
+      key: 'retire-success',
+      message: wasRetired ? 'Undo Retire' : 'Item Retired',
+      description: wasRetired
+        ? `${item.name} is no longer marked as "retired".`
+        : `${item.name} is now marked as "retired"`
+    });
+
+    loader.stopLoading();
+  };
+
+  const confirmDelete = () => {
+    Modal.confirm({
+      centered: true,
+      maskStyle: {
+        backgroundColor: 'rgba(0, 0, 0, 50%)'
+      },
+      title: 'Delete Item',
+      content: (
+        <p>
+          Are you sure you want to delete <b>{item.name}</b>? This action cannot be
+          undone.
+        </p>
+      ),
+      okText: 'Delete',
+      okButtonProps: {
+        className: 'ant-btn-dangerous'
+      },
+      onOk: () => deleteItem()
+    });
+  };
+
+  const confirmRetire = () => {
+    Modal.confirm({
+      centered: true,
+      maskStyle: {
+        backgroundColor: 'rgba(0, 0, 0, 50%)'
+      },
+      title: item.retiredDateTime ? 'Undo Retire' : 'Retire Item',
+      content: (
+        <p>
+          Are you sure you want to {item.retiredDateTime ? 'undo retiring' : 'retire'}{' '}
+          <b>{item.name}</b>? Retired items cannot be checked out and will not appear in
+          user searches (the item will not be deleted). This action can always be undone
+          later.
+        </p>
+      ),
+      okText: item.retiredDateTime ? 'Undo Retire' : 'Retire',
+      onOk: () => handleItemRetire()
+    });
   };
 
   useEffect(() => {
-    form.resetFields();
-
-    if (parentItem) {
-      form.setFieldsValue({
-        location: parentItem.location,
-        barcode: parentItem.barcode,
-        quantity: parentItem.quantity,
-        available: parentItem.available,
-        moveable: parentItem.moveable
-      });
-    }
-  }, [parentItem]);
+    form.setFieldsValue(item);
+  }, [item]);
 
   return (
     <Drawer
-      title={parentItem ? 'Add Child Item' : 'Add Item'}
-      className="add-item-drawer"
       maskClosable
-      destroyOnClose
-      visible={visible}
+      title={`Edit - ${item.name}`}
       onClose={onClose}
+      visible={visible}
       placement="right"
+      className="edit-item-drawer"
       extra={
         <Button
           type="primary"
+          onClick={() => formik.submitForm()}
           loading={loader.isLoading}
           disabled={loader.isLoading}
-          onClick={() => formik.submitForm()}
         >
           Save
         </Button>
       }
     >
-      <div className="drawer-header-message">
-        {!!parentItem && (
-          <p>
-            This will add a child item to the parent: <span>{parentItem.name}</span>
-          </p>
-        )}
-        <p>You will be able to upload images after this item is created.</p>
-      </div>
+      <CreateReservationDrawer
+        item={item}
+        visible={drawer.state.reservation}
+        onClose={() => drawer.close('reservation')}
+      />
+      <ItemImageList itemId={item.ID} loader={loader} />
       <Form layout="vertical" form={form}>
         <Form.Item required label="Name" name="name">
           <Input type="text" onChange={formik.handleChange('name')} />
@@ -191,7 +268,7 @@ const AddItemDrawer = ({
           label="Location"
           name="location"
           help={
-            parentItem
+            !item.main
               ? 'This value can only be updated through the parent item.'
               : undefined
           }
@@ -199,7 +276,7 @@ const AddItemDrawer = ({
           <Input
             type="text"
             onChange={formik.handleChange('location')}
-            disabled={!!parentItem}
+            disabled={!item.main}
           />
         </Form.Item>
         <Form.Item
@@ -207,7 +284,7 @@ const AddItemDrawer = ({
           label="Barcode"
           name="barcode"
           help={
-            parentItem
+            !item.main
               ? 'This value can only be updated through the parent item.'
               : undefined
           }
@@ -215,7 +292,7 @@ const AddItemDrawer = ({
           <Input
             type="text"
             onChange={formik.handleChange('barcode')}
-            disabled={!!parentItem}
+            disabled={!item.main}
           />
         </Form.Item>
         <Form.Item
@@ -223,7 +300,7 @@ const AddItemDrawer = ({
           label="Quantity"
           name="quantity"
           help={
-            parentItem
+            !item.main
               ? 'This value can only be updated through the parent item.'
               : undefined
           }
@@ -232,7 +309,7 @@ const AddItemDrawer = ({
             type="number"
             onChange={formik.handleChange('quantity')}
             min={0}
-            disabled={!!parentItem}
+            disabled={!item.main}
           />
         </Form.Item>
 
@@ -241,13 +318,13 @@ const AddItemDrawer = ({
           label="Availability"
           name="available"
           help={
-            parentItem
+            !item.main
               ? 'This value can only be updated through the parent item.'
               : undefined
           }
         >
           <Select
-            disabled={!!parentItem}
+            disabled={!item.main}
             onChange={(value: boolean) => formik.setFieldValue('available', value)}
             dropdownRender={menu =>
               renderDropdownWithMessage(
@@ -271,13 +348,13 @@ const AddItemDrawer = ({
           label="Movable"
           name="moveable"
           help={
-            parentItem
+            !item.main
               ? 'This value can only be updated through the parent item.'
               : undefined
           }
         >
           <Select
-            disabled={!!parentItem}
+            disabled={!item.main}
             onChange={(value: boolean) => formik.setFieldValue('moveable', value)}
             dropdownRender={menu =>
               renderDropdownWithMessage(
@@ -301,6 +378,7 @@ const AddItemDrawer = ({
             onChange={value =>
               formik.setFieldValue('purchaseDate', value?.format() || null)
             }
+            defaultValue={(item.purchaseDate && moment(item.purchaseDate)) || undefined}
           />
         </Form.Item>
 
@@ -324,9 +402,38 @@ const AddItemDrawer = ({
             prefix="$"
           />
         </Form.Item>
+
+        <div className="form-actions">
+          <Button
+            danger
+            className="form-action-button"
+            disabled={loader.isLoading}
+            onClick={confirmDelete}
+          >
+            Delete
+          </Button>
+          {item.main && (
+            <Button
+              type="primary"
+              className="form-action-button"
+              disabled={loader.isLoading}
+              onClick={confirmRetire}
+            >
+              {item.retiredDateTime ? 'Undo Retire' : 'Retire'}
+            </Button>
+          )}
+          <Button
+            type="primary"
+            className="form-action-button"
+            disabled={loader.isLoading || !!item.retiredDateTime}
+            onClick={() => drawer.open('reservation')}
+          >
+            Create Reservation
+          </Button>
+        </div>
       </Form>
     </Drawer>
   );
 };
 
-export default AddItemDrawer;
+export default EditItemDrawer;

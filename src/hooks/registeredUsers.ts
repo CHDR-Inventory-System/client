@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import moment from 'moment';
 import RegisteredUsersContext from '../contexts/RegisteredUsers';
 import API from '../util/API';
 import { BaseUser, UserRole } from '../types/API';
@@ -29,14 +30,10 @@ const useRegisteredUsers = (): UseRegisteredUsersHook => {
     const users = await API.getAllUsers();
 
     users.forEach(user => {
-      user.created = new Date(user.created).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour12: true,
-        hour: 'numeric',
-        minute: 'numeric'
-      });
+      // The server returns GMT dates so we need to add 5 hours to convert it to EST
+      user.created = moment(user.created)
+        .add({ hours: 5 })
+        .format('MMM D, YYYY, hh:mm A');
     });
 
     dispatch({

@@ -1,49 +1,95 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Table, Card, Input, Button, Menu, Modal, Tooltip, Dropdown } from 'antd';
-// Disabled so we don't have to install an extra library just
-// to access this type. It's a dependency of Ant Design
+import {
+  Table,
+  Card,
+  Input,
+  Button,
+  Menu,
+  Modal,
+  Tooltip,
+  Dropdown,
+  notification
+} from 'antd';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import Highlighter from 'react-highlight-words';
-import { AiOutlineDown, AiOutlineWarning, AiOutlineSearch } from 'react-icons/ai';
+import {
+  AiOutlineDown,
+  AiOutlineWarning,
+  AiOutlineSearch,
+  AiOutlineCalendar
+} from 'react-icons/ai';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
 // lodash is needed to filter values from the table since it has
 // a nested data structure: https://stackoverflow.com/a/61742923/9124220
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
-import mockReservations from '../../assets/mocks/reservations.json';
-import API from '../../util/API';
 import type { Reservation, ReservationStatus } from '../../types/API';
+import useReservations from '../../hooks/reservation';
+import useLoader from '../../hooks/loading';
+import LoadingSpinner from '../LoadingSpinner';
+import EmptyTableContent from './EmptyTableContent';
+import useUser from '../../hooks/user';
 
-const formatDate = (date: string) =>
-  new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-  });
+const createDateSorter = (first: Reservation, second: Reservation) =>
+  Date.parse(first.endDateTime) - Date.parse(second.endDateTime);
 
-const renderDate = (value: string) => <span>{formatDate(value)}</span>;
-
-const createDateSorter = (first: Reservation, second: Reservation) => {
-  return Date.parse(first.endDateTime) - Date.parse(second.endDateTime);
-};
+const STATUSES: ReservationStatus[] = [
+  'Approved',
+  'Cancelled',
+  'Checked Out',
+  'Denied',
+  'Late',
+  'Missed',
+  'Pending',
+  'Returned'
+];
 
 const ReservationTable = (): JSX.Element => {
+  const reservations = useReservations();
+  const loader = useLoader();
+  const user = useUser();
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState(mockReservations as Reservation[]);
   const searchInputRef = useRef<Input>(null);
 
-  const updateReservationStatus = (
+  const updateReservationStatus = async (
     reservation: Reservation,
     status: ReservationStatus
   ) => {
-    // eslint-disable-next-line no-console
-    console.log(`New reservation status => ${status}`, reservation);
+    const previousStatus = reservation.status;
+    loader.startLoading();
+
+    try {
+      await reservations.updateStatus({
+        status,
+        reservationId: reservation.ID,
+        adminId: user.state.ID
+      });
+
+      notification.success({
+        key: 'reservation-update-success',
+        message: 'Status Updated',
+        description: (
+          <p>
+            Status for <b>{reservation.item.name}</b> was changed from{' '}
+            <b>{previousStatus}</b> to <b>{status}</b>.
+          </p>
+        )
+      });
+    } catch {
+      notification.success({
+        key: 'reservation-update-error',
+        message: 'Error Updating Status',
+        description: `
+          An error occurred while updating this reservation's status,
+          please try again.
+        `
+      });
+    }
+
+    loader.stopLoading();
   };
 
   const handleSearch = (searchQuery: string, confirm: () => void, dataIndex: string) => {
@@ -88,34 +134,21 @@ const ReservationTable = (): JSX.Element => {
   };
 
   // Renders the menu that drops down when a reservation's status
-  const createStatusMenu = (reservation: Reservation) => {
-    const statuses: ReservationStatus[] = [
-      'Approved',
-      'Cancelled',
-      'Checked Out',
-      'Denied',
-      'Late',
-      'Missed',
-      'Pending',
-      'Returned'
-    ];
-
-    return (
-      <Menu>
-        {statuses.map(status => (
-          <Menu.Item
-            key={status}
-            disabled={reservation.status === status}
-            onClick={(info: MenuInfo) => {
-              onMenuItemClick(reservation, info.key as ReservationStatus);
-            }}
-          >
-            {status}
-          </Menu.Item>
-        ))}
-      </Menu>
-    );
-  };
+  const createStatusMenu = (reservation: Reservation) => (
+    <Menu>
+      {STATUSES.map(status => (
+        <Menu.Item
+          key={status}
+          disabled={reservation.status === status}
+          onClick={(info: MenuInfo) => {
+            onMenuItemClick(reservation, info.key as ReservationStatus);
+          }}
+        >
+          {status}
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
 
   const createFilterDropdown = (
     dataIndex: string,
@@ -189,72 +222,35 @@ const ReservationTable = (): JSX.Element => {
 
   const columns: ColumnsType<Reservation> = [
     {
-      title: 'Item Name',
-      key: 'itemName',
       ellipsis: true,
-      dataIndex: ['item', 'name'],
-      sorter: (first, second) => first.item.name.localeCompare(second.item.name),
-      ...getColumnSearchProps('item.name', 'item name')
+      title: 'Check Out',
+      key: 'checkOutDate',
+      dataIndex: 'startDateTime',
+      className: 'cell-checkout-date',
+      sorter: createDateSorter
     },
     {
       ellipsis: true,
-      title: 'Name',
-      key: 'userFullName',
-      dataIndex: ['user', 'fullName'],
-      sorter: (first, second) => first.user.fullName.localeCompare(second.user.fullName),
-      ...getColumnSearchProps('user.fullName', 'user name')
-    },
-    {
-      title: 'Email',
-      key: 'email',
-      dataIndex: ['user', 'email'],
-      sorter: (first, second) => first.user.email.localeCompare(second.user.email),
-      ...getColumnSearchProps('user.email', 'user email')
+      title: 'Return',
+      key: 'return Date',
+      dataIndex: 'endDateTime',
+      className: 'cell-return-date',
+      sorter: createDateSorter
     },
     {
       ellipsis: true,
       title: 'Status',
       key: 'status',
       dataIndex: 'status',
-      filters: [
-        {
-          value: 'Approved',
-          text: 'Approved'
-        },
-        {
-          value: 'Cancelled',
-          text: 'Cancelled'
-        },
-        {
-          value: 'Checked Out',
-          text: 'Checked Out'
-        },
-        {
-          value: 'Denied',
-          text: 'Denied'
-        },
-        {
-          value: 'Late',
-          text: 'Late'
-        },
-        {
-          value: 'Missed',
-          text: 'Missed'
-        },
-        {
-          value: 'Pending',
-          text: 'Pending'
-        },
-        {
-          value: 'Returned',
-          text: 'Returned'
-        }
-      ],
+      filters: STATUSES.map(status => ({
+        value: status,
+        text: status
+      })),
       className: 'cell-status',
       onFilter: (value, reservation) => reservation.status.indexOf(value as string) === 0,
       sorter: (first, second) => first.status.localeCompare(second.status),
       render: (text: string, row: Reservation) => (
-        <Tooltip placement="left" title="Change this item's status">
+        <Tooltip placement="top" title="Change this reservation's status">
           <Dropdown overlay={createStatusMenu(row)} trigger={['click']}>
             <div>
               {text} <AiOutlineDown />
@@ -265,52 +261,73 @@ const ReservationTable = (): JSX.Element => {
     },
     {
       ellipsis: true,
-      title: 'Check Out',
-      key: 'checkOutDate',
-      dataIndex: 'startDateTime',
-      className: 'cell-checkout-date',
-      render: renderDate,
-      sorter: createDateSorter
+      title: 'Name',
+      key: 'userFullName',
+      dataIndex: ['user', 'fullName'],
+      sorter: (first, second) => first.user.fullName.localeCompare(second.user.fullName),
+      ...getColumnSearchProps('user.fullName', 'user name')
     },
     {
+      title: 'Item Name',
+      key: 'itemName',
       ellipsis: true,
-      title: 'Return',
-      key: 'return Date',
-      dataIndex: 'endDateTime',
-      className: 'cell-return-date',
-      render: renderDate,
-      sorter: createDateSorter
+      dataIndex: ['item', 'name'],
+      sorter: (first, second) => first.item.name.localeCompare(second.item.name),
+      ...getColumnSearchProps('item.name', 'item name')
+    },
+    {
+      title: 'Email',
+      key: 'email',
+      dataIndex: ['user', 'email'],
+      sorter: (first, second) => first.user.email.localeCompare(second.user.email),
+      ...getColumnSearchProps('user.email', 'user email')
     }
   ];
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadReservations = async () => {
-    setLoading(true);
+    loader.startLoading();
 
     try {
-      const reservations = await API.getAllReservations();
-      setTableData(reservations);
-    } catch (err) {
-      // TODO: Catch errors here!!!
+      await reservations.initAllReservations();
+    } catch {
+      notification.error({
+        duration: 0,
+        key: 'load-error',
+        message: "Couldn't Load Reservations",
+        description:
+          'An error occurred while loading reservations. Refresh the page to try again.'
+      });
     }
 
-    setLoading(false);
+    loader.stopLoading();
   };
 
   useEffect(() => {
-    // loadReservations();
+    loadReservations();
   }, []);
 
   return (
     <Card bordered={false} className="reservation-table">
       <Table
         rowKey="ID"
-        loading={isLoading}
-        dataSource={tableData}
+        loading={{
+          spinning: loader.isLoading,
+          indicator: <LoadingSpinner />
+        }}
+        locale={{
+          emptyText: (
+            <EmptyTableContent
+              icon={<AiOutlineCalendar size={84} />}
+              text="No reservations to display."
+            />
+          )
+        }}
+        dataSource={reservations.state}
         columns={columns}
         pagination={{
           showTotal: renderTableCount,
-          showSizeChanger: true
+          showSizeChanger: true,
+          pageSize: 50
         }}
         scroll={{ x: true }}
       />

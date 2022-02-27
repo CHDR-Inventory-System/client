@@ -8,7 +8,9 @@ import {
   ImageUploadParams,
   BaseUser,
   ResetPasswordOpts,
-  UserRole
+  UserRole,
+  CreateReservationOpts,
+  UpdateReservationStatusOpts
 } from '../types/API';
 import APIError from './APIError';
 import { AtLeast } from './types';
@@ -100,11 +102,6 @@ class API {
     return response.data;
   }
 
-  static async getAllReservations(): Promise<Reservation[]> {
-    const response = await axios.get('/reservations/');
-    return response.data;
-  }
-
   static async uploadImage({
     itemId,
     image,
@@ -159,6 +156,48 @@ class API {
 
   static async resetPassword(opts: ResetPasswordOpts): Promise<void> {
     const response = await axios.post('/users/resetPassword', opts);
+    return response.data;
+  }
+
+  static async createReservation({
+    email,
+    item,
+    checkoutDate,
+    returnDate,
+    status,
+    adminId
+  }: CreateReservationOpts): Promise<Reservation> {
+    const response = await axios.post('/reservations/', {
+      email,
+      item,
+      status,
+      adminId,
+      startDateTime: checkoutDate,
+      endDateTime: returnDate
+    });
+
+    return response.data;
+  }
+
+  static async getAllReservations(): Promise<Reservation[]> {
+    const response = await axios.get('/reservations/');
+    return response.data;
+  }
+
+  static async updateReservationStatus({
+    reservationId,
+    adminId,
+    status
+  }: UpdateReservationStatusOpts): Promise<void> {
+    const response = await axios.patch(`/reservations/${reservationId}/status`, {
+      status,
+      adminId
+    });
+    return response.data;
+  }
+
+  static async getReservationsForItem(itemId: number): Promise<Reservation[]> {
+    const response = await axios.get(`/reservations/item/${itemId}`);
     return response.data;
   }
 }

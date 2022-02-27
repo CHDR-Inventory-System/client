@@ -2,9 +2,10 @@ import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { UserProvider } from '../contexts/UserContext';
 import useLoader from '../hooks/loading';
-import { User } from '../types/API';
+import type { User } from '../types/API';
 import { InventoryProvider } from '../contexts/InventoryContext';
 import { RegisteredUsersProvider } from '../contexts/RegisteredUsers';
+import { ReservationProvider } from '../contexts/ReservationContext';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
 const Auth = lazy(() => import('../pages/Auth'));
@@ -94,7 +95,9 @@ const App = (): JSX.Element | null => {
     <InventoryProvider>
       <UserProvider initialValue={initialUserValue}>
         <RegisteredUsersProvider>
-          <HashRouter>{routes}</HashRouter>
+          <ReservationProvider>
+            <HashRouter>{routes}</HashRouter>
+          </ReservationProvider>
         </RegisteredUsersProvider>
       </UserProvider>
     </InventoryProvider>

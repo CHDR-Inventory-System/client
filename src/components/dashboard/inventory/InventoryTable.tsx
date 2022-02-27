@@ -10,13 +10,14 @@ import { FilterDropdownProps } from 'antd/lib/table/interface';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RenderExpandIconProps } from 'rc-table/lib/interface';
 import moment from 'moment';
-import EditItemDrawer from './EditItemDrawer';
+import EditItemDrawer from '../../drawers/EditItemDrawer';
 import useLoader from '../../../hooks/loading';
 import useInventory from '../../../hooks/inventory';
-import AddItemDrawer from './AddItemDrawer';
+import AddItemDrawer from '../../drawers/AddItemDrawer';
 import LoadingSpinner from '../../LoadingSpinner';
 import EmptyTableContent from '../EmptyTableContent';
 import type { Item } from '../../../types/API';
+import useDrawer from '../../../hooks/useDrawer';
 
 /**
  * Used to show the current table count along with the
@@ -29,16 +30,13 @@ const InventoryTable = (): JSX.Element => {
   const inventory = useInventory();
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof Item>();
-  const [isEditDrawerVisible, setEditDrawerVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const [isAddItemDrawerVisible, setAddItemDrawerVisible] = useState(false);
+  const drawer = useDrawer({
+    addItem: false,
+    editItem: false
+  });
   const loader = useLoader();
   const searchInputRef = useRef<Input>(null);
-
-  const openAddItemDrawer = () => setAddItemDrawerVisible(true);
-  const closeAddItemDrawer = () => setAddItemDrawerVisible(false);
-  const openEditItemDrawer = () => setEditDrawerVisible(true);
-  const closeEditItemDrawer = () => setEditDrawerVisible(false);
 
   const handleSearch = (
     searchQuery: string,
@@ -208,7 +206,7 @@ const InventoryTable = (): JSX.Element => {
     return {
       onClick: () => {
         setSelectedItem(item);
-        openEditItemDrawer();
+        drawer.open('editItem');
       }
     };
   };
@@ -219,7 +217,7 @@ const InventoryTable = (): JSX.Element => {
       className="add-child-button"
       onClick={() => {
         setSelectedItem(item);
-        openAddItemDrawer();
+        drawer.open('addItem');
       }}
     >
       Add child item
@@ -253,12 +251,12 @@ const InventoryTable = (): JSX.Element => {
         <>
           <EditItemDrawer
             itemId={selectedItem.ID}
-            visible={isEditDrawerVisible}
-            onClose={closeEditItemDrawer}
+            visible={drawer.state.editItem}
+            onClose={() => drawer.close('editItem')}
           />
           <AddItemDrawer
-            visible={isAddItemDrawerVisible}
-            onClose={closeAddItemDrawer}
+            visible={drawer.state.addItem}
+            onClose={() => drawer.close('addItem')}
             parentItem={selectedItem}
           />
         </>
@@ -281,7 +279,8 @@ const InventoryTable = (): JSX.Element => {
         }}
         pagination={{
           showTotal: renderTableCount,
-          showSizeChanger: true
+          showSizeChanger: true,
+          pageSize: 50
         }}
         expandable={{
           expandedRowRender: expandedRowRenderer,
