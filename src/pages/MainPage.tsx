@@ -5,6 +5,7 @@ import debounce from 'lodash/debounce';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaBoxOpen } from 'react-icons/fa';
+import Cookies from 'js-cookie';
 import Navbar from '../components/Navbar';
 import { Item, User } from '../types/API';
 import mockInventory from '../assets/mocks/inventory.json';
@@ -27,7 +28,7 @@ const MainPage = (): JSX.Element | null => {
   // have to read from local storage
   const user = useMemo(() => {
     try {
-      return JSON.parse(localStorage.getItem('user') || '') as User;
+      return JSON.parse(Cookies.get('user') || '') as User;
     } catch (err) {
       return null;
     }

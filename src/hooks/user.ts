@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import Cookies from 'js-cookie';
 import UserContext from '../contexts/UserContext';
 import API from '../util/API';
 import type {
@@ -49,7 +50,7 @@ const useUser = (): UseUserHook => {
   const login = async (email: string, password: string): Promise<User> => {
     const user = await API.login(email, password);
 
-    localStorage.setItem('user', JSON.stringify(user));
+    Cookies.set('user', JSON.stringify(user));
 
     dispatch({
       type: 'LOG_IN',
@@ -60,7 +61,7 @@ const useUser = (): UseUserHook => {
   };
 
   const logout = () => {
-    localStorage.removeItem('user');
+    Cookies.remove('user');
     dispatch({ type: 'LOG_OUT' });
   };
 

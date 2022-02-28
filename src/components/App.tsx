@@ -1,5 +1,6 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import { UserProvider } from '../contexts/UserContext';
 import useLoader from '../hooks/loading';
 import type { User } from '../types/API';
@@ -75,7 +76,7 @@ const App = (): JSX.Element | null => {
   // from localStorage, set the the user context object,
   // then take them to the main screen
   const loadUserFromStorage = () => {
-    const user = localStorage.getItem('user');
+    const user = Cookies.get('user');
 
     if (!user) {
       loader.stopLoading();

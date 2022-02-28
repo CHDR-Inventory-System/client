@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { User } from '../types/API';
 
 export type UserAction =
@@ -20,10 +21,10 @@ const userReducer = (state: User, action: UserAction): User => {
     case 'LOG_OUT':
       return {} as User;
     case 'UPDATE_EMAIL': {
-      const user = localStorage.getItem('user') as User | null;
+      const user = Cookies.get('user') as User | undefined;
 
       if (user) {
-        localStorage.setItem(
+        Cookies.set(
           'user',
           JSON.stringify({
             ...user,

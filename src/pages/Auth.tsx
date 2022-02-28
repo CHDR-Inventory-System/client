@@ -1,6 +1,7 @@
 import '../scss/auth.scss';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 import SignUpCard from '../components/cards/SignUpCard';
 import LogInCard from '../components/cards/LogInCard';
 import useLoader from '../hooks/loading';
@@ -72,7 +73,7 @@ const Auth = (): JSX.Element | null => {
   useEffect(() => {
     loader.startLoading();
 
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}') as User;
+    const storedUser = JSON.parse(Cookies.get('user') || '{}') as User;
 
     if (storedUser && storedUser.token && storedUser.verified) {
       navigate('/');
