@@ -1,0 +1,22 @@
+@import './variables';
+
+.edit-account-modal {
+  .ant-modal-body {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+
+  .ant-form {
+    padding-top: 1em;
+  }
+
+  .change-password-button {
+    margin-top: 1em;
+    margin-bottom: 0.25em;
+    width: 100%;
+  }
+
+  .welcome-message {
+    color: map-get($colors, 'text-muted');
+  }
+}

@@ -1,0 +1,75 @@
+@import './variables';
+@import './mixins.scss';
+
+.update-email-page {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  header {
+    text-align: center;
+    margin: 3em 1em 1.5em 1em;
+
+    h1 {
+      font-size: 3.5em;
+      margin-bottom: 0.25em;
+      line-height: 1.2;
+    }
+
+    p {
+      color: map-get($colors, 'text-muted');
+    }
+  }
+
+  .update-email-card {
+    width: 500px;
+    margin-bottom: 5em;
+
+    @media screen and (max-width: 650px) {
+      max-width: 90%;
+    }
+
+    &.ant-card {
+      box-shadow: 0px 4px 41px 8px hsla(0deg, 0%, 0%, 0.07);
+      padding: 1.5em 3em 2em 3em;
+      border-radius: 16px;
+
+      @media screen and (max-width: 500px) {
+        padding: 1.5em 1.5em 2em 1.5em;
+      }
+    }
+
+    .ant-card-head {
+      border: none;
+    }
+
+    .ant-card-head-title {
+      @include font-fallback('Gotham-Bold');
+      text-align: center;
+      font-size: 1.5em;
+      padding-bottom: 0;
+      white-space: normal;
+    }
+
+    .ant-card-meta-detail {
+      margin-bottom: 2em;
+    }
+
+    .ant-card-meta-description {
+      text-align: center;
+    }
+
+    .ant-card-body {
+      padding-bottom: 0;
+    }
+
+    .ant-alert {
+      margin-bottom: 1em;
+    }
+
+    button[type='submit'] {
+      margin-top: 0.5em;
+      width: 100%;
+    }
+  }
+}

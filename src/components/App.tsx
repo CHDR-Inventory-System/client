@@ -12,6 +12,7 @@ const Auth = lazy(() => import('../pages/Auth'));
 const Dashboard = lazy(() => import('../pages/Dashboard'));
 const VerifyAccountPage = lazy(() => import('../pages/VerifyAccountPage'));
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
+const UpdateEmailPage = lazy(() => import('../pages/UpdateEmailPage'));
 
 const routes = (
   <Routes>
@@ -52,6 +53,14 @@ const routes = (
       element={
         <Suspense fallback={<div />}>
           <ResetPasswordPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/update-email"
+      element={
+        <Suspense fallback={<div />}>
+          <UpdateEmailPage />
         </Suspense>
       }
     />

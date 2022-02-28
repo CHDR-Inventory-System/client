@@ -65,7 +65,7 @@ const Dashboard = (): JSX.Element => {
 
   return (
     <div className="dashboard">
-      <Navbar title="CHDR - Inventory" subTitle="Admin" />
+      <Navbar />
       <AddItemDrawer
         onClose={() => drawer.close('addItem')}
         visible={drawer.state.addItem}

@@ -1,5 +1,5 @@
 import '../scss/profile-avatar.scss';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Divider, Dropdown, Menu, Modal } from 'antd';
 import {
@@ -9,8 +9,10 @@ import {
   AiOutlineLogout
 } from 'react-icons/ai';
 import useUser from '../hooks/user';
+import EditAccountModal from './modals/EditAccountModal';
 
 const ProfileAvatar = (): JSX.Element => {
+  const [isAccountModalShowing, setAccountModalShowing] = useState(false);
   const navigate = useNavigate();
   const user = useUser();
   const userInitials = useMemo(() => {
@@ -45,22 +47,25 @@ const ProfileAvatar = (): JSX.Element => {
     <Menu className="profile-avatar-dropdown-menu">
       <p className="menu-extra-message">Signed in as {user.state.email}</p>
       <Divider className="menu-divider" />
-      <Menu.Item key="edit-account" icon={<AiOutlineEdit size={18} />}>
+      <Menu.Item
+        key="edit-account"
+        icon={<AiOutlineEdit size={18} />}
+        onClick={() => setAccountModalShowing(true)}
+      >
         Edit Account
       </Menu.Item>
       <Menu.Item key="reservations" icon={<AiOutlineCalendar size={18} />}>
         My Reservations
       </Menu.Item>
-      {user.state.role === 'Admin' ||
-        (user.state.role === 'Super' && (
-          <Menu.Item
-            key="dashboard"
-            icon={<AiOutlineDashboard size={18} />}
-            onClick={goToDashboard}
-          >
-            Dashboard
-          </Menu.Item>
-        ))}
+      {(user.state.role === 'Admin' || user.state.role === 'Super') && (
+        <Menu.Item
+          key="dashboard"
+          icon={<AiOutlineDashboard size={18} />}
+          onClick={goToDashboard}
+        >
+          Admin Dashboard
+        </Menu.Item>
+      )}
       <Menu.Item
         key="logout"
         icon={<AiOutlineLogout size={18} />}
@@ -72,9 +77,15 @@ const ProfileAvatar = (): JSX.Element => {
   );
 
   return (
-    <Dropdown overlay={menu} trigger={['click']}>
-      <Avatar>{userInitials}</Avatar>
-    </Dropdown>
+    <>
+      <Dropdown overlay={menu} trigger={['click']}>
+        <Avatar>{userInitials}</Avatar>
+      </Dropdown>
+      <EditAccountModal
+        visible={isAccountModalShowing}
+        onClose={() => setAccountModalShowing(false)}
+      />
+    </>
   );
 };
 

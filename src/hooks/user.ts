@@ -1,7 +1,12 @@
 import { useContext } from 'react';
 import UserContext from '../contexts/UserContext';
 import API from '../util/API';
-import type { CreateAccountOptions, User, ResetPasswordOpts } from '../types/API';
+import type {
+  CreateAccountOptions,
+  User,
+  ResetPasswordOpts,
+  UpdateEmailOpts
+} from '../types/API';
 
 type UseUserHook = {
   readonly state: Readonly<User>;
@@ -18,6 +23,12 @@ type UseUserHook = {
   verifyAccount: (userId: number, verificationCode: string) => Promise<void>;
   sendPasswordResetEmail: (email: string) => Promise<void>;
   resetPassword: (opts: ResetPasswordOpts) => Promise<void>;
+  /**
+   * Makes an API call that sends the email allowing a user to update
+   * their email
+   */
+  sendUpdateEmail: (email: string, password: string) => Promise<void>;
+  updateEmail: (opts: UpdateEmailOpts) => Promise<void>;
 };
 
 /**
@@ -76,6 +87,23 @@ const useUser = (): UseUserHook => {
     await API.resetPassword(opts);
   };
 
+  const sendUpdateEmail = async (email: string, password: string): Promise<void> => {
+    await API.sendUpdateEmail({
+      userId: state.ID,
+      email,
+      password
+    });
+  };
+
+  const updateEmail = async (opts: UpdateEmailOpts): Promise<void> => {
+    await API.updateEmail(opts);
+
+    dispatch({
+      type: 'UPDATE_EMAIL',
+      payload: opts.email
+    });
+  };
+
   return {
     state,
     login,
@@ -84,7 +112,9 @@ const useUser = (): UseUserHook => {
     resendVerificationEmail,
     verifyAccount,
     sendPasswordResetEmail,
-    resetPassword
+    resetPassword,
+    sendUpdateEmail,
+    updateEmail
   };
 };
 

@@ -90,9 +90,9 @@ const CreateReservationDrawer = ({
         key: 'create-reservation-success',
         message: 'Reservation Created',
         description: (
-          <p>
+          <span>
             Created a reservation for user: <b>{parsedValues.email}</b>
-          </p>
+          </span>
         )
       });
 

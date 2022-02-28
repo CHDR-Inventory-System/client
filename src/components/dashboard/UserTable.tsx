@@ -57,10 +57,10 @@ const UserTable = (): JSX.Element => {
         key: 'update-role-success',
         message: 'Role Changed',
         description: (
-          <p>
+          <span>
             <b>{user.email}</b>&apos;s role was changed from <b>{previousRole}</b> to{' '}
             <b>{role}</b>
-          </p>
+          </span>
         )
       });
     } catch {
@@ -253,7 +253,7 @@ const UserTable = (): JSX.Element => {
     } catch {
       notification.error({
         duration: 0,
-        key: 'load-error',
+        key: 'user-load-error',
         message: "Couldn't Load Users",
         description:
           'An error occurred while loading users. Refresh the page to try again.'

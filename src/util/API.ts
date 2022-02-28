@@ -10,7 +10,9 @@ import {
   ResetPasswordOpts,
   UserRole,
   CreateReservationOpts,
-  UpdateReservationStatusOpts
+  UpdateReservationStatusOpts,
+  SendUpdateEmailOpts,
+  UpdateEmailOpts
 } from '../types/API';
 import APIError from './APIError';
 import { AtLeast } from './types';
@@ -198,6 +200,23 @@ class API {
 
   static async getReservationsForItem(itemId: number): Promise<Reservation[]> {
     const response = await axios.get(`/reservations/item/${itemId}`);
+    return response.data;
+  }
+
+  static async sendUpdateEmail({
+    userId,
+    email,
+    password
+  }: SendUpdateEmailOpts): Promise<void> {
+    const response = await axios.patch(`/users/${userId}/email`, {
+      email,
+      password
+    });
+    return response.data;
+  }
+
+  static async updateEmail(opts: UpdateEmailOpts): Promise<void> {
+    const response = await axios.patch('/users/updateEmail', opts);
     return response.data;
   }
 }

@@ -7,10 +7,9 @@ import axios from 'axios';
 import useLoader from '../../hooks/loading';
 import useInventory from '../../hooks/inventory';
 import APIError from '../../util/APIError';
+import { BaseModalProps } from './base-modal-props';
 
-type ImageUploadModalProps = {
-  visible: boolean;
-  onClose: () => void;
+type ImageUploadModalProps = BaseModalProps & {
   itemId: number;
 };
 
