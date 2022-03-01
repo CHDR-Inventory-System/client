@@ -81,12 +81,10 @@ const SignUpCard = ({ className, description }: CardProps): JSX.Element => {
       await user.createAccount(values);
     } catch (err) {
       if (err instanceof yup.ValidationError) {
-        const validationError = err as yup.ValidationError;
-
         // Because errors are handled by Formik, we need to make sure Ant's form
         // knows about Formik's errors
         form.setFields(
-          validationError.inner.map(fieldError => ({
+          err.inner.map(fieldError => ({
             name: fieldError.path || '',
             errors: [fieldError.message]
           }))
@@ -94,7 +92,7 @@ const SignUpCard = ({ className, description }: CardProps): JSX.Element => {
       }
 
       if (err instanceof APIError) {
-        const { status } = err as APIError;
+        const { status } = err;
         const errorObject: Partial<ArgsProps> = {
           key: 'sign-up-error',
           message: '',

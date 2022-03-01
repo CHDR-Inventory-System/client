@@ -99,12 +99,10 @@ const CreateReservationDrawer = ({
       onClose();
     } catch (err) {
       if (err instanceof yup.ValidationError) {
-        const validationError = err as yup.ValidationError;
-
         // Because errors are handled by Formik, we need to make sure Ant's form
         // knows about Formik's errors
         form.setFields(
-          validationError.inner.map(error => ({
+          err.inner.map(error => ({
             name: error.path || '',
             errors: [error.message]
           }))
