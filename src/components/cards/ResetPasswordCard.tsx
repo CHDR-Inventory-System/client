@@ -19,10 +19,10 @@ const ResetPasswordCard = ({ className, description }: CardProps): JSX.Element =
         key: 'reset-success',
         message: 'Email Sent',
         description: (
-          <p>
+          <span>
             An email was sent to <b>{email}</b>. Check your inbox for a link to reset your
             password.
-          </p>
+          </span>
         )
       });
     } catch {

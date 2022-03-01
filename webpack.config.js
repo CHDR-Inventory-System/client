@@ -5,6 +5,7 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = (env, argv) => {
   const plugins = [
@@ -17,7 +18,8 @@ module.exports = (env, argv) => {
       favicon: path.resolve(__dirname, 'public', 'favicon.ico'),
       title: 'CHDR Inventory'
     }),
-    new MomentLocalesPlugin()
+    new MomentLocalesPlugin(),
+    new CleanWebpackPlugin()
   ];
 
   if (env.analyze) {

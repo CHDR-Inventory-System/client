@@ -20,7 +20,7 @@ import { AtLeast } from '../../util/types';
 import useLoader from '../../hooks/loading';
 import APIError from '../../util/APIError';
 import ItemImageList from '../dashboard/inventory/ItemImageList';
-import useDrawer from '../../hooks/useDrawer';
+import useDrawer from '../../hooks/drawer';
 import CreateReservationDrawer from './CreateReservationDrawer';
 
 type EditItemDrawerProps = {
@@ -99,12 +99,10 @@ const EditItemDrawer = ({
       await inventory.updateItem(parsedItem as AtLeast<Item, 'ID'>);
     } catch (err) {
       if (err instanceof yup.ValidationError) {
-        const validationError = err as yup.ValidationError;
-
         // Because errors are handled by Formik, we need to make sure Ant's form
         // knows about Formik's errors
         form.setFields(
-          validationError.inner.map(error => ({
+          err.inner.map(error => ({
             name: error.path || '',
             errors: [error.message]
           }))

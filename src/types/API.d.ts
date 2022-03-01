@@ -114,3 +114,10 @@ export type UpdateReservationStatusOpts = {
    */
   adminId?: number;
 };
+
+export type UpdateEmailOpts = {
+  userId: number;
+  email: string;
+  password: string;
+  verificationCode: string;
+};

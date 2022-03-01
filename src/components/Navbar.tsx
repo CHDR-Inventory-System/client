@@ -1,24 +1,27 @@
 import '../scss/navbar.scss';
 import React from 'react';
-import { Avatar, PageHeader } from 'antd';
+import { PageHeader } from 'antd';
+import { Link } from 'react-router-dom';
+import ProfileAvatar from './ProfileAvatar';
+import useUser from '../hooks/user';
 
 type NavbarProps = {
-  title?: string;
   className?: string;
-  subTitle?: string;
 };
 
-const Navbar = ({
-  title = 'CHDR - Inventory',
-  className = '',
-  subTitle
-}: NavbarProps): JSX.Element => (
-  <PageHeader
-    title={title}
-    className={`navbar ${className}`}
-    subTitle={subTitle}
-    extra={[<Avatar key="avatar">JS</Avatar>]}
-  />
-);
+const Navbar = ({ className = '' }: NavbarProps): JSX.Element => {
+  const user = useUser();
+
+  return (
+    <PageHeader
+      title={<Link to="/">CHDR - Inventory</Link>}
+      className={`navbar ${className}`}
+      subTitle={
+        user.state.role === 'Admin' || user.state.role === 'Super' ? 'Admin' : null
+      }
+      extra={[<ProfileAvatar key="avatar" />]}
+    />
+  );
+};
 
 export default Navbar;

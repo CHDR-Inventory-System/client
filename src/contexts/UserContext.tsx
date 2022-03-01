@@ -16,7 +16,7 @@ const UserContext = createContext<UserContextType | null>(null);
 
 const UserProvider = ({ children, initialValue }: UserProviderProps): JSX.Element => {
   const [state, dispatch] = useReducer(userReducer, initialValue || ({} as User));
-  const providerValue = useMemo(() => ({ state, dispatch }), [initialValue]);
+  const providerValue = useMemo(() => ({ state, dispatch }), [state]);
 
   return <UserContext.Provider value={providerValue}>{children}</UserContext.Provider>;
 };

@@ -27,7 +27,8 @@ h1 {
   @include font-fallback('Gotham-Bold');
 }
 
-b {
+b,
+h2 {
   @include font-fallback('Gotham-Medium');
 }
 

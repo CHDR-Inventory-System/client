@@ -4,15 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import SignUpCard from '../components/cards/SignUpCard';
 import LogInCard from '../components/cards/LogInCard';
 import useLoader from '../hooks/loading';
-import useUser from '../hooks/user';
 import ResetPasswordCard from '../components/cards/ResetPasswordCard';
+import { User } from '../types/API';
 
 type CardType = 'login' | 'signUp' | 'forgotPassword';
 
 const Auth = (): JSX.Element | null => {
   const [card, setCard] = useState<CardType>('login');
-  const user = useUser();
-  const loader = useLoader(true);
+  const loader = useLoader(false);
   const navigate = useNavigate();
 
   const cards: Record<CardType, JSX.Element> = {
@@ -71,7 +70,11 @@ const Auth = (): JSX.Element | null => {
   };
 
   useEffect(() => {
-    if (user.state.token && user.state.verified) {
+    loader.startLoading();
+
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}') as User;
+
+    if (storedUser && storedUser.token && storedUser.verified) {
       navigate('/');
     } else {
       loader.stopLoading();

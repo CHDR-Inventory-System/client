@@ -3,10 +3,9 @@ import { Modal, notification } from 'antd';
 import React from 'react';
 import useLoader from '../../hooks/loading';
 import useUser from '../../hooks/user';
+import { BaseModalProps } from './base-modal-props';
 
-type VerifyEmailModalProps = {
-  visible: boolean;
-  onClose: () => void;
+type VerifyEmailModalProps = BaseModalProps & {
   email: string;
 };
 
@@ -25,10 +24,10 @@ const VerifyEmailModal = ({
       await user.resendVerificationEmail(email);
       notification.success({
         description: (
-          <p>
+          <span>
             An email was sent to <b>{email}</b>. Check your inbox for a link to verify
-            your email.
-          </p>
+            your account.
+          </span>
         ),
         message: 'Email Sent'
       });

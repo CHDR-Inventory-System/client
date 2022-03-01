@@ -72,10 +72,10 @@ const ReservationTable = (): JSX.Element => {
         key: 'reservation-update-success',
         message: 'Status Updated',
         description: (
-          <p>
+          <span>
             Status for <b>{reservation.item.name}</b> was changed from{' '}
             <b>{previousStatus}</b> to <b>{status}</b>.
-          </p>
+          </span>
         )
       });
     } catch {
@@ -292,7 +292,7 @@ const ReservationTable = (): JSX.Element => {
     } catch {
       notification.error({
         duration: 0,
-        key: 'load-error',
+        key: 'reservation-load-error',
         message: "Couldn't Load Reservations",
         description:
           'An error occurred while loading reservations. Refresh the page to try again.'
