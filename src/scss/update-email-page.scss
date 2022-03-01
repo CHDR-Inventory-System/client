@@ -21,11 +21,17 @@
     }
   }
 
+  .card-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
   .update-email-card {
     width: 500px;
     margin-bottom: 5em;
 
-    @media screen and (max-width: 650px) {
+    @media screen and (max-width: 500px) {
       max-width: 90%;
     }
 

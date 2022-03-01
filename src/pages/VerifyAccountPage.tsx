@@ -84,6 +84,7 @@ const VerifyAccount = (): JSX.Element => {
       <motion.div
         initial="hidden"
         animate="show"
+        className="card-container"
         transition={animationOpts}
         variants={animationVariants}
       >
