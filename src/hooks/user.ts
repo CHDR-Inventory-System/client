@@ -90,7 +90,7 @@ const useUser = (): UseUserHook => {
   };
 
   const logout = () => {
-    localStorage.remove('user');
+    localStorage.removeItem('user');
     dispatch({ type: 'LOG_OUT' });
   };
 

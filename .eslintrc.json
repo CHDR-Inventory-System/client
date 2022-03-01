@@ -55,6 +55,7 @@
       "error",
       "never"
     ],
+    "function-paren-newline": "off",
     "semi": [
       "error",
       "always"

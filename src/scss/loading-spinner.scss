@@ -11,6 +11,15 @@
     }
   }
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .loading-message {
+    margin-top: 2em;
+    color: map-get($colors, 'text-muted');
+  }
+
   &.ant-spin-dot {
     width: unset;
     height: unset;

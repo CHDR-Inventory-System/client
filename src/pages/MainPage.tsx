@@ -7,16 +7,16 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import { FaBoxOpen } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 import { Item, User } from '../types/API';
-import mockInventory from '../assets/mocks/inventory.json';
 import ItemCard from '../components/ItemCard';
 import useInventory from '../hooks/inventory';
 import useLoader from '../hooks/loading';
 import EmptyTableContent from '../components/dashboard/EmptyTableContent';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const MainPage = (): JSX.Element | null => {
   const navigate = useNavigate();
   const inventory = useInventory();
-  const loader = useLoader();
+  const loader = useLoader(false);
 
   // Store items an a cache so that we don't have to re-query the API
   // every time the search query changes
@@ -39,9 +39,8 @@ const MainPage = (): JSX.Element | null => {
       return;
     }
 
-    const items = [...inventoryCache].filter(
-      item => item.name.toLowerCase().trim().includes(query.toLowerCase().trim())
-      // eslint-disable-next-line function-paren-newline
+    const items = [...inventoryCache].filter(item =>
+      item.name.toLowerCase().trim().includes(query.toLowerCase().trim())
     );
 
     inventory.setItems(items);
@@ -51,13 +50,12 @@ const MainPage = (): JSX.Element | null => {
     loader.startLoading();
 
     try {
-      inventory.setItems(mockInventory);
-      setInventoryCache(mockInventory);
+      const items = await inventory.init();
+      setInventoryCache(items);
     } catch {
       notification.error({
-        duration: 0,
         message: "Couldn't Load Items",
-        key: 'inventory-load-error',
+        key: 'main-page-inventory-load-error',
         description: `
           An unexpected error occurred loading inventory.
           Refresh the page to try again.
@@ -74,6 +72,10 @@ const MainPage = (): JSX.Element | null => {
     } else {
       loadInventory();
     }
+
+    return () => {
+      notification.destroy();
+    };
   }, []);
 
   if (!user) {
@@ -94,7 +96,8 @@ const MainPage = (): JSX.Element | null => {
         />
       </div>
       <div className="items">
-        {inventory.items.length === 0 ? (
+        {loader.isLoading && <LoadingSpinner text="Loading..." />}
+        {inventory.items.length === 0 && !loader.isLoading ? (
           <EmptyTableContent icon={<FaBoxOpen size={120} />} text="No items available" />
         ) : (
           inventory.items.map(item => <ItemCard item={item} key={item.ID} />)
