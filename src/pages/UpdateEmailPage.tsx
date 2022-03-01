@@ -4,7 +4,7 @@ import { Button, Card, Form, Input, notification } from 'antd';
 import { motion, Transition, Variants } from 'framer-motion';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ArgsProps } from 'antd/lib/notification';
 import useLoader from '../hooks/loading';
 import useUser from '../hooks/user';
@@ -144,6 +144,13 @@ const UpdateEmailPage = (): JSX.Element => {
         variants={animationVariants}
       >
         <Card title="Update Your Email" className="update-email-card">
+          <Card.Meta
+            description={
+              <p>
+                <Link to="/">Click here</Link> to go back to CHDR Inventory.
+              </p>
+            }
+          />
           <Form layout="vertical" form={form}>
             <Form.Item label="Email" name="email">
               <Input type="email" onChange={formik.handleChange('email')} />

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import Cookies from 'js-cookie';
 import UserContext from '../contexts/UserContext';
 import API from '../util/API';
@@ -10,7 +10,11 @@ import type {
 } from '../types/API';
 
 type UseUserHook = {
-  readonly state: Readonly<User>;
+  readonly state: Readonly<User> & {
+    readonly firstName: string;
+    readonly lastName: string;
+  };
+
   /**
    * Makes a call to the API to log a user in. If successful, this also sets
    * the `user` field in {@link AsyncStorage} to the value of the current user.
@@ -28,8 +32,30 @@ type UseUserHook = {
    * Makes an API call that sends the email allowing a user to update
    * their email
    */
-  sendUpdateEmail: (email: string, password: string) => Promise<void>;
+  sendUpdateEmail: () => Promise<void>;
   updateEmail: (opts: UpdateEmailOpts) => Promise<void>;
+  updateName: (firstName: string, lastName: string) => Promise<void>;
+};
+
+const updateUserCookie = (updatedUser: Partial<User>) => {
+  const userCookie = Cookies.get('user');
+
+  if (userCookie) {
+    try {
+      const user = JSON.parse(userCookie) as User;
+
+      Cookies.set(
+        'user',
+        JSON.stringify({
+          ...user,
+          ...updatedUser
+        })
+      );
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('Invalid cookie', err);
+    }
+  }
 };
 
 /**
@@ -46,6 +72,10 @@ const useUser = (): UseUserHook => {
   }
 
   const { state, dispatch } = context;
+  const [firstName, ...lastName] = useMemo(
+    () => (state.fullName ? state.fullName.split(' ') : []),
+    [state.fullName]
+  );
 
   const login = async (email: string, password: string): Promise<User> => {
     const user = await API.login(email, password);
@@ -88,16 +118,14 @@ const useUser = (): UseUserHook => {
     await API.resetPassword(opts);
   };
 
-  const sendUpdateEmail = async (email: string, password: string): Promise<void> => {
-    await API.sendUpdateEmail({
-      userId: state.ID,
-      email,
-      password
-    });
+  const sendUpdateEmail = async (): Promise<void> => {
+    await API.sendUpdateEmail(state.ID, state.email);
   };
 
   const updateEmail = async (opts: UpdateEmailOpts): Promise<void> => {
     await API.updateEmail(opts);
+
+    updateUserCookie({ email: opts.email });
 
     dispatch({
       type: 'UPDATE_EMAIL',
@@ -105,8 +133,25 @@ const useUser = (): UseUserHook => {
     });
   };
 
+  const updateName = async (first: string, last: string): Promise<void> => {
+    const fullName = `${first.trim()} ${last.trim()}`;
+
+    await API.updateName(state.ID, fullName);
+
+    updateUserCookie({ fullName });
+
+    dispatch({
+      type: 'UPDATE_NAME',
+      payload: fullName
+    });
+  };
+
   return {
-    state,
+    state: {
+      ...state,
+      firstName,
+      lastName: lastName.join(' ')
+    },
     login,
     logout,
     createAccount,
@@ -115,7 +160,8 @@ const useUser = (): UseUserHook => {
     sendPasswordResetEmail,
     resetPassword,
     sendUpdateEmail,
-    updateEmail
+    updateEmail,
+    updateName
   };
 };
 

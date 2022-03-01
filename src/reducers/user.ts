@@ -1,5 +1,4 @@
-import Cookies from 'js-cookie';
-import { User } from '../types/API';
+import type { User } from '../types/API';
 
 export type UserAction =
   | {
@@ -12,6 +11,10 @@ export type UserAction =
   | {
       type: 'UPDATE_EMAIL';
       payload: string;
+    }
+  | {
+      type: 'UPDATE_NAME';
+      payload: string;
     };
 
 const userReducer = (state: User, action: UserAction): User => {
@@ -20,23 +23,16 @@ const userReducer = (state: User, action: UserAction): User => {
       return action.payload;
     case 'LOG_OUT':
       return {} as User;
-    case 'UPDATE_EMAIL': {
-      const user = Cookies.get('user') as User | undefined;
-
-      if (user) {
-        Cookies.set(
-          'user',
-          JSON.stringify({
-            ...user,
-            email: action.payload
-          })
-        );
-      }
+    case 'UPDATE_EMAIL':
       return {
         ...state,
         email: action.payload
       };
-    }
+    case 'UPDATE_NAME':
+      return {
+        ...state,
+        fullName: action.payload
+      };
     default:
       throw new Error(`Invalid action for user reducer: ${action}`);
   }

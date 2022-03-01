@@ -2,21 +2,20 @@ import '../../scss/edit-account-modal.scss';
 import React, { useEffect, useState } from 'react';
 import { Input, Modal, Form, Button, notification } from 'antd';
 import { useFormik } from 'formik';
-import { ArgsProps } from 'antd/lib/notification';
 import * as yup from 'yup';
 import { BaseModalProps } from './base-modal-props';
 import useUser from '../../hooks/user';
 import useLoader from '../../hooks/loading';
 import APIError from '../../util/APIError';
 
-const accountSchema = yup.object({
-  email: yup.string().trim().required('An email is required'),
-  password: yup.string().required('You need to confirm your password')
+const schema = yup.object({
+  firstName: yup.string().trim().required('A first name is required'),
+  lastName: yup.string().trim().required('A last name is required')
 });
 
 type FormValues = {
-  email: string;
-  password: string;
+  firstName: string;
+  lastName: string;
 };
 
 const EditAccountModal = ({ onClose, visible }: BaseModalProps): JSX.Element => {
@@ -27,72 +26,68 @@ const EditAccountModal = ({ onClose, visible }: BaseModalProps): JSX.Element => 
   const formik = useFormik<FormValues>({
     enableReinitialize: true,
     initialValues: {
-      email: '',
-      password: ''
+      firstName: user.state.firstName,
+      lastName: user.state.lastName
     },
     validateOnChange: false,
-    onSubmit: values => updateEmail(values)
+    onSubmit: values => updateName(values)
   });
 
-  const updateEmail = async (values: FormValues) => {
-    const email = values.email.trim().toLowerCase();
-
-    if (!dirty || email === user.state.email.toLowerCase()) {
-      return;
-    }
-
+  const updateName = async (values: FormValues) => {
     loader.startLoading();
 
-    // Reset all errors in the form
-    form.setFields(
-      Object.keys(values).map(key => ({
-        name: key,
-        errors: []
-      }))
-    );
+    try {
+      const { firstName, lastName } = await schema.validate(values, {
+        abortEarly: false
+      });
+
+      await user.updateName(firstName, lastName);
+    } catch (err) {
+      if (err instanceof yup.ValidationError) {
+        // Because errors are handled by Formik, we need to make sure Ant's form
+        // knows about Formik's errors
+        form.setFields(
+          err.inner.map(fieldError => ({
+            name: fieldError.path || '',
+            errors: [fieldError.message]
+          }))
+        );
+      }
+
+      if (err instanceof APIError) {
+        notification.error({
+          key: 'update-name-error',
+          message: 'Error Updating Name',
+          description: 'An error occurred while updating your name, please try again.'
+        });
+      }
+    }
+
+    loader.stopLoading();
+  };
+
+  const updateEmail = async () => {
+    loader.startLoading();
 
     try {
-      const parsedValues = await accountSchema.validate(values, { abortEarly: false });
-      await user.sendUpdateEmail(parsedValues.email, parsedValues.password);
+      await user.sendUpdateEmail();
 
       notification.success({
         key: 'email-update-success',
         message: 'Email Update Requested',
         description: (
           <span>
-            An email was sent to <b>{email}</b>. Check your inbox for a link to verify
-            your account.
+            An email was sent to <b>{user.state.email}</b>. Check your inbox for a link to
+            update your email.
           </span>
         )
       });
-    } catch (err) {
-      if (err instanceof yup.ValidationError) {
-        // Because errors are handled by Formik, we need to make sure Ant's form
-        // knows about Formik's errors
-        form.setFields(
-          err.inner.map(error => ({
-            name: error.path || '',
-            errors: [error.message]
-          }))
-        );
-      }
-
-      if (err instanceof APIError) {
-        const { status } = err;
-        const notificationProps: Partial<ArgsProps> = {
-          message: status === 401 ? 'Invalid Credentials' : 'Error Updating',
-          description:
-            status === 401
-              ? 'Invalid password. Make sure your password is correct and try again.'
-              : 'An error occurred while updating your email, please try again.'
-        };
-
-        notification.error({
-          key: 'email-update-error',
-          message: notificationProps.message,
-          description: notificationProps.description
-        });
-      }
+    } catch {
+      notification.error({
+        key: 'email-update-error',
+        message: "Couldn't Request Update",
+        description: 'An error occurred while updating your email, please try again.'
+      });
     }
 
     loader.stopLoading();
@@ -125,12 +120,11 @@ const EditAccountModal = ({ onClose, visible }: BaseModalProps): JSX.Element => 
     loader.stopLoading();
   };
 
-  const onFormChange = (event: React.ChangeEvent<HTMLFormElement>) => {
-    const target = event.nativeEvent.target as HTMLInputElement;
+  const onFormChange = () => {
+    const firstName = form.getFieldValue('firstName').trim();
+    const lastName = form.getFieldValue('lastName').trim();
 
-    if (target.type === 'email') {
-      setDirty(target.value.toLowerCase().trim() !== user.state.email.toLowerCase());
-    }
+    setDirty(firstName !== user.state.firstName || lastName !== user.state.lastName);
   };
 
   useEffect(() => {
@@ -145,11 +139,15 @@ const EditAccountModal = ({ onClose, visible }: BaseModalProps): JSX.Element => 
       title="Your Account"
       className="edit-account-modal"
       okText="Save Changes"
+      cancelText="Close"
       onOk={() => formik.submitForm()}
       okButtonProps={{
         loading: loader.isLoading,
         disabled:
-          loader.isLoading || !dirty || !formik.values.email || !formik.values.password
+          loader.isLoading ||
+          !dirty ||
+          !formik.values.firstName.trim() ||
+          !formik.values.lastName.trim()
       }}
     >
       <p className="welcome-message">Hello, {user.state.fullName}!</p>
@@ -159,29 +157,27 @@ const EditAccountModal = ({ onClose, visible }: BaseModalProps): JSX.Element => 
         initialValues={formik.initialValues}
         onChange={onFormChange}
       >
-        <Form.Item label="Update Email" name="email">
-          <Input
-            type="email"
-            onChange={formik.handleChange('email')}
-            placeholder="Enter a new email address"
-          />
+        <Form.Item label="First Name" name="firstName">
+          <Input type="text" onChange={formik.handleChange('firstName')} />
         </Form.Item>
-        <Form.Item
-          label="Confirm Your Password"
-          name="password"
-          help={
-            form.getFieldError('email')[0] ||
-            "You'll need to confirm your password before you update your email."
-          }
-        >
-          <Input.Password onChange={formik.handleChange('password')} />
+        <Form.Item label="Last Name" name="lastName">
+          <Input type="text" onChange={formik.handleChange('lastName')} />
+        </Form.Item>
+        <Form.Item help="You'll receive an email with a link to update your email">
+          <Button
+            type="primary"
+            className="form-action-button"
+            disabled={loader.isLoading}
+            onClick={updateEmail}
+          >
+            Change Your Email
+          </Button>
         </Form.Item>
         <Form.Item help="You'll receive an email with a link to change your password">
           <Button
             type="primary"
-            className="change-password-button"
+            className="form-action-button"
             disabled={loader.isLoading}
-            loading={loader.isLoading}
             onClick={resetPassword}
           >
             Change Your Password

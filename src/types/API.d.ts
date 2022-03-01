@@ -115,12 +115,6 @@ export type UpdateReservationStatusOpts = {
   adminId?: number;
 };
 
-export type SendUpdateEmailOpts = {
-  userId: number;
-  email: string;
-  password: string;
-};
-
 export type UpdateEmailOpts = {
   userId: number;
   email: string;

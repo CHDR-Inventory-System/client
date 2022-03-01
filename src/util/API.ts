@@ -11,7 +11,6 @@ import {
   UserRole,
   CreateReservationOpts,
   UpdateReservationStatusOpts,
-  SendUpdateEmailOpts,
   UpdateEmailOpts
 } from '../types/API';
 import APIError from './APIError';
@@ -203,20 +202,21 @@ class API {
     return response.data;
   }
 
-  static async sendUpdateEmail({
-    userId,
-    email,
-    password
-  }: SendUpdateEmailOpts): Promise<void> {
-    const response = await axios.patch(`/users/${userId}/email`, {
-      email,
-      password
-    });
+  /**
+   * Sends an email to the user that contains a link to change their email
+   */
+  static async sendUpdateEmail(userId: number, email: string): Promise<void> {
+    const response = await axios.patch(`/users/${userId}/email`, { email });
     return response.data;
   }
 
   static async updateEmail(opts: UpdateEmailOpts): Promise<void> {
     const response = await axios.patch('/users/updateEmail', opts);
+    return response.data;
+  }
+
+  static async updateName(userId: number, fullName: string): Promise<void> {
+    const response = await axios.patch(`/users/${userId}/updateName`, { fullName });
     return response.data;
   }
 }
