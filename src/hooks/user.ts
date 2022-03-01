@@ -1,5 +1,4 @@
 import { useContext, useMemo } from 'react';
-import Cookies from 'js-cookie';
 import UserContext from '../contexts/UserContext';
 import API from '../util/API';
 import type {
@@ -37,14 +36,14 @@ type UseUserHook = {
   updateName: (firstName: string, lastName: string) => Promise<void>;
 };
 
-const updateUserCookie = (updatedUser: Partial<User>) => {
-  const userCookie = Cookies.get('user');
+const updateLocalStorage = (updatedUser: Partial<User>) => {
+  const storedUser = localStorage.getItem('user');
 
-  if (userCookie) {
+  if (storedUser) {
     try {
-      const user = JSON.parse(userCookie) as User;
+      const user = JSON.parse(storedUser) as User;
 
-      Cookies.set(
+      localStorage.setItem(
         'user',
         JSON.stringify({
           ...user,
@@ -80,7 +79,7 @@ const useUser = (): UseUserHook => {
   const login = async (email: string, password: string): Promise<User> => {
     const user = await API.login(email, password);
 
-    Cookies.set('user', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(user));
 
     dispatch({
       type: 'LOG_IN',
@@ -91,7 +90,7 @@ const useUser = (): UseUserHook => {
   };
 
   const logout = () => {
-    Cookies.remove('user');
+    localStorage.remove('user');
     dispatch({ type: 'LOG_OUT' });
   };
 
@@ -125,7 +124,7 @@ const useUser = (): UseUserHook => {
   const updateEmail = async (opts: UpdateEmailOpts): Promise<void> => {
     await API.updateEmail(opts);
 
-    updateUserCookie({ email: opts.email });
+    updateLocalStorage({ email: opts.email });
 
     dispatch({
       type: 'UPDATE_EMAIL',
@@ -138,7 +137,7 @@ const useUser = (): UseUserHook => {
 
     await API.updateName(state.ID, fullName);
 
-    updateUserCookie({ fullName });
+    updateLocalStorage({ fullName });
 
     dispatch({
       type: 'UPDATE_NAME',
