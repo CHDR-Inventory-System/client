@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
+type StopLoadingOpts = {
+  delay?: number;
+};
+
 export type UseLoadingHook = {
   readonly isLoading: boolean;
   startLoading: () => void;
-  stopLoading: () => void;
+  stopLoading: (opts?: StopLoadingOpts) => void;
   toggleLoading: (isLoading: boolean) => void;
   /**
    * A helper function used to delay code execution in async functions.
@@ -44,7 +48,9 @@ const useLoader = (initialValue = false): UseLoadingHook => {
 
   const startLoading = () => setLoading(true);
 
-  const stopLoading = () => setLoading(false);
+  const stopLoading = (opts?: StopLoadingOpts) => {
+    setTimeout(() => setLoading(false), opts?.delay ?? 0);
+  };
 
   const toggleLoading = (loading: boolean) => setLoading(loading);
 

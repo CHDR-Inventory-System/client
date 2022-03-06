@@ -1,16 +1,16 @@
-/* eslint-disable */
 import '../scss/reservation-page.scss';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Image, notification } from 'antd';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
+import { BsBoxSeam } from 'react-icons/bs';
+import classNames from 'classnames';
 import Navbar from '../components/Navbar';
 import useInventory from '../hooks/inventory';
 import useLoader from '../hooks/loading';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { Item } from '../types/API';
 import APIError from '../util/APIError';
-import mockInventory from '../assets/mocks/inventory.json';
 import ReservationForm from '../components/reservation-page/ReservationForm';
 
 type ReservationParams = {
@@ -50,7 +50,7 @@ const ReservationPage = (): JSX.Element | null => {
 
   useEffect(() => {
     fetchItem();
-    // setItem(mockInventory[0]);
+
     document.title = 'CHDR Inventory - Reservation';
 
     return () => {
@@ -71,7 +71,12 @@ const ReservationPage = (): JSX.Element | null => {
     return (
       <div className="reservation-page">
         <Navbar />
-        <div>Invalid item</div>
+        <div className="invalid-item-container">
+          <BsBoxSeam />
+          <h1>Item Not Found</h1>
+          <p>Uh oh! We couldn&apos;t find the item you were looking for.</p>
+          <Link to="/">Go Back</Link>
+        </div>
       </div>
     );
   }
@@ -107,9 +112,10 @@ const ReservationPage = (): JSX.Element | null => {
             <p>
               Status:{' '}
               <span
-                className={`item-status item-status-${
-                  item.available ? 'available' : 'unavailable'
-                }`}
+                className={classNames('item-status', {
+                  'item-status-available': item.available,
+                  'item-status-unavailable': !item.available
+                })}
               >
                 {item.available ? 'Available' : 'Unavailable'}
                 {item.available ? (

@@ -130,7 +130,7 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
 
       notification.success({
         message: 'Reservation Created',
-        description: 'An admin will review your reservation shortly.'
+        description: 'A staff member will review your reservation shortly.'
       });
 
       setHasReservation(true);

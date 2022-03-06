@@ -63,7 +63,21 @@ const MainPage = (): JSX.Element | null => {
       });
     }
 
-    loader.stopLoading();
+    // Using delay here to prevent the layout shift that occurs when
+    // the loading spinner dismounts and the cards render
+    loader.stopLoading({ delay: 500 });
+  };
+
+  const renderInventory = () => {
+    if (loader.isLoading) {
+      return null;
+    }
+
+    return inventory.items.length === 0 ? (
+      <EmptyTableContent icon={<FaBoxOpen size={120} />} text="No items available" />
+    ) : (
+      inventory.items.map(item => <ItemCard item={item} key={item.ID} />)
+    );
   };
 
   useEffect(() => {
@@ -100,11 +114,7 @@ const MainPage = (): JSX.Element | null => {
       </div>
       <div className="items">
         {loader.isLoading && <LoadingSpinner text="Loading..." />}
-        {inventory.items.length === 0 && !loader.isLoading ? (
-          <EmptyTableContent icon={<FaBoxOpen size={120} />} text="No items available" />
-        ) : (
-          inventory.items.map(item => <ItemCard item={item} key={item.ID} />)
-        )}
+        {renderInventory()}
       </div>
     </div>
   );
