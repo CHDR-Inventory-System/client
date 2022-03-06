@@ -20,128 +20,16 @@
     border-radius: 6px;
   }
 
-  .ant-form-item-label > label {
-    font-size: 1.2em;
-  }
-
-  .ant-form-item-control-input-content > p {
-    color: map-get($colors, 'text-muted');
-  }
-
-  .ant-picker-calendar-mini {
-    border: 1px solid rgb(217, 217, 217);
-    border-radius: 6px;
-    // max-width: 400px;
-
-    & .ant-picker-panel {
-      border-radius: 0 0 6px 6px;
-    }
-  }
-
-  // Changes the color of the line between the month/year
-  // radio buttons in the calendar's header
-  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):before {
-    background-color: map-get($colors, 'monochromatic-2');
-  }
-
-  // Changes the border color of the selected radio buttons in the calendar's header
-  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child,
-  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-    border-color: map-get($colors, 'monochromatic-2');
-  }
-
-  // Changes the text color of the selected radio button in the calendar's header
-  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-    color: map-get($colors, 'monochromatic-2');
-  }
-
-  .ant-radio-button-wrapper:hover {
-    color: map-get($colors, 'monochromatic-3');
-  }
-
-  // Removes the box shadow of the active radio button in the calendar's header
-  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):focus-within {
-    box-shadow: none;
-  }
-
-  .ant-picker-cell {
-    padding: 8px 0;
-    transition: background 0.3s, border 0.3s;
-
-    &::before {
-      height: 100%;
-    }
-
-    &:not(.ant-picker-cell-selected):hover {
-      background: rgb(245, 245, 245) !important;
-
-      .ant-picker-cell-inner {
-        background: inherit !important;
-      }
-    }
-  }
-
-  .ant-picker-cell-selected {
-    background-color: map-get($colors, 'monochromatic-2');
-  }
-
-  // Removes the border from the inner date cell
-  .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner:before {
-    border: none;
-  }
-
-  .ant-picker-cell-today::before {
-    content: '';
-    border: 1px solid map-get($colors, 'monochromatic-2');
-    // border-radius: 4px;
-  }
-
-  .ant-picker-cell-inner {
-    height: unset;
-  }
-
-  .ant-picker-cell-inner.ant-picker-calendar-date {
-    padding: 8px;
-  }
-
-  @media screen and (max-width: 480px) {
-    .ant-picker-calendar-month-select,
-    .ant-picker-calendar-year-select {
-      flex: 1;
-    }
-
-    .ant-picker-calendar-mini .ant-picker-calendar-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-  }
-
   .container {
     display: flex;
     flex-direction: row;
     gap: 16px;
     max-width: 1300px;
-    margin: 2em auto 0 auto;
+    margin: 2.5em auto 0 auto;
 
     @media screen and (max-width: $breakpoint) {
       flex-direction: column;
-    }
-  }
-
-  .back-header {
-    font-size: 1.5em;
-    align-self: flex-start;
-    margin-bottom: 1em;
-
-    &:focus {
-      color: rgba(0, 0, 0, 0.85);
-    }
-
-    span {
-      @include font-fallback('Gotham-Medium');
-      margin-left: 1em;
+      margin-top: 0em;
     }
   }
 
@@ -156,6 +44,10 @@
     display: flex;
     flex-direction: column;
     padding: 0 3em;
+
+    @media screen and (max-width: $breakpoint) {
+      padding: 0 1.5em;
+    }
   }
 
   .item-detail-sticky-container {
@@ -168,7 +60,7 @@
   }
 
   .item-name {
-    margin: 1em 0 0.1em 0;
+    margin: 1.5em 0 0.1em 0;
   }
 
   .item-status {
@@ -182,15 +74,15 @@
   }
 
   .item-status-available {
-    color: hsla(94, 100%, 27%, 1);
+    color: map-get($colors, 'success');
   }
 
   .item-status-unavailable {
-    color: hsla(4, 94%, 45%, 1);
+    color: map-get($colors, 'danger');
   }
 
   .item-description {
-    margin: 1em 0;
+    margin: 1.5em 0;
   }
 
   .item-quantity {
@@ -205,13 +97,5 @@
     @media screen and (max-width: $breakpoint) {
       margin-top: 2em;
     }
-  }
-
-  .form-submit-button {
-    width: 100%;
-  }
-
-  .ant-form-item {
-    margin-bottom: 1.2em;
   }
 }

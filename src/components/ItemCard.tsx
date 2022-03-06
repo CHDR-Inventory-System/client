@@ -63,7 +63,6 @@ const ItemCard = ({ item }: ItemCardProps): JSX.Element => {
       <Button
         type="primary"
         className="reserve-button"
-        disabled={!item.available}
         onClick={() => navigate(`/reserve/${item.ID}`)}
       >
         Reserve
