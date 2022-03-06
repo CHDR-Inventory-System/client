@@ -9,23 +9,27 @@ import useUser from '../hooks/user';
 type NavbarProps = {
   className?: string;
   sticky?: boolean;
+  showAvatar?: boolean;
 };
 
-const Navbar = ({ sticky, className = '' }: NavbarProps): JSX.Element => {
+const Navbar = ({
+  sticky,
+  showAvatar = true,
+  className = ''
+}: NavbarProps): JSX.Element => {
   const user = useUser();
 
   return (
     <PageHeader
       title={<Link to="/">CHDR - Inventory</Link>}
-      className={classNames({
-        navbar: true,
+      className={classNames('navbar', {
         [className]: className,
         'navbar--sticky': sticky
       })}
       subTitle={
         user.state.role === 'Admin' || user.state.role === 'Super' ? 'Admin' : null
       }
-      extra={[<ProfileAvatar key="avatar" />]}
+      extra={[showAvatar && <ProfileAvatar key="avatar" />]}
     />
   );
 };

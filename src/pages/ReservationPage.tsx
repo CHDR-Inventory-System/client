@@ -20,7 +20,7 @@ type ReservationParams = {
 const ReservationPage = (): JSX.Element | null => {
   const params = useParams<ReservationParams>();
   const inventory = useInventory();
-  const loader = useLoader(false);
+  const loader = useLoader(true);
   const [item, setItem] = useState<Item | null>(null);
   const [isImagePreviewVisible, setImagePreviewVisible] = useState(false);
 

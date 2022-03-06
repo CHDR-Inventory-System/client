@@ -16,7 +16,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 const MainPage = (): JSX.Element | null => {
   const navigate = useNavigate();
   const inventory = useInventory();
-  const loader = useLoader(false);
+  const loader = useLoader(true);
 
   // Store items an a cache so that we don't have to re-query the API
   // every time the search query changes
@@ -65,7 +65,7 @@ const MainPage = (): JSX.Element | null => {
 
     // Using delay here to prevent the layout shift that occurs when
     // the loading spinner dismounts and the cards render
-    loader.stopLoading({ delay: 500 });
+    loader.stopLoading({ delay: 250 });
   };
 
   const renderInventory = () => {
@@ -84,10 +84,13 @@ const MainPage = (): JSX.Element | null => {
     if (!user) {
       navigate('/auth');
     } else if (inventory.items.length === 0) {
-      // This check prevents the flicker/layout shift that
-      // occurs when a user navigates back to this page through
-      // the browser's history.
+      // This check prevents layout shift/flicker. This will
+      // be true if the user is visiting this page for the first time.
       loadInventory();
+    } else {
+      // This will be true if the user navigated back to this page by either
+      // clicking the navbar or using the browser's back button
+      loader.stopLoading({ delay: 100 });
     }
 
     return () => {

@@ -6,6 +6,7 @@ import type { User } from '../types/API';
 import { InventoryProvider } from '../contexts/InventoryContext';
 import { RegisteredUsersProvider } from '../contexts/RegisteredUsers';
 import { ReservationProvider } from '../contexts/ReservationContext';
+import Navbar from './Navbar';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
 const Auth = lazy(() => import('../pages/Auth'));
@@ -20,7 +21,7 @@ const routes = (
     <Route
       path="/"
       element={
-        <Suspense fallback={<div />}>
+        <Suspense fallback={<Navbar showAvatar={false} />}>
           <MainPage />
         </Suspense>
       }
@@ -36,7 +37,7 @@ const routes = (
     <Route
       path="/dashboard"
       element={
-        <Suspense fallback={<div />}>
+        <Suspense fallback={<Navbar showAvatar={false} />}>
           <Dashboard />
         </Suspense>
       }
@@ -68,7 +69,7 @@ const routes = (
     <Route
       path="/reserve/:itemId"
       element={
-        <Suspense fallback={<div />}>
+        <Suspense fallback={<Navbar showAvatar={false} />}>
           <ReservationPage />
         </Suspense>
       }
