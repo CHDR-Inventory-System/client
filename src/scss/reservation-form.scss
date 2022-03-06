@@ -2,6 +2,8 @@
 @import './mixins';
 
 .reservation-form {
+  margin-bottom: 1.5em;
+
   .ant-picker-calendar-mini {
     border: 1px solid rgb(217, 217, 217);
     border-radius: 6px;
@@ -76,6 +78,17 @@
     padding: 8px;
   }
 
+  .ant-select-single.ant-select-sm:not(.ant-select-customize-input) .ant-select-selector {
+    display: table;
+  }
+
+  .ant-select-selection-item,
+  .ant-radio-button-wrapper {
+    padding-top: 0.25em !important;
+    padding-bottom: 0.25em !important;
+    display: table-cell;
+  }
+
   @media screen and (max-width: 480px) {
     .ant-picker-calendar-month-select,
     .ant-picker-calendar-year-select {
@@ -87,6 +100,11 @@
       justify-content: center;
       align-items: center;
       flex-wrap: wrap;
+    }
+
+    .ant-picker-calendar-mode-switch {
+      display: table;
+      margin-top: 16px;
     }
   }
 
