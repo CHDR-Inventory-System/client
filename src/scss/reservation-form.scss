@@ -13,6 +13,10 @@
     }
   }
 
+  .ant-picker {
+    margin-bottom: 1.5em;
+  }
+
   // Changes the color of the line between the month/year
   // radio buttons in the calendar's header
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):before {
@@ -118,6 +122,13 @@
 
   .ant-form-item {
     margin-bottom: 1.5em;
+  }
+
+  // Resets the color of the calendars header buttons when the form has an error
+  // prettier-ignore
+  .ant-form-item-has-error .ant-select:not(.ant-select-disabled):not(.ant-select-customize-input) .ant-select-selector,
+  .ant-form-item-has-error .ant-radio-button-wrapper {
+    border-color: rgb(217, 217, 217) !important;
   }
 
   .form-submit-button {

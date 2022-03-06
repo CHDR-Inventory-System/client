@@ -19,8 +19,9 @@ type FormValues = {
   returnDate: Moment;
 };
 
-const now = moment();
+const todayDate = moment();
 const maxReservationDate = moment().add({ days: 60 });
+const isMobile = /Android|iPhone/.test(navigator.userAgent);
 
 const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
   const loader = useLoader();
@@ -162,6 +163,22 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
     return undefined;
   }, [hasReservation]);
 
+  // Pressing enter when the user enters a value in the time picker doesn't set
+  // the picker's value so we need to do it manually
+  const onTimePickerKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    field: keyof FormValues
+  ) => {
+    if (event.key === 'Enter') {
+      const inputValue = (event.target as HTMLInputElement).value;
+      const date = moment(`${todayDate.format('MMM D, YYYY')} ${inputValue}`);
+
+      if (date.isValid()) {
+        formik.setFieldValue(field, date);
+      }
+    }
+  };
+
   useEffect(() => {
     checkUserReservations();
   }, []);
@@ -173,15 +190,16 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
     <Form layout="vertical" form={form} className="reservation-form">
       <Form.Item label="Checkout Time">
         <p>The time your reservation for this item starts</p>
-        <Form.Item name="checkoutTime">
-          <TimePicker
-            use12Hours
-            showSecond={false}
-            placeholder="12:00 PM"
-            format="h:mm A"
-            onChange={value => formik.setFieldValue('checkoutTime', value)}
-          />
-        </Form.Item>
+        <TimePicker
+          use12Hours
+          inputReadOnly={isMobile}
+          showSecond={false}
+          placeholder="12:00 PM"
+          format="h:mm A"
+          value={formik.values.checkoutTime}
+          onKeyDown={event => onTimePickerKeyDown(event, 'checkoutTime')}
+          onSelect={value => formik.setFieldValue('checkoutTime', value)}
+        />
       </Form.Item>
 
       <Form.Item label="Checkout Date">
@@ -189,7 +207,7 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
         <Form.Item name="checkoutDate">
           <Calendar
             fullscreen={false}
-            validRange={[now, maxReservationDate]}
+            validRange={[todayDate, maxReservationDate]}
             onChange={value => formik.setFieldValue('checkoutDate', value)}
           />
         </Form.Item>
@@ -197,15 +215,16 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
 
       <Form.Item label="Return Time">
         <p>The time your reservation for this item ends</p>
-        <Form.Item name="returnTime">
-          <TimePicker
-            use12Hours
-            placeholder="12:00 PM"
-            showSecond={false}
-            format="h:mm A"
-            onChange={value => formik.setFieldValue('returnTime', value)}
-          />
-        </Form.Item>
+        <TimePicker
+          use12Hours
+          inputReadOnly={isMobile}
+          placeholder="12:00 PM"
+          showSecond={false}
+          format="h:mm A"
+          value={formik.values.returnTime}
+          onKeyDown={event => onTimePickerKeyDown(event, 'returnTime')}
+          onSelect={value => formik.setFieldValue('returnTime', value)}
+        />
       </Form.Item>
 
       <Form.Item label="Return Date">
@@ -213,7 +232,7 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
         <Form.Item name="returnDate">
           <Calendar
             fullscreen={false}
-            validRange={[now, maxReservationDate]}
+            validRange={[todayDate, maxReservationDate]}
             onChange={value => formik.setFieldValue('returnDate', value)}
           />
         </Form.Item>
