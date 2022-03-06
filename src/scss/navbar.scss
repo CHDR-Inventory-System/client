@@ -3,7 +3,12 @@
 
 .navbar {
   background-color: $body-color;
-  z-index: 2;
+  z-index: 10;
+
+  &.navbar--sticky {
+    position: sticky;
+    top: 0;
+  }
 
   .ant-page-header-heading-title {
     @include font-fallback('Gotham-Bold');

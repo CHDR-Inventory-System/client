@@ -13,6 +13,7 @@ const Dashboard = lazy(() => import('../pages/Dashboard'));
 const VerifyAccountPage = lazy(() => import('../pages/VerifyAccountPage'));
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
 const UpdateEmailPage = lazy(() => import('../pages/UpdateEmailPage'));
+const ReservationPage = lazy(() => import('../pages/ReservationPage'));
 
 const routes = (
   <Routes>
@@ -61,6 +62,14 @@ const routes = (
       element={
         <Suspense fallback={<div />}>
           <UpdateEmailPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/reserve/:itemId"
+      element={
+        <Suspense fallback={<div />}>
+          <ReservationPage />
         </Suspense>
       }
     />

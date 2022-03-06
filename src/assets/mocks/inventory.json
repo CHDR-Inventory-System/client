@@ -24,13 +24,33 @@
         "main": false,
         "moveable": true,
         "name": "Canon EFS 18-135mm lens",
-        "purchaseDate": "Fri, 06 Dec 2019 00:00:00 GMT",
+        "purchaseDate": "Wed, 27 Feb 2002 00:00:00 GMT",
         "quantity": 4,
         "retiredDateTime": null,
         "serial": "2142-1245-7643-1234",
         "type": "Camera",
         "vendorName": "JimCo Widgets",
         "vendorPrice": 31.45
+      },
+      {
+        "ID": 36,
+        "available": true,
+        "barcode": "CHDR2453",
+        "created": "Wed, 02 Mar 2022 19:38:28 GMT",
+        "description": null,
+        "images": [],
+        "item": 8,
+        "location": "321C",
+        "main": false,
+        "moveable": true,
+        "name": "Test Child",
+        "purchaseDate": null,
+        "quantity": 4,
+        "retiredDateTime": null,
+        "serial": null,
+        "type": "Tech",
+        "vendorName": null,
+        "vendorPrice": null
       }
     ],
     "created": "Wed, 12 Jan 2022 16:57:34 GMT",
@@ -41,6 +61,13 @@
         "created": "Sat, 12 Feb 2022 23:52:07 GMT",
         "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
         "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+        "itemChild": 10
+      },
+      {
+        "ID": 36,
+        "created": "Sun, 27 Feb 2022 17:04:16 GMT",
+        "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+        "imageURL": "https://chdr.cs.ucf.edu/csi/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
         "itemChild": 10
       }
     ],
@@ -63,7 +90,7 @@
     "barcode": "CHDR5212",
     "children": [],
     "created": "Wed, 12 Jan 2022 16:57:34 GMT",
-    "description": "Ea deserunt proident qui officia magna culpa id. Fugiat velit laboris labore et consectetur ad reprehenderit. Excepteur esse incididunt fugiat tempor Lorem velit aliqua culpa Lorem velit ex non nostrud ex. Ipsum ut et culpa commodo eu aliqua dolor. Nulla elit id est aliquip voluptate tempor cillum eu dolor aliqua. Nostrud proident labore commodo Lorem.",
+    "description": null,
     "images": [
       {
         "ID": 6,
@@ -84,7 +111,7 @@
     "serial": "CN-5829291-498549-293",
     "type": "Other",
     "vendorName": null,
-    "vendorPrice": 2000
+    "vendorPrice": 2000.0
   },
   {
     "ID": 13,
@@ -154,6 +181,46 @@
         "type": "Computer",
         "vendorName": "BestBuy",
         "vendorPrice": 2334.32
+      },
+      {
+        "ID": 31,
+        "available": true,
+        "barcode": "CHDR2849",
+        "created": "Sat, 26 Feb 2022 23:10:45 GMT",
+        "description": "",
+        "images": [],
+        "item": 11,
+        "location": "321A",
+        "main": false,
+        "moveable": true,
+        "name": "samsung Tablet Keyboard ",
+        "purchaseDate": "Sat, 16 Aug 2008 00:00:00 GMT",
+        "quantity": 80,
+        "retiredDateTime": null,
+        "serial": "",
+        "type": "Accessories ",
+        "vendorName": "",
+        "vendorPrice": 50.0
+      },
+      {
+        "ID": 37,
+        "available": true,
+        "barcode": "CHDR2849",
+        "created": "Thu, 03 Mar 2022 13:34:39 GMT",
+        "description": "Its a cloth",
+        "images": [],
+        "item": 11,
+        "location": "321A",
+        "main": false,
+        "moveable": true,
+        "name": "Samsung Cloth",
+        "purchaseDate": null,
+        "quantity": 80,
+        "retiredDateTime": null,
+        "serial": null,
+        "type": "Fabric",
+        "vendorName": null,
+        "vendorPrice": null
       }
     ],
     "created": "Wed, 12 Jan 2022 16:57:34 GMT",
@@ -182,7 +249,7 @@
   },
   {
     "ID": 16,
-    "available": false,
+    "available": true,
     "barcode": "CHDR9593",
     "children": [],
     "created": "Wed, 12 Jan 2022 16:57:34 GMT",
@@ -251,7 +318,7 @@
     "barcode": "CHDR1234",
     "children": [],
     "created": "Wed, 09 Feb 2022 11:12:49 GMT",
-    "description": "It can play Pokémon. That’s pretty cool right?",
+    "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
     "images": [
       {
         "ID": 16,
@@ -262,7 +329,7 @@
       }
     ],
     "item": 14,
-    "location": "Cam’s Apartment",
+    "location": "Cam\u2019s Apartment",
     "main": true,
     "moveable": true,
     "name": "Nintendo Switch",
@@ -278,9 +345,50 @@
     "ID": 19,
     "available": true,
     "barcode": "CHDR3749",
-    "children": [],
+    "children": [
+      {
+        "ID": 32,
+        "available": true,
+        "barcode": "CHDR3749",
+        "created": "Sat, 26 Feb 2022 23:17:12 GMT",
+        "description": "",
+        "images": [],
+        "item": 15,
+        "location": "Cabinet 5H",
+        "main": false,
+        "moveable": true,
+        "name": "HP stylus",
+        "purchaseDate": "Mon, 27 Oct 2014 00:00:00 GMT",
+        "quantity": 25,
+        "retiredDateTime": null,
+        "serial": "",
+        "type": "ACCESSORIES ",
+        "vendorName": "",
+        "vendorPrice": -1.0
+      },
+      {
+        "ID": 33,
+        "available": true,
+        "barcode": "CHDR3749",
+        "created": "Sun, 27 Feb 2022 20:10:31 GMT",
+        "description": null,
+        "images": [],
+        "item": 15,
+        "location": "Cabinet 5H",
+        "main": false,
+        "moveable": true,
+        "name": "HP Cord Bundle ",
+        "purchaseDate": null,
+        "quantity": 25,
+        "retiredDateTime": null,
+        "serial": null,
+        "type": "Accessiries ",
+        "vendorName": null,
+        "vendorPrice": null
+      }
+    ],
     "created": "Wed, 16 Feb 2022 19:11:33 GMT",
-    "description": "HP’s newest laptop",
+    "description": "HP\u2019s newest laptop",
     "images": [],
     "item": 15,
     "location": "Cabinet 5H",
@@ -293,7 +401,7 @@
     "serial": "",
     "type": "Laptops",
     "vendorName": "HP",
-    "vendorPrice": 8000
+    "vendorPrice": 8000.0
   },
   {
     "ID": 28,
@@ -335,7 +443,7 @@
     "serial": "Test",
     "type": "Test",
     "vendorName": "Test",
-    "vendorPrice": 9999
+    "vendorPrice": 9999.0
   },
   {
     "ID": 30,
@@ -356,6 +464,85 @@
     "serial": null,
     "type": "No",
     "vendorName": "No",
+    "vendorPrice": null
+  },
+  {
+    "ID": 34,
+    "available": true,
+    "barcode": "0859947004233",
+    "children": [],
+    "created": "Tue, 01 Mar 2022 21:57:27 GMT",
+    "description": "This is the best deck of cards EVER!!!",
+    "images": [
+      {
+        "ID": 37,
+        "created": "Tue, 01 Mar 2022 21:57:59 GMT",
+        "imagePath": "/home/CHDR_CSI/public_html/images/76348037-755D-4E6A-9C1A-82DA6AAD2C95.jpg",
+        "imageURL": "https://chdr.cs.ucf.edu/csi/images/76348037-755D-4E6A-9C1A-82DA6AAD2C95.jpg",
+        "itemChild": 34
+      }
+    ],
+    "item": 24,
+    "location": "2A",
+    "main": true,
+    "moveable": true,
+    "name": "Deck of Cards",
+    "purchaseDate": "Fri, 18 Nov 2011 00:00:00 GMT",
+    "quantity": 25,
+    "retiredDateTime": null,
+    "serial": "dunissbol",
+    "type": "Games",
+    "vendorName": "Vegas Brand",
+    "vendorPrice": 1.0
+  },
+  {
+    "ID": 35,
+    "available": true,
+    "barcode": "CHDR22222",
+    "children": [],
+    "created": "Wed, 02 Mar 2022 19:06:48 GMT",
+    "description": "Test",
+    "images": [],
+    "item": 25,
+    "location": "No",
+    "main": true,
+    "moveable": true,
+    "name": "Test",
+    "purchaseDate": null,
+    "quantity": 0,
+    "retiredDateTime": null,
+    "serial": null,
+    "type": "Test",
+    "vendorName": null,
+    "vendorPrice": null
+  },
+  {
+    "ID": 38,
+    "available": true,
+    "barcode": "CHDR9472",
+    "children": [],
+    "created": "Thu, 03 Mar 2022 13:37:47 GMT",
+    "description": null,
+    "images": [
+      {
+        "ID": 38,
+        "created": "Thu, 03 Mar 2022 13:42:06 GMT",
+        "imagePath": "/home/CHDR_CSI/public_html/images/339F648F-F52F-4866-BAAB-1852B1B2D2BC.jpg",
+        "imageURL": "https://chdr.cs.ucf.edu/csi/images/339F648F-F52F-4866-BAAB-1852B1B2D2BC.jpg",
+        "itemChild": 38
+      }
+    ],
+    "item": 26,
+    "location": "154C",
+    "main": true,
+    "moveable": true,
+    "name": "iPad Air 4th Generation",
+    "purchaseDate": null,
+    "quantity": 0,
+    "retiredDateTime": null,
+    "serial": null,
+    "type": "Tech",
+    "vendorName": null,
     "vendorPrice": null
   }
 ]

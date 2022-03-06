@@ -15,7 +15,15 @@ type UseInventoryHook = {
   init: () => Promise<Item[]>;
   setItems: (items: Item[]) => void;
   updateItem: (item: AtLeast<Item, 'ID'>) => Promise<void>;
-  getItem: (id: number) => Item | undefined;
+  /**
+   * Searches the current inventory state for the item with the specified ID.
+   * This function **does not** make an API request.
+   */
+  findItem: (id: number) => Item | undefined;
+  /**
+   * Makes an API call to get an item with a specific ID
+   */
+  fetchItem: (id: number) => Promise<Item>;
   deleteImage: (itemId: number, imageId: number) => Promise<void>;
   getImages: (itemId: number) => ItemImage[];
   uploadImage: (params: ImageUploadParams) => Promise<ItemImage>;
@@ -85,7 +93,7 @@ const useInventory = (): UseInventoryHook => {
     });
   };
 
-  const getItem = (itemId: number): Item | undefined => {
+  const findItem = (itemId: number): Item | undefined => {
     const item = state.find(({ ID }) => itemId === ID);
 
     if (item) {
@@ -108,7 +116,7 @@ const useInventory = (): UseInventoryHook => {
     });
   };
 
-  const getImages = (itemId: number): ItemImage[] => getItem(itemId)?.images || [];
+  const getImages = (itemId: number): ItemImage[] => findItem(itemId)?.images || [];
 
   const uploadImage = async (params: ImageUploadParams): Promise<ItemImage> => {
     const image = await API.uploadImage(params);
@@ -172,19 +180,25 @@ const useInventory = (): UseInventoryHook => {
     });
   };
 
+  const fetchItem = async (itemId: number): Promise<Item> => {
+    const item = await API.getItem(itemId);
+    return item;
+  };
+
   return {
     items: state,
     init,
     setItems,
     updateItem,
-    getItem,
+    findItem,
     deleteImage,
     getImages,
     uploadImage,
     deleteItem,
     addItem,
     addChildItem,
-    retireItem
+    retireItem,
+    fetchItem
   };
 };
 

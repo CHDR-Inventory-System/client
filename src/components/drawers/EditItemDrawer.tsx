@@ -73,7 +73,7 @@ const EditItemDrawer = ({
   // In this case, the parent that renders the component makes sure that the
   // id of the item is always valid so we can safely cast to Item to get
   // rid of the undefined type.
-  const item = useMemo(() => inventory.getItem(itemId), [itemId]) as Item;
+  const item = useMemo(() => inventory.findItem(itemId), [itemId]) as Item;
   const [form] = Form.useForm();
   const drawer = useDrawer({ reservation: false });
   const formik = useFormik<Item>({

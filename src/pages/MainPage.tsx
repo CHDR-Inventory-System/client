@@ -69,7 +69,10 @@ const MainPage = (): JSX.Element | null => {
   useEffect(() => {
     if (!user) {
       navigate('/auth');
-    } else {
+    } else if (inventory.items.length === 0) {
+      // This check prevents the flicker/layout shift that
+      // occurs when a user navigates back to this page through
+      // the browser's history.
       loadInventory();
     }
 
@@ -84,7 +87,7 @@ const MainPage = (): JSX.Element | null => {
 
   return (
     <div className="main-page">
-      <Navbar />
+      <Navbar sticky />
       <div className="search-input-wrapper">
         <h2>Search</h2>
         <Input
