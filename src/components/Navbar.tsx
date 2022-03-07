@@ -1,7 +1,7 @@
 import '../scss/navbar.scss';
 import React from 'react';
 import { PageHeader } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import ProfileAvatar from './ProfileAvatar';
 import useUser from '../hooks/user';
@@ -18,6 +18,7 @@ const Navbar = ({
   className = ''
 }: NavbarProps): JSX.Element => {
   const user = useUser();
+  const location = useLocation();
 
   return (
     <PageHeader
@@ -27,7 +28,25 @@ const Navbar = ({
         'navbar--sticky': sticky
       })}
       subTitle={user.isAdminOrSuper() ? 'Admin' : null}
-      extra={[showAvatar && <ProfileAvatar key="avatar" />]}
+      extra={
+        showAvatar && [
+          user.isAdminOrSuper() && (
+            <Link
+              to="/dashboard"
+              key="dashboard"
+              className={classNames('nav-link', {
+                'nav-link--active': location.pathname === '/dashboard'
+              })}
+            >
+              Dashboard
+            </Link>
+          ),
+          <Link to="/" key="reservations" className="nav-link">
+            My Reservations
+          </Link>,
+          <ProfileAvatar key="avatar" />
+        ]
+      }
     />
   );
 };
