@@ -41,7 +41,7 @@ const Navbar = ({
               Dashboard
             </Link>
           ),
-          <Link to="/" key="reservations" className="nav-link">
+          <Link to="/reservations" key="reservations" className="nav-link">
             My Reservations
           </Link>,
           <ProfileAvatar key="avatar" />

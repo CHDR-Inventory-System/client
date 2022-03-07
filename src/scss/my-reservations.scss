@@ -1,0 +1,50 @@
+@import './variables';
+
+.my-reservations {
+  $breakpoint: 1000px;
+
+  .page-title {
+    margin: 1em auto 0 auto;
+    font-size: 1.7em;
+    width: 80%;
+  }
+
+  .reservations-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0 auto;
+
+    & > h2 {
+      font-size: 1.7em;
+      margin: 1em 0 0 1em;
+      z-index: 1;
+    }
+
+    @media screen and (max-width: $breakpoint) {
+      display: block;
+      width: 100%;
+
+      & > h2 {
+        width: 80%;
+        margin: 1em auto 0 auto;
+      }
+    }
+  }
+
+  .center-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .reservations {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    @media screen and (max-width: $breakpoint) {
+      margin: 0 auto;
+      justify-content: center;
+    }
+  }
+}

@@ -21,8 +21,9 @@ const VerifyAccountPage = lazy(() => import('../pages/VerifyAccountPage'));
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
 const UpdateEmailPage = lazy(() => import('../pages/UpdateEmailPage'));
 const ReservationPage = lazy(() => import('../pages/ReservationPage'));
+const MyReservations = lazy(() => import('../pages/MyReservations'));
 
-const requiredAuthPaths = ['/dashboard', '/'];
+const requiredAuthPaths = ['/', '/dashboard', '/reservations'];
 const reserveRouteRegex = /reserve\/[0-9]/;
 
 const AppRoutes = (): JSX.Element => {
@@ -115,6 +116,14 @@ const AppRoutes = (): JSX.Element => {
         element={
           <Suspense fallback={<Navbar showAvatar={false} />}>
             <ReservationPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/reservations"
+        element={
+          <Suspense fallback={<Navbar showAvatar={false} />}>
+            <MyReservations />
           </Suspense>
         }
       />

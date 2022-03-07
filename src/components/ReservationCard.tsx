@@ -1,17 +1,22 @@
+/* eslint-disable */
 import '../scss/item-card.scss';
 import React, { useState } from 'react';
-import { Button, Card, Image } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Card, Image, Button } from 'antd';
+import { Reservation } from '../types/API';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
-import { Item } from '../types/API';
+import moment from 'moment';
 
-type ItemCardProps = {
-  item: Item;
+type ReservationCardProps = {
+  reservation: Reservation;
 };
 
-const ItemCard = ({ item }: ItemCardProps): JSX.Element => {
-  const navigate = useNavigate();
+// The server returns GMT dates so we need to add 5 hours to convert it to EST
+const formatDate = (date: string) =>
+  moment(date).add({ hours: 5 }).format('MMM D, YYYY, hh:mm A');
+
+const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => {
   const [isPreviewVisible, setPreviewVisible] = useState(false);
+  const item = reservation.item;
 
   return (
     <Card className="item-card" bordered={false}>
@@ -40,37 +45,24 @@ const ItemCard = ({ item }: ItemCardProps): JSX.Element => {
         )}
       </div>
       <h2>{item.name}</h2>
-      <p className="item-status">
-        <b>Status</b>:{' '}
-        <span
-          className={`item-status item-status-${
-            item.available ? 'available' : 'unavailable'
-          }`}
-        >
-          {item.available ? 'Available' : 'Unavailable'}
-          {item.available ? (
-            <AiFillCheckCircle size={16} />
-          ) : (
-            <AiFillCloseCircle size={16} />
-          )}
-        </span>
+      <p>
+        <b>Status</b>: {reservation.status}
       </p>
-      <p className="quantity">
-        <b>Quantity</b>: {item.quantity}
+      <p>
+        <b>Checkout</b>: {formatDate(reservation.startDateTime)}
       </p>
-      <b>Description</b>
-      <p className="item-description" title={item.description || undefined}>
-        {item.description || 'No description available'}
+      <p>
+        <b>Return</b>: {formatDate(reservation.endDateTime)}
       </p>
       <Button
         type="primary"
         className="reserve-button"
-        onClick={() => navigate(`/reserve/${item.ID}`)}
+        disabled={reservation.status !== 'Pending'}
       >
-        Reserve
+        Cancel Reservation
       </Button>
     </Card>
   );
 };
 
-export default ItemCard;
+export default ReservationCard;
