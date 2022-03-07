@@ -57,7 +57,7 @@ const ProfileAvatar = (): JSX.Element => {
       <Menu.Item key="reservations" icon={<AiOutlineCalendar size={18} />}>
         My Reservations
       </Menu.Item>
-      {(user.state.role === 'Admin' || user.state.role === 'Super') && (
+      {user.isAdminOrSuper() && (
         <Menu.Item
           key="dashboard"
           icon={<AiOutlineDashboard size={18} />}

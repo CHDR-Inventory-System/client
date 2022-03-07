@@ -26,9 +26,7 @@ const Navbar = ({
         [className]: className,
         'navbar--sticky': sticky
       })}
-      subTitle={
-        user.state.role === 'Admin' || user.state.role === 'Super' ? 'Admin' : null
-      }
+      subTitle={user.isAdminOrSuper() ? 'Admin' : null}
       extra={[showAvatar && <ProfileAvatar key="avatar" />]}
     />
   );

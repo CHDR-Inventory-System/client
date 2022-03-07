@@ -53,7 +53,7 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
         )
       );
     } catch {
-      // Ignored
+      // TODO: Catch this error?
     }
 
     loader.stopLoading();

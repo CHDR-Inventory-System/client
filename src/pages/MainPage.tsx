@@ -1,12 +1,11 @@
 import '../scss/main-page.scss';
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, notification } from 'antd';
 import debounce from 'lodash/debounce';
-import { useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaBoxOpen } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
-import { Item, User } from '../types/API';
+import { Item } from '../types/API';
 import ItemCard from '../components/ItemCard';
 import useInventory from '../hooks/inventory';
 import useLoader from '../hooks/loading';
@@ -14,24 +13,11 @@ import EmptyTableContent from '../components/dashboard/EmptyTableContent';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const MainPage = (): JSX.Element | null => {
-  const navigate = useNavigate();
   const inventory = useInventory();
   const loader = useLoader(true);
-
   // Store items an a cache so that we don't have to re-query the API
   // every time the search query changes
   const [inventoryCache, setInventoryCache] = useState<Item[]>([]);
-
-  // Because we won't have access to the updated user state after
-  // a call to dispatch, we can't rely on it's value. Therefore, we'll
-  // have to read from local storage
-  const user = useMemo(() => {
-    try {
-      return JSON.parse(localStorage.getItem('user') || '') as User;
-    } catch (err) {
-      return null;
-    }
-  }, []);
 
   const handleSearch = debounce((query: string) => {
     if (!query) {
@@ -81,9 +67,7 @@ const MainPage = (): JSX.Element | null => {
   };
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-    } else if (inventory.items.length === 0) {
+    if (inventory.items.length === 0) {
       // This check prevents layout shift/flicker. This will
       // be true if the user is visiting this page for the first time.
       loadInventory();
@@ -97,10 +81,6 @@ const MainPage = (): JSX.Element | null => {
       notification.destroy();
     };
   }, []);
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <div className="main-page">
