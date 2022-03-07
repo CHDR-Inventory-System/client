@@ -21,7 +21,6 @@ type FormValues = {
 
 const todayDate = moment();
 const maxReservationDate = moment().add({ days: 60 });
-const isMobile = /Android|iPhone/.test(navigator.userAgent);
 
 const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
   const loader = useLoader();
@@ -192,7 +191,6 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
         <p>The time your reservation for this item starts</p>
         <TimePicker
           use12Hours
-          inputReadOnly={isMobile}
           showSecond={false}
           placeholder="12:00 PM"
           format="h:mm A"
@@ -217,7 +215,6 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
         <p>The time your reservation for this item ends</p>
         <TimePicker
           use12Hours
-          inputReadOnly={isMobile}
           placeholder="12:00 PM"
           showSecond={false}
           format="h:mm A"
