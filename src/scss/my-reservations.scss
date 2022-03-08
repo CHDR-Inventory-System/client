@@ -1,7 +1,9 @@
 @import './variables';
 
 .my-reservations {
-  $breakpoint: 1000px;
+  $breakpoint: 600px;
+  $container-width: 85%;
+
   padding-bottom: 2em;
 
   .ant-collapse > .ant-collapse-item > .ant-collapse-header {
@@ -37,7 +39,11 @@
 
   .page-header {
     margin: 1em auto 3em auto;
-    width: 90%;
+    width: $container-width;
+
+    @media screen and (max-width: $breakpoint) {
+      width: 85%;
+    }
 
     h2 {
       font-size: 1.7em;
@@ -56,8 +62,12 @@
   .reservations-container {
     display: flex;
     flex-direction: column;
-    width: 90%;
+    width: $container-width;
     margin: 1em auto;
+
+    @media screen and (max-width: $breakpoint) {
+      width: 93%;
+    }
 
     & > h2 {
       font-size: 1.7em;
