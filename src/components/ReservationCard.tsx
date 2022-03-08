@@ -1,10 +1,11 @@
-/* eslint-disable */
 import '../scss/item-card.scss';
 import '../scss/reservation-card.scss';
 import React, { useState } from 'react';
-import { Card, Image, Button, Modal } from 'antd';
-import { Reservation } from '../types/API';
+import { Card, Image, Button, Modal, notification } from 'antd';
 import moment from 'moment';
+import { Reservation } from '../types/API';
+import useLoader from '../hooks/loading';
+import useReservations from '../hooks/reservation';
 
 type ReservationCardProps = {
   reservation: Reservation;
@@ -15,10 +16,44 @@ const formatDate = (date: string) =>
   moment(date).add({ hours: 5 }).format('MMM D, YYYY, hh:mm A');
 
 const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => {
+  const { item } = reservation;
   const [isPreviewVisible, setPreviewVisible] = useState(false);
-  const item = reservation.item;
+  const loader = useLoader();
+  const res = useReservations();
 
-  const cancelReservation = async () => {};
+  const cancelReservation = async () => {
+    if (loader.isLoading) {
+      return;
+    }
+
+    loader.startLoading();
+
+    try {
+      await res.updateStatus({
+        reservationId: reservation.ID,
+        status: 'Cancelled'
+      });
+
+      notification.success({
+        key: 'reservation-cancel-success',
+        message: 'Reservation Cancelled',
+        description: (
+          <div>
+            Your reservation for <b>{reservation.item.name}</b> was cancelled.
+          </div>
+        )
+      });
+    } catch {
+      notification.error({
+        key: 'reservation-cancel-error',
+        message: 'Error Cancelling Reservation',
+        description:
+          'An error occurred while cancelling this reservation, please try again.'
+      });
+    }
+
+    loader.stopLoading();
+  };
 
   const confirmDCancelReservation = () => {
     Modal.confirm({

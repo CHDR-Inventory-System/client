@@ -41,7 +41,13 @@ const Navbar = ({
               Dashboard
             </Link>
           ),
-          <Link to="/reservations" key="reservations" className="nav-link">
+          <Link
+            to="/reservations"
+            key="reservations"
+            className={classNames('nav-link', {
+              'nav-link--active': location.pathname === '/reservations'
+            })}
+          >
             My Reservations
           </Link>,
           <ProfileAvatar key="avatar" />

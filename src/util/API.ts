@@ -219,6 +219,11 @@ class API {
     const response = await axios.patch(`/users/${userId}/updateName`, { fullName });
     return response.data;
   }
+
+  static async getReservationsForUser(userId: number): Promise<Reservation[]> {
+    const response = await axios.get(`/reservations/user/${userId}`);
+    return response.data;
+  }
 }
 
 export default API;

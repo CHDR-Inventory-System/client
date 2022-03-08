@@ -17,6 +17,7 @@ type UserReservationHook = {
    * @param itemId Refers to the ID of the item in the `item` table
    */
   getReservationsForItem: (itemId: number) => Promise<Reservation[]>;
+  getReservationsForUser: (userId: number) => Promise<Reservation[]>;
 };
 
 // The server returns GMT dates so we need to add 5 hours to convert it to EST
@@ -84,12 +85,24 @@ const useReservations = (): UserReservationHook => {
     return reservations;
   };
 
+  const getReservationsForUser = async (userId: number): Promise<Reservation[]> => {
+    const reservations = await API.getReservationsForUser(userId);
+
+    dispatch({
+      type: 'SET_RESERVATIONS',
+      payload: reservations
+    });
+
+    return reservations;
+  };
+
   return {
     state,
     createReservation,
     initAllReservations,
     updateStatus,
-    getReservationsForItem
+    getReservationsForItem,
+    getReservationsForUser
   };
 };
 

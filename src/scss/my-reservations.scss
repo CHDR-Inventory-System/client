@@ -4,8 +4,39 @@
   $breakpoint: 1000px;
   padding-bottom: 2em;
 
-  .page-title {
-    margin: 1em auto 0 auto;
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    align-items: unset;
+  }
+
+  .ant-collapse-borderless > .ant-collapse-item {
+    border-bottom: none;
+  }
+
+  .ant-collapse-content > .ant-collapse-content-box {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .ant-collapse-content {
+    background-color: $body-color;
+  }
+
+  .ant-collapse-header {
+    border: 1px solid rgb(217, 217, 217);
+    border-radius: 6px !important;
+
+    & > div {
+      display: flex;
+      align-items: center;
+    }
+
+    h2 {
+      margin: 0;
+    }
+  }
+
+  .page-header {
+    margin: 1em auto 3em auto;
     width: 87%;
 
     h2 {
@@ -16,6 +47,10 @@
       font-size: 1.1em;
       color: map-get($colors, 'text-muted');
     }
+  }
+
+  .loading-spinner {
+    margin-top: 30vh;
   }
 
   .reservations-container {
@@ -29,21 +64,6 @@
       margin: 1em 0 0 1em;
       z-index: 1;
     }
-
-    @media screen and (max-width: $breakpoint) {
-      display: block;
-      width: 100%;
-
-      & > h2 {
-        width: 80%;
-        margin: 1em auto 0 auto;
-      }
-    }
-  }
-
-  .center-wrapper {
-    display: flex;
-    justify-content: center;
   }
 
   .reservations {
@@ -51,7 +71,18 @@
 
     &::after {
       content: '';
-      flex: 0 0 32px;
+      flex: 0 0 16px;
+    }
+  }
+
+  .empty-inventory-list {
+    margin-top: 10vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    p {
+      font-size: 1.2em;
     }
   }
 }
