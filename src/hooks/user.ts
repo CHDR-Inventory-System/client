@@ -13,7 +13,7 @@ type UseUserHook = {
     readonly firstName: string;
     readonly lastName: string;
   };
-
+  init: (user: User) => void;
   /**
    * Makes a call to the API to log a user in. If successful, this also sets
    * the `user` field in {@link AsyncStorage} to the value of the current user.
@@ -34,6 +34,7 @@ type UseUserHook = {
   sendUpdateEmail: () => Promise<void>;
   updateEmail: (opts: UpdateEmailOpts) => Promise<void>;
   updateName: (firstName: string, lastName: string) => Promise<void>;
+  isAdminOrSuper: () => boolean;
 };
 
 const updateLocalStorage = (updatedUser: Partial<User>) => {
@@ -76,15 +77,19 @@ const useUser = (): UseUserHook => {
     [state.fullName]
   );
 
+  const init = (user: User) => {
+    dispatch({
+      type: 'LOG_IN',
+      payload: user
+    });
+  };
+
   const login = async (email: string, password: string): Promise<User> => {
     const user = await API.login(email, password);
 
     localStorage.setItem('user', JSON.stringify(user));
 
-    dispatch({
-      type: 'LOG_IN',
-      payload: user
-    });
+    init(user);
 
     return user;
   };
@@ -145,12 +150,15 @@ const useUser = (): UseUserHook => {
     });
   };
 
+  const isAdminOrSuper = () => state.role === 'Admin' || state.role === 'Super';
+
   return {
     state: {
       ...state,
       firstName,
       lastName: lastName.join(' ')
     },
+    init,
     login,
     logout,
     createAccount,
@@ -160,7 +168,8 @@ const useUser = (): UseUserHook => {
     resetPassword,
     sendUpdateEmail,
     updateEmail,
-    updateName
+    updateName,
+    isAdminOrSuper
   };
 };
 

@@ -10,4 +10,10 @@
   .menu-divider {
     margin: 4px 0;
   }
+
+  @media screen and (min-width: 700px) {
+    .menu-item-mobile {
+      display: none;
+    }
+  }
 }

@@ -165,9 +165,9 @@ const CreateReservationDrawer = ({
           <DatePicker
             use12Hours
             showSecond={false}
-            showTime={{ format: 'hh:mm A' }}
-            format="MM/DD/YYYY hh:mm A"
-            placeholder="MM/DD/YYYY 12:00 AM"
+            showTime={{ format: 'h:mm A' }}
+            format="MM/DD/YYYY h:mm A"
+            placeholder="MM/DD/YYYY 12:00 PM"
             onChange={date =>
               formik.setFieldValue(
                 'startDateTime',
@@ -182,9 +182,9 @@ const CreateReservationDrawer = ({
           <DatePicker
             use12Hours
             showSecond={false}
-            showTime={{ format: 'hh:mm A' }}
-            format="MM/DD/YYYY hh:mm A"
-            placeholder="MM/DD/YYYY 12:00 AM"
+            showTime={{ format: 'h:mm A' }}
+            format="MM/DD/YYYY h:mm A"
+            placeholder="MM/DD/YYYY 12:00 PM"
             onChange={date =>
               formik.setFieldValue(
                 'endDateTime',

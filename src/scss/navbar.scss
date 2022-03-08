@@ -3,7 +3,12 @@
 
 .navbar {
   background-color: $body-color;
-  z-index: 2;
+  z-index: 10;
+
+  &.navbar--sticky {
+    position: sticky;
+    top: 0;
+  }
 
   .ant-page-header-heading-title {
     @include font-fallback('Gotham-Bold');
@@ -21,5 +26,26 @@
   .ant-page-header-heading-sub-title {
     @include font-fallback('Gotham-Medium');
     color: map-get($colors, 'text-muted');
+  }
+
+  .ant-page-header-heading-extra {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-link {
+    @include font-fallback('Gotham-Medium');
+    color: map-get($colors, 'text-muted');
+    margin-left: 1em;
+    margin-right: 1em;
+
+    &.nav-link--active,
+    &:hover {
+      color: map-get($colors, 'monochromatic-2');
+    }
+
+    @media screen and (max-width: 700px) {
+      display: none;
+    }
   }
 }

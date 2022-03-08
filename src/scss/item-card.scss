@@ -1,11 +1,4 @@
 .item-card {
-  @mixin supports-line-clamp() {
-    @supports (display: -webkit-box) and (-webkit-line-clamp: 2) and
-      (-webkit-box-orient: vertical) {
-      @content;
-    }
-  }
-
   display: flex;
   box-shadow: 0px 6px 57px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -22,10 +15,13 @@
     flex-direction: column;
   }
 
-  .item-status {
+  p.item-status {
+    margin-bottom: 0.5em;
+  }
+
+  span.item-status {
     display: inline-flex;
     align-items: center;
-    margin-bottom: 0.5em;
     margin-left: 0.25em;
 
     svg {
@@ -48,7 +44,8 @@
     margin-bottom: 1.5em;
     color: hsl(0deg, 0%, 40%);
 
-    @include supports-line-clamp() {
+    // prettier-ignore
+    @supports (display: -webkit-box) and (-webkit-line-clamp: 2) and (-webkit-box-orient: vertical) {
       white-space: normal;
       display: -webkit-box;
       flex: 1;

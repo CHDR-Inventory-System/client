@@ -98,11 +98,6 @@
 .ant-input,
 .ant-input-affix-wrapper {
   padding: 5px 11px;
-  // Increase the input size on mobile to prevent the device
-  // from zooming into the field by default
-  @media screen and (max-width: 500px) {
-    font-size: 16px;
-  }
 }
 
 .ant-input-show-count-has-suffix {

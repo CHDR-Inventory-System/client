@@ -1,5 +1,113 @@
 [
   {
+    "ID": 10,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Wed, 12 Jan 2022 17:02:58 GMT",
+    "endDateTime": "Fri, 07 Jan 2022 11:00:00 GMT",
+    "item": {
+      "ID": 10,
+      "available": true,
+      "barcode": "CHDR2453",
+      "children": [
+        {
+          "ID": 11,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "Descriptions are optional",
+          "images": [
+            {
+              "ID": 5,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/Canon/lens1.jpg",
+              "imageURL": "",
+              "itemChild": 11
+            }
+          ],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Canon EFS 18-135mm lens",
+          "purchaseDate": "Wed, 27 Feb 2002 00:00:00 GMT",
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": "2142-1245-7643-1234",
+          "type": "Camera",
+          "vendorName": "JimCo Widgets",
+          "vendorPrice": 31.45
+        },
+        {
+          "ID": 36,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 02 Mar 2022 19:38:28 GMT",
+          "description": null,
+          "images": [],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Test Child",
+          "purchaseDate": null,
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Tech",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "This was updated through the mobile app!!!!!",
+      "images": [
+        {
+          "ID": 15,
+          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "itemChild": 10
+        },
+        {
+          "ID": 36,
+          "created": "Sun, 27 Feb 2022 17:04:16 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "itemChild": 10
+        }
+      ],
+      "item": 8,
+      "location": "321C",
+      "main": true,
+      "moveable": true,
+      "name": "Canon EOS7D Camera",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 4,
+      "retiredDateTime": null,
+      "serial": "143421321421",
+      "type": "Camera",
+      "vendorName": "Test",
+      "vendorPrice": 1200.45
+    },
+    "startDateTime": "Fri, 31 Dec 2021 11:00:00 GMT",
+    "status": "Returned",
+    "user": {
+      "ID": 1,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "test.user@Knights.ucf.edu",
+      "fullName": "Test User",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
     "ID": 11,
     "admin": {
       "ID": 2,
@@ -21,7 +129,7 @@
           "available": true,
           "barcode": "CHDR2849",
           "created": "Wed, 12 Jan 2022 16:57:34 GMT",
-          "description": "Here's a stylus for that computer",
+          "description": "This is a stylus for the Samsung CT-P5113 tablet. It's an amazing stylus as you can see. There's only one in all of existence. It's said to be older than the universe itself.",
           "images": [
             {
               "ID": 9,
@@ -34,15 +142,55 @@
           "item": 11,
           "location": "321A",
           "main": false,
-          "moveable": false,
-          "name": "Samsung Stylus\r\n",
-          "purchaseDate": "Sat, 04 May 2019 00:00:00 GMT",
-          "quantity": 1,
+          "moveable": true,
+          "name": "Samsung Stylus",
+          "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+          "quantity": 80,
           "retiredDateTime": null,
           "serial": "3521245",
           "type": "Computer",
           "vendorName": "BestBuy",
           "vendorPrice": 2334.32
+        },
+        {
+          "ID": 31,
+          "available": true,
+          "barcode": "CHDR2849",
+          "created": "Sat, 26 Feb 2022 23:10:45 GMT",
+          "description": "",
+          "images": [],
+          "item": 11,
+          "location": "321A",
+          "main": false,
+          "moveable": true,
+          "name": "samsung Tablet Keyboard ",
+          "purchaseDate": "Sat, 16 Aug 2008 00:00:00 GMT",
+          "quantity": 80,
+          "retiredDateTime": null,
+          "serial": "",
+          "type": "Accessories ",
+          "vendorName": "",
+          "vendorPrice": 50.0
+        },
+        {
+          "ID": 37,
+          "available": true,
+          "barcode": "CHDR2849",
+          "created": "Thu, 03 Mar 2022 13:34:39 GMT",
+          "description": "Its a cloth",
+          "images": [],
+          "item": 11,
+          "location": "321A",
+          "main": false,
+          "moveable": true,
+          "name": "Samsung Cloth",
+          "purchaseDate": null,
+          "quantity": 80,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Fabric",
+          "vendorName": null,
+          "vendorPrice": null
         }
       ],
       "created": "Wed, 12 Jan 2022 16:57:34 GMT",
@@ -59,14 +207,14 @@
       "item": 11,
       "location": "321A",
       "main": true,
-      "moveable": false,
-      "name": "Samsung CT-P5113 tablet\r\n",
+      "moveable": true,
+      "name": "Samsung CT-P5113 tablet",
       "purchaseDate": null,
-      "quantity": 1,
+      "quantity": 80,
       "retiredDateTime": null,
       "serial": "RFCKSOENFOAKNW",
       "type": "Computer",
-      "vendorName": "BestBuy",
+      "vendorName": "Best Buy",
       "vendorPrice": null
     },
     "startDateTime": "Thu, 06 Jan 2022 11:00:00 GMT",
@@ -105,7 +253,7 @@
       "location": "321B",
       "main": true,
       "moveable": true,
-      "name": "Microfilm Scanner\r\n",
+      "name": "Microfilm Scanner",
       "purchaseDate": null,
       "quantity": 2,
       "retiredDateTime": null,
@@ -115,13 +263,13 @@
       "vendorPrice": 2000.0
     },
     "startDateTime": "Tue, 04 Jan 2022 11:00:00 GMT",
-    "status": "Denied",
+    "status": "Approved",
     "user": {
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
-      "email": "ctcuff@knights.ucf.edu",
+      "email": "ctcuff@gmail.com",
       "fullName": "Cameron Cuff",
-      "role": "Super",
+      "role": "User",
       "verified": true
     }
   },
@@ -144,13 +292,20 @@
           "imagePath": "images/vr/oculus1.jpg",
           "imageURL": "",
           "itemChild": 13
+        },
+        {
+          "ID": 35,
+          "created": "Fri, 25 Feb 2022 19:57:05 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "itemChild": 13
         }
       ],
       "item": 10,
       "location": "321B",
       "main": true,
       "moveable": true,
-      "name": "Oculus Quest\r\n",
+      "name": "Oculus Quest",
       "purchaseDate": "Thu, 04 Jul 2019 00:00:00 GMT",
       "quantity": 1,
       "retiredDateTime": null,
@@ -164,17 +319,881 @@
     "user": {
       "ID": 3,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
-      "email": "ashensilverwolf@gmail.com",
+      "email": "gilbert.gavin@knights.ucf.edu",
       "fullName": "Gavin Gilbert",
-      "role": "Super",
-      "verified": false
+      "role": "User",
+      "verified": true
     }
   },
   {
-    "ID": 18,
+    "ID": 14,
     "admin": null,
-    "created": "Fri, 14 Jan 2022 16:57:23 GMT",
-    "endDateTime": "Sat, 14 Jan 2023 02:21:14 GMT",
+    "created": "Wed, 12 Jan 2022 17:02:58 GMT",
+    "endDateTime": "Fri, 28 Jan 2022 11:00:00 GMT",
+    "item": {
+      "ID": 13,
+      "available": true,
+      "barcode": "CHDR9749",
+      "children": [],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "Here's another description",
+      "images": [
+        {
+          "ID": 7,
+          "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+          "imagePath": "images/vr/oculus1.jpg",
+          "imageURL": "",
+          "itemChild": 13
+        },
+        {
+          "ID": 35,
+          "created": "Fri, 25 Feb 2022 19:57:05 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "itemChild": 13
+        }
+      ],
+      "item": 10,
+      "location": "321B",
+      "main": true,
+      "moveable": true,
+      "name": "Oculus Quest",
+      "purchaseDate": "Thu, 04 Jul 2019 00:00:00 GMT",
+      "quantity": 1,
+      "retiredDateTime": null,
+      "serial": "4678534246",
+      "type": "VR",
+      "vendorName": "UCF Stuff",
+      "vendorPrice": 3252.21
+    },
+    "startDateTime": "Fri, 21 Jan 2022 11:00:00 GMT",
+    "status": "Approved",
+    "user": {
+      "ID": 5,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "jeffery.cherisma@Knights.ucf.edu",
+      "fullName": "Jeffery Cherisma",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 15,
+    "admin": null,
+    "created": "Wed, 12 Jan 2022 17:02:58 GMT",
+    "endDateTime": "Mon, 24 Jan 2022 11:00:00 GMT",
+    "item": {
+      "ID": 14,
+      "available": true,
+      "barcode": "CHDR2849",
+      "children": [
+        {
+          "ID": 15,
+          "available": true,
+          "barcode": "CHDR2849",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "This is a stylus for the Samsung CT-P5113 tablet. It's an amazing stylus as you can see. There's only one in all of existence. It's said to be older than the universe itself.",
+          "images": [
+            {
+              "ID": 9,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/samsung/stylus1.jpg",
+              "imageURL": "",
+              "itemChild": 15
+            }
+          ],
+          "item": 11,
+          "location": "321A",
+          "main": false,
+          "moveable": true,
+          "name": "Samsung Stylus",
+          "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+          "quantity": 80,
+          "retiredDateTime": null,
+          "serial": "3521245",
+          "type": "Computer",
+          "vendorName": "BestBuy",
+          "vendorPrice": 2334.32
+        },
+        {
+          "ID": 31,
+          "available": true,
+          "barcode": "CHDR2849",
+          "created": "Sat, 26 Feb 2022 23:10:45 GMT",
+          "description": "",
+          "images": [],
+          "item": 11,
+          "location": "321A",
+          "main": false,
+          "moveable": true,
+          "name": "samsung Tablet Keyboard ",
+          "purchaseDate": "Sat, 16 Aug 2008 00:00:00 GMT",
+          "quantity": 80,
+          "retiredDateTime": null,
+          "serial": "",
+          "type": "Accessories ",
+          "vendorName": "",
+          "vendorPrice": 50.0
+        },
+        {
+          "ID": 37,
+          "available": true,
+          "barcode": "CHDR2849",
+          "created": "Thu, 03 Mar 2022 13:34:39 GMT",
+          "description": "Its a cloth",
+          "images": [],
+          "item": 11,
+          "location": "321A",
+          "main": false,
+          "moveable": true,
+          "name": "Samsung Cloth",
+          "purchaseDate": null,
+          "quantity": 80,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Fabric",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "Here's a computer",
+      "images": [
+        {
+          "ID": 8,
+          "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+          "imagePath": "images/samsung/tablet1.jpg",
+          "imageURL": "",
+          "itemChild": 14
+        }
+      ],
+      "item": 11,
+      "location": "321A",
+      "main": true,
+      "moveable": true,
+      "name": "Samsung CT-P5113 tablet",
+      "purchaseDate": null,
+      "quantity": 80,
+      "retiredDateTime": null,
+      "serial": "RFCKSOENFOAKNW",
+      "type": "Computer",
+      "vendorName": "Best Buy",
+      "vendorPrice": null
+    },
+    "startDateTime": "Mon, 17 Jan 2022 11:00:00 GMT",
+    "status": "Cancelled",
+    "user": {
+      "ID": 1,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "test.user@Knights.ucf.edu",
+      "fullName": "Test User",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 19,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Mon, 14 Feb 2022 12:48:11 GMT",
+    "endDateTime": "Fri, 04 Feb 2022 17:53:00 GMT",
+    "item": {
+      "ID": 10,
+      "available": true,
+      "barcode": "CHDR2453",
+      "children": [
+        {
+          "ID": 11,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "Descriptions are optional",
+          "images": [
+            {
+              "ID": 5,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/Canon/lens1.jpg",
+              "imageURL": "",
+              "itemChild": 11
+            }
+          ],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Canon EFS 18-135mm lens",
+          "purchaseDate": "Wed, 27 Feb 2002 00:00:00 GMT",
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": "2142-1245-7643-1234",
+          "type": "Camera",
+          "vendorName": "JimCo Widgets",
+          "vendorPrice": 31.45
+        },
+        {
+          "ID": 36,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 02 Mar 2022 19:38:28 GMT",
+          "description": null,
+          "images": [],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Test Child",
+          "purchaseDate": null,
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Tech",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "This was updated through the mobile app!!!!!",
+      "images": [
+        {
+          "ID": 15,
+          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "itemChild": 10
+        },
+        {
+          "ID": 36,
+          "created": "Sun, 27 Feb 2022 17:04:16 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "itemChild": 10
+        }
+      ],
+      "item": 8,
+      "location": "321C",
+      "main": true,
+      "moveable": true,
+      "name": "Canon EOS7D Camera",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 4,
+      "retiredDateTime": null,
+      "serial": "143421321421",
+      "type": "Camera",
+      "vendorName": "Test",
+      "vendorPrice": 1200.45
+    },
+    "startDateTime": "Fri, 04 Feb 2022 17:53:00 GMT",
+    "status": "Returned",
+    "user": {
+      "ID": 4,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 20,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Mon, 14 Feb 2022 12:56:10 GMT",
+    "endDateTime": "Fri, 04 Feb 2022 17:53:00 GMT",
+    "item": {
+      "ID": 10,
+      "available": true,
+      "barcode": "CHDR2453",
+      "children": [
+        {
+          "ID": 11,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "Descriptions are optional",
+          "images": [
+            {
+              "ID": 5,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/Canon/lens1.jpg",
+              "imageURL": "",
+              "itemChild": 11
+            }
+          ],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Canon EFS 18-135mm lens",
+          "purchaseDate": "Wed, 27 Feb 2002 00:00:00 GMT",
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": "2142-1245-7643-1234",
+          "type": "Camera",
+          "vendorName": "JimCo Widgets",
+          "vendorPrice": 31.45
+        },
+        {
+          "ID": 36,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 02 Mar 2022 19:38:28 GMT",
+          "description": null,
+          "images": [],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Test Child",
+          "purchaseDate": null,
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Tech",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "This was updated through the mobile app!!!!!",
+      "images": [
+        {
+          "ID": 15,
+          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "itemChild": 10
+        },
+        {
+          "ID": 36,
+          "created": "Sun, 27 Feb 2022 17:04:16 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "itemChild": 10
+        }
+      ],
+      "item": 8,
+      "location": "321C",
+      "main": true,
+      "moveable": true,
+      "name": "Canon EOS7D Camera",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 4,
+      "retiredDateTime": null,
+      "serial": "143421321421",
+      "type": "Camera",
+      "vendorName": "Test",
+      "vendorPrice": 1200.45
+    },
+    "startDateTime": "Fri, 04 Feb 2022 17:53:00 GMT",
+    "status": "Returned",
+    "user": {
+      "ID": 4,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 21,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Mon, 14 Feb 2022 12:57:56 GMT",
+    "endDateTime": "Fri, 04 Feb 2022 17:53:00 GMT",
+    "item": {
+      "ID": 12,
+      "available": true,
+      "barcode": "CHDR5212",
+      "children": [],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": null,
+      "images": [
+        {
+          "ID": 6,
+          "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+          "imagePath": "images/scanner/scanner1.jpg",
+          "imageURL": "",
+          "itemChild": 12
+        }
+      ],
+      "item": 9,
+      "location": "321B",
+      "main": true,
+      "moveable": true,
+      "name": "Microfilm Scanner",
+      "purchaseDate": null,
+      "quantity": 2,
+      "retiredDateTime": null,
+      "serial": "CN-5829291-498549-293",
+      "type": "Other",
+      "vendorName": null,
+      "vendorPrice": 2000.0
+    },
+    "startDateTime": "Fri, 04 Feb 2022 17:53:00 GMT",
+    "status": "Late",
+    "user": {
+      "ID": 4,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 24,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Fri, 25 Feb 2022 03:04:11 GMT",
+    "endDateTime": "Fri, 04 Feb 2022 17:53:00 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Fri, 04 Feb 2022 17:53:00 GMT",
+    "status": "Cancelled",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 25,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Fri, 25 Feb 2022 12:09:44 GMT",
+    "endDateTime": "Mon, 28 Feb 2022 12:00:00 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Fri, 25 Feb 2022 12:09:00 GMT",
+    "status": "Checked Out",
+    "user": {
+      "ID": 5,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "jeffery.cherisma@Knights.ucf.edu",
+      "fullName": "Jeffery Cherisma",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 26,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Fri, 25 Feb 2022 12:12:19 GMT",
+    "endDateTime": "Fri, 25 Feb 2022 12:14:00 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Fri, 25 Feb 2022 12:12:00 GMT",
+    "status": "Cancelled",
+    "user": {
+      "ID": 5,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "jeffery.cherisma@Knights.ucf.edu",
+      "fullName": "Jeffery Cherisma",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 27,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Fri, 25 Feb 2022 13:01:48 GMT",
+    "endDateTime": "Fri, 25 Feb 2022 18:01:00 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Tue, 01 Feb 2022 14:13:00 GMT",
+    "status": "Pending",
+    "user": {
+      "ID": 5,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "jeffery.cherisma@Knights.ucf.edu",
+      "fullName": "Jeffery Cherisma",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 28,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Fri, 25 Feb 2022 13:03:42 GMT",
+    "endDateTime": "Mon, 28 Feb 2022 12:00:00 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Fri, 25 Feb 2022 17:00:00 GMT",
+    "status": "Cancelled",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 29,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Fri, 25 Feb 2022 13:07:11 GMT",
+    "endDateTime": "Mon, 28 Feb 2022 13:06:00 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Fri, 25 Feb 2022 16:20:00 GMT",
+    "status": "Denied",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 30,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Fri, 25 Feb 2022 15:23:42 GMT",
+    "endDateTime": "Sat, 26 Feb 2022 12:30:00 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Fri, 25 Feb 2022 12:00:00 GMT",
+    "status": "Cancelled",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 31,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Fri, 25 Feb 2022 15:53:04 GMT",
+    "endDateTime": "Sat, 26 Feb 2022 16:20:00 GMT",
+    "item": {
+      "ID": 13,
+      "available": true,
+      "barcode": "CHDR9749",
+      "children": [],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "Here's another description",
+      "images": [
+        {
+          "ID": 7,
+          "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+          "imagePath": "images/vr/oculus1.jpg",
+          "imageURL": "",
+          "itemChild": 13
+        },
+        {
+          "ID": 35,
+          "created": "Fri, 25 Feb 2022 19:57:05 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "itemChild": 13
+        }
+      ],
+      "item": 10,
+      "location": "321B",
+      "main": true,
+      "moveable": true,
+      "name": "Oculus Quest",
+      "purchaseDate": "Thu, 04 Jul 2019 00:00:00 GMT",
+      "quantity": 1,
+      "retiredDateTime": null,
+      "serial": "4678534246",
+      "type": "VR",
+      "vendorName": "UCF Stuff",
+      "vendorPrice": 3252.21
+    },
+    "startDateTime": "Fri, 25 Feb 2022 16:20:00 GMT",
+    "status": "Cancelled",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 32,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Sat, 26 Feb 2022 12:59:26 GMT",
+    "endDateTime": "Sat, 26 Feb 2022 14:30:00 GMT",
     "item": {
       "ID": 16,
       "available": true,
@@ -195,7 +1214,7 @@
       "location": "321A",
       "main": true,
       "moveable": false,
-      "name": "Study Room 1\r\n",
+      "name": "Study Room 1",
       "purchaseDate": null,
       "quantity": 6,
       "retiredDateTime": null,
@@ -204,12 +1223,939 @@
       "vendorName": null,
       "vendorPrice": null
     },
-    "startDateTime": "Fri, 14 Jan 2022 02:20:55 GMT",
+    "startDateTime": "Sat, 26 Feb 2022 13:00:00 GMT",
     "status": "Checked Out",
     "user": {
-      "ID": 4,
+      "ID": 1,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
-      "email": "ctcuff@knights.ucf.edu",
+      "email": "test.user@Knights.ucf.edu",
+      "fullName": "Test User",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 33,
+    "admin": null,
+    "created": "Sun, 27 Feb 2022 22:33:02 GMT",
+    "endDateTime": "Mon, 07 Mar 2022 04:52:00 GMT",
+    "item": {
+      "ID": 28,
+      "available": true,
+      "barcode": "Test",
+      "children": [
+        {
+          "ID": 29,
+          "available": true,
+          "barcode": "Test",
+          "created": "Thu, 24 Feb 2022 18:03:16 GMT",
+          "description": "A simple test child item",
+          "images": [],
+          "item": 22,
+          "location": "Test",
+          "main": false,
+          "moveable": true,
+          "name": "Simple Test Child Item",
+          "purchaseDate": null,
+          "quantity": 0,
+          "retiredDateTime": null,
+          "serial": "Test",
+          "type": "Test",
+          "vendorName": "Test",
+          "vendorPrice": 17.78
+        }
+      ],
+      "created": "Thu, 24 Feb 2022 18:01:38 GMT",
+      "description": "This is just a simple test item.",
+      "images": [],
+      "item": 22,
+      "location": "Test",
+      "main": true,
+      "moveable": true,
+      "name": "Simple Test Item",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 0,
+      "retiredDateTime": null,
+      "serial": "Test",
+      "type": "Test",
+      "vendorName": "Test",
+      "vendorPrice": 9999.0
+    },
+    "startDateTime": "Sun, 27 Feb 2022 22:28:59 GMT",
+    "status": "Checked Out",
+    "user": {
+      "ID": 1,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "test.user@Knights.ucf.edu",
+      "fullName": "Test User",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 34,
+    "admin": null,
+    "created": "Sun, 27 Feb 2022 22:33:46 GMT",
+    "endDateTime": "Sun, 06 Mar 2022 16:59:00 GMT",
+    "item": {
+      "ID": 28,
+      "available": true,
+      "barcode": "Test",
+      "children": [
+        {
+          "ID": 29,
+          "available": true,
+          "barcode": "Test",
+          "created": "Thu, 24 Feb 2022 18:03:16 GMT",
+          "description": "A simple test child item",
+          "images": [],
+          "item": 22,
+          "location": "Test",
+          "main": false,
+          "moveable": true,
+          "name": "Simple Test Child Item",
+          "purchaseDate": null,
+          "quantity": 0,
+          "retiredDateTime": null,
+          "serial": "Test",
+          "type": "Test",
+          "vendorName": "Test",
+          "vendorPrice": 17.78
+        }
+      ],
+      "created": "Thu, 24 Feb 2022 18:01:38 GMT",
+      "description": "This is just a simple test item.",
+      "images": [],
+      "item": 22,
+      "location": "Test",
+      "main": true,
+      "moveable": true,
+      "name": "Simple Test Item",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 0,
+      "retiredDateTime": null,
+      "serial": "Test",
+      "type": "Test",
+      "vendorName": "Test",
+      "vendorPrice": 9999.0
+    },
+    "startDateTime": "Sun, 27 Feb 2022 22:28:59 GMT",
+    "status": "Checked Out",
+    "user": {
+      "ID": 1,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "test.user@Knights.ucf.edu",
+      "fullName": "Test User",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 36,
+    "admin": null,
+    "created": "Sun, 27 Feb 2022 23:30:27 GMT",
+    "endDateTime": "Tue, 08 Mar 2022 04:28:00 GMT",
+    "item": {
+      "ID": 14,
+      "available": true,
+      "barcode": "CHDR2849",
+      "children": [
+        {
+          "ID": 15,
+          "available": true,
+          "barcode": "CHDR2849",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "This is a stylus for the Samsung CT-P5113 tablet. It's an amazing stylus as you can see. There's only one in all of existence. It's said to be older than the universe itself.",
+          "images": [
+            {
+              "ID": 9,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/samsung/stylus1.jpg",
+              "imageURL": "",
+              "itemChild": 15
+            }
+          ],
+          "item": 11,
+          "location": "321A",
+          "main": false,
+          "moveable": true,
+          "name": "Samsung Stylus",
+          "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+          "quantity": 80,
+          "retiredDateTime": null,
+          "serial": "3521245",
+          "type": "Computer",
+          "vendorName": "BestBuy",
+          "vendorPrice": 2334.32
+        },
+        {
+          "ID": 31,
+          "available": true,
+          "barcode": "CHDR2849",
+          "created": "Sat, 26 Feb 2022 23:10:45 GMT",
+          "description": "",
+          "images": [],
+          "item": 11,
+          "location": "321A",
+          "main": false,
+          "moveable": true,
+          "name": "samsung Tablet Keyboard ",
+          "purchaseDate": "Sat, 16 Aug 2008 00:00:00 GMT",
+          "quantity": 80,
+          "retiredDateTime": null,
+          "serial": "",
+          "type": "Accessories ",
+          "vendorName": "",
+          "vendorPrice": 50.0
+        },
+        {
+          "ID": 37,
+          "available": true,
+          "barcode": "CHDR2849",
+          "created": "Thu, 03 Mar 2022 13:34:39 GMT",
+          "description": "Its a cloth",
+          "images": [],
+          "item": 11,
+          "location": "321A",
+          "main": false,
+          "moveable": true,
+          "name": "Samsung Cloth",
+          "purchaseDate": null,
+          "quantity": 80,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Fabric",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "Here's a computer",
+      "images": [
+        {
+          "ID": 8,
+          "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+          "imagePath": "images/samsung/tablet1.jpg",
+          "imageURL": "",
+          "itemChild": 14
+        }
+      ],
+      "item": 11,
+      "location": "321A",
+      "main": true,
+      "moveable": true,
+      "name": "Samsung CT-P5113 tablet",
+      "purchaseDate": null,
+      "quantity": 80,
+      "retiredDateTime": null,
+      "serial": "RFCKSOENFOAKNW",
+      "type": "Computer",
+      "vendorName": "Best Buy",
+      "vendorPrice": null
+    },
+    "startDateTime": "Mon, 28 Feb 2022 04:28:40 GMT",
+    "status": "Checked Out",
+    "user": {
+      "ID": 1,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "test.user@Knights.ucf.edu",
+      "fullName": "Test User",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 37,
+    "admin": null,
+    "created": "Tue, 01 Mar 2022 22:05:57 GMT",
+    "endDateTime": "Tue, 15 Mar 2022 21:00:00 GMT",
+    "item": {
+      "ID": 34,
+      "available": true,
+      "barcode": "0859947004233",
+      "children": [],
+      "created": "Tue, 01 Mar 2022 21:57:27 GMT",
+      "description": "This is the best deck of cards EVER!!!",
+      "images": [
+        {
+          "ID": 37,
+          "created": "Tue, 01 Mar 2022 21:57:59 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/76348037-755D-4E6A-9C1A-82DA6AAD2C95.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/76348037-755D-4E6A-9C1A-82DA6AAD2C95.jpg",
+          "itemChild": 34
+        }
+      ],
+      "item": 24,
+      "location": "2A",
+      "main": true,
+      "moveable": true,
+      "name": "Deck of Cards",
+      "purchaseDate": "Fri, 18 Nov 2011 00:00:00 GMT",
+      "quantity": 25,
+      "retiredDateTime": null,
+      "serial": "dunissbol",
+      "type": "Games",
+      "vendorName": "Vegas Brand",
+      "vendorPrice": 1.0
+    },
+    "startDateTime": "Wed, 02 Mar 2022 02:49:24 GMT",
+    "status": "Checked Out",
+    "user": {
+      "ID": 1,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "test.user@Knights.ucf.edu",
+      "fullName": "Test User",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 38,
+    "admin": null,
+    "created": "Tue, 01 Mar 2022 22:10:45 GMT",
+    "endDateTime": "Tue, 15 Mar 2022 21:00:00 GMT",
+    "item": {
+      "ID": 13,
+      "available": true,
+      "barcode": "CHDR9749",
+      "children": [],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "Here's another description",
+      "images": [
+        {
+          "ID": 7,
+          "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+          "imagePath": "images/vr/oculus1.jpg",
+          "imageURL": "",
+          "itemChild": 13
+        },
+        {
+          "ID": 35,
+          "created": "Fri, 25 Feb 2022 19:57:05 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "itemChild": 13
+        }
+      ],
+      "item": 10,
+      "location": "321B",
+      "main": true,
+      "moveable": true,
+      "name": "Oculus Quest",
+      "purchaseDate": "Thu, 04 Jul 2019 00:00:00 GMT",
+      "quantity": 1,
+      "retiredDateTime": null,
+      "serial": "4678534246",
+      "type": "VR",
+      "vendorName": "UCF Stuff",
+      "vendorPrice": 3252.21
+    },
+    "startDateTime": "Wed, 02 Mar 2022 02:49:24 GMT",
+    "status": "Checked Out",
+    "user": {
+      "ID": 1,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "test.user@Knights.ucf.edu",
+      "fullName": "Test User",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 39,
+    "admin": null,
+    "created": "Sat, 05 Mar 2022 21:25:56 GMT",
+    "endDateTime": "Sun, 06 Mar 2022 21:25:39 GMT",
+    "item": {
+      "ID": 13,
+      "available": true,
+      "barcode": "CHDR9749",
+      "children": [],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "Here's another description",
+      "images": [
+        {
+          "ID": 7,
+          "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+          "imagePath": "images/vr/oculus1.jpg",
+          "imageURL": "",
+          "itemChild": 13
+        },
+        {
+          "ID": 35,
+          "created": "Fri, 25 Feb 2022 19:57:05 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/0248DB54-93EB-4AD6-AB48-2FDE9877317E.jpg",
+          "itemChild": 13
+        }
+      ],
+      "item": 10,
+      "location": "321B",
+      "main": true,
+      "moveable": true,
+      "name": "Oculus Quest",
+      "purchaseDate": "Thu, 04 Jul 2019 00:00:00 GMT",
+      "quantity": 1,
+      "retiredDateTime": null,
+      "serial": "4678534246",
+      "type": "VR",
+      "vendorName": "UCF Stuff",
+      "vendorPrice": 3252.21
+    },
+    "startDateTime": "Sat, 05 Mar 2022 21:25:39 GMT",
+    "status": "Pending",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 40,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Sat, 05 Mar 2022 21:45:30 GMT",
+    "endDateTime": "Wed, 09 Mar 2022 21:45:12 GMT",
+    "item": {
+      "ID": 10,
+      "available": true,
+      "barcode": "CHDR2453",
+      "children": [
+        {
+          "ID": 11,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "Descriptions are optional",
+          "images": [
+            {
+              "ID": 5,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/Canon/lens1.jpg",
+              "imageURL": "",
+              "itemChild": 11
+            }
+          ],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Canon EFS 18-135mm lens",
+          "purchaseDate": "Wed, 27 Feb 2002 00:00:00 GMT",
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": "2142-1245-7643-1234",
+          "type": "Camera",
+          "vendorName": "JimCo Widgets",
+          "vendorPrice": 31.45
+        },
+        {
+          "ID": 36,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 02 Mar 2022 19:38:28 GMT",
+          "description": null,
+          "images": [],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Test Child",
+          "purchaseDate": null,
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Tech",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "This was updated through the mobile app!!!!!",
+      "images": [
+        {
+          "ID": 15,
+          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "itemChild": 10
+        },
+        {
+          "ID": 36,
+          "created": "Sun, 27 Feb 2022 17:04:16 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "itemChild": 10
+        }
+      ],
+      "item": 8,
+      "location": "321C",
+      "main": true,
+      "moveable": true,
+      "name": "Canon EOS7D Camera",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 4,
+      "retiredDateTime": null,
+      "serial": "143421321421",
+      "type": "Camera",
+      "vendorName": "Test",
+      "vendorPrice": 1200.45
+    },
+    "startDateTime": "Sat, 05 Mar 2022 21:45:12 GMT",
+    "status": "Denied",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 41,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Sat, 05 Mar 2022 21:47:17 GMT",
+    "endDateTime": "Sun, 06 Mar 2022 21:47:05 GMT",
+    "item": {
+      "ID": 10,
+      "available": true,
+      "barcode": "CHDR2453",
+      "children": [
+        {
+          "ID": 11,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "Descriptions are optional",
+          "images": [
+            {
+              "ID": 5,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/Canon/lens1.jpg",
+              "imageURL": "",
+              "itemChild": 11
+            }
+          ],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Canon EFS 18-135mm lens",
+          "purchaseDate": "Wed, 27 Feb 2002 00:00:00 GMT",
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": "2142-1245-7643-1234",
+          "type": "Camera",
+          "vendorName": "JimCo Widgets",
+          "vendorPrice": 31.45
+        },
+        {
+          "ID": 36,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 02 Mar 2022 19:38:28 GMT",
+          "description": null,
+          "images": [],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Test Child",
+          "purchaseDate": null,
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Tech",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "This was updated through the mobile app!!!!!",
+      "images": [
+        {
+          "ID": 15,
+          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "itemChild": 10
+        },
+        {
+          "ID": 36,
+          "created": "Sun, 27 Feb 2022 17:04:16 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "itemChild": 10
+        }
+      ],
+      "item": 8,
+      "location": "321C",
+      "main": true,
+      "moveable": true,
+      "name": "Canon EOS7D Camera",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 4,
+      "retiredDateTime": null,
+      "serial": "143421321421",
+      "type": "Camera",
+      "vendorName": "Test",
+      "vendorPrice": 1200.45
+    },
+    "startDateTime": "Sun, 06 Mar 2022 21:47:05 GMT",
+    "status": "Denied",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 42,
+    "admin": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    },
+    "created": "Sat, 05 Mar 2022 21:49:20 GMT",
+    "endDateTime": "Sun, 27 Mar 2022 21:49:54 GMT",
+    "item": {
+      "ID": 10,
+      "available": true,
+      "barcode": "CHDR2453",
+      "children": [
+        {
+          "ID": 11,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "Descriptions are optional",
+          "images": [
+            {
+              "ID": 5,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/Canon/lens1.jpg",
+              "imageURL": "",
+              "itemChild": 11
+            }
+          ],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Canon EFS 18-135mm lens",
+          "purchaseDate": "Wed, 27 Feb 2002 00:00:00 GMT",
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": "2142-1245-7643-1234",
+          "type": "Camera",
+          "vendorName": "JimCo Widgets",
+          "vendorPrice": 31.45
+        },
+        {
+          "ID": 36,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 02 Mar 2022 19:38:28 GMT",
+          "description": null,
+          "images": [],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Test Child",
+          "purchaseDate": null,
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Tech",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "This was updated through the mobile app!!!!!",
+      "images": [
+        {
+          "ID": 15,
+          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "itemChild": 10
+        },
+        {
+          "ID": 36,
+          "created": "Sun, 27 Feb 2022 17:04:16 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "itemChild": 10
+        }
+      ],
+      "item": 8,
+      "location": "321C",
+      "main": true,
+      "moveable": true,
+      "name": "Canon EOS7D Camera",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 4,
+      "retiredDateTime": null,
+      "serial": "143421321421",
+      "type": "Camera",
+      "vendorName": "Test",
+      "vendorPrice": 1200.45
+    },
+    "startDateTime": "Sat, 05 Mar 2022 21:49:54 GMT",
+    "status": "Denied",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 43,
+    "admin": null,
+    "created": "Sat, 05 Mar 2022 21:50:46 GMT",
+    "endDateTime": "Sun, 13 Mar 2022 21:50:37 GMT",
+    "item": {
+      "ID": 10,
+      "available": true,
+      "barcode": "CHDR2453",
+      "children": [
+        {
+          "ID": 11,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+          "description": "Descriptions are optional",
+          "images": [
+            {
+              "ID": 5,
+              "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+              "imagePath": "images/Canon/lens1.jpg",
+              "imageURL": "",
+              "itemChild": 11
+            }
+          ],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Canon EFS 18-135mm lens",
+          "purchaseDate": "Wed, 27 Feb 2002 00:00:00 GMT",
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": "2142-1245-7643-1234",
+          "type": "Camera",
+          "vendorName": "JimCo Widgets",
+          "vendorPrice": 31.45
+        },
+        {
+          "ID": 36,
+          "available": true,
+          "barcode": "CHDR2453",
+          "created": "Wed, 02 Mar 2022 19:38:28 GMT",
+          "description": null,
+          "images": [],
+          "item": 8,
+          "location": "321C",
+          "main": false,
+          "moveable": true,
+          "name": "Test Child",
+          "purchaseDate": null,
+          "quantity": 4,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Tech",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "This was updated through the mobile app!!!!!",
+      "images": [
+        {
+          "ID": 15,
+          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
+          "itemChild": 10
+        },
+        {
+          "ID": 36,
+          "created": "Sun, 27 Feb 2022 17:04:16 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
+          "itemChild": 10
+        }
+      ],
+      "item": 8,
+      "location": "321C",
+      "main": true,
+      "moveable": true,
+      "name": "Canon EOS7D Camera",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 4,
+      "retiredDateTime": null,
+      "serial": "143421321421",
+      "type": "Camera",
+      "vendorName": "Test",
+      "vendorPrice": 1200.45
+    },
+    "startDateTime": "Sat, 05 Mar 2022 21:50:37 GMT",
+    "status": "Pending",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 44,
+    "admin": null,
+    "created": "Sun, 06 Mar 2022 03:17:35 GMT",
+    "endDateTime": "Sat, 12 Mar 2022 12:30:59 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Sun, 06 Mar 2022 12:30:59 GMT",
+    "status": "Pending",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
+      "fullName": "Cameron Cuff",
+      "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 45,
+    "admin": null,
+    "created": "Sun, 06 Mar 2022 03:33:56 GMT",
+    "endDateTime": "Wed, 04 May 2022 03:33:34 GMT",
+    "item": {
+      "ID": 19,
+      "available": true,
+      "barcode": "CHDR3749",
+      "children": [
+        {
+          "ID": 32,
+          "available": true,
+          "barcode": "CHDR3749",
+          "created": "Sat, 26 Feb 2022 23:17:12 GMT",
+          "description": "",
+          "images": [],
+          "item": 15,
+          "location": "Cabinet 5H",
+          "main": false,
+          "moveable": true,
+          "name": "HP stylus",
+          "purchaseDate": "Mon, 27 Oct 2014 00:00:00 GMT",
+          "quantity": 25,
+          "retiredDateTime": null,
+          "serial": "",
+          "type": "ACCESSORIES ",
+          "vendorName": "",
+          "vendorPrice": -1.0
+        },
+        {
+          "ID": 33,
+          "available": true,
+          "barcode": "CHDR3749",
+          "created": "Sun, 27 Feb 2022 20:10:31 GMT",
+          "description": null,
+          "images": [],
+          "item": 15,
+          "location": "Cabinet 5H",
+          "main": false,
+          "moveable": true,
+          "name": "HP Cord Bundle ",
+          "purchaseDate": null,
+          "quantity": 25,
+          "retiredDateTime": null,
+          "serial": null,
+          "type": "Accessiries ",
+          "vendorName": null,
+          "vendorPrice": null
+        }
+      ],
+      "created": "Wed, 16 Feb 2022 19:11:33 GMT",
+      "description": "HP\u2019s newest laptop",
+      "images": [],
+      "item": 15,
+      "location": "Cabinet 5H",
+      "main": true,
+      "moveable": true,
+      "name": "Pavilion x360 laptop",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 25,
+      "retiredDateTime": null,
+      "serial": "",
+      "type": "Laptops",
+      "vendorName": "HP",
+      "vendorPrice": 8000.0
+    },
+    "startDateTime": "Sun, 06 Mar 2022 03:33:34 GMT",
+    "status": "Pending",
+    "user": {
+      "ID": 9,
+      "created": "Tue, 22 Feb 2022 20:18:41 GMT",
+      "email": "dev.ctcuff@gmail.com",
       "fullName": "Cameron Cuff",
       "role": "Super",
       "verified": true

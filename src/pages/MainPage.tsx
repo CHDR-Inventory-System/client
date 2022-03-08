@@ -1,37 +1,23 @@
 import '../scss/main-page.scss';
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, notification } from 'antd';
 import debounce from 'lodash/debounce';
-import { useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaBoxOpen } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
-import { Item, User } from '../types/API';
+import { Item } from '../types/API';
 import ItemCard from '../components/ItemCard';
 import useInventory from '../hooks/inventory';
 import useLoader from '../hooks/loading';
-import EmptyTableContent from '../components/dashboard/EmptyTableContent';
+import NoContent from '../components/dashboard/NoContent';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const MainPage = (): JSX.Element | null => {
-  const navigate = useNavigate();
   const inventory = useInventory();
-  const loader = useLoader(false);
-
+  const loader = useLoader(true);
   // Store items an a cache so that we don't have to re-query the API
   // every time the search query changes
   const [inventoryCache, setInventoryCache] = useState<Item[]>([]);
-
-  // Because we won't have access to the updated user state after
-  // a call to dispatch, we can't rely on it's value. Therefore, we'll
-  // have to read from local storage
-  const user = useMemo(() => {
-    try {
-      return JSON.parse(localStorage.getItem('user') || '') as User;
-    } catch (err) {
-      return null;
-    }
-  }, []);
 
   const handleSearch = debounce((query: string) => {
     if (!query) {
@@ -63,14 +49,36 @@ const MainPage = (): JSX.Element | null => {
       });
     }
 
-    loader.stopLoading();
+    // Using delay here to prevent the layout shift that occurs when
+    // the loading spinner dismounts and the cards render
+    loader.stopLoading({ delay: 250 });
+  };
+
+  const renderInventory = () => {
+    if (loader.isLoading) {
+      return null;
+    }
+
+    return inventory.items.length === 0 ? (
+      <NoContent
+        icon={<FaBoxOpen size={120} />}
+        text="No items available"
+        className="empty-inventory-list"
+      />
+    ) : (
+      inventory.items.map(item => <ItemCard item={item} key={item.ID} />)
+    );
   };
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth');
-    } else {
+    if (inventory.items.length === 0) {
+      // This check prevents layout shift/flicker. This will
+      // be true if the user is visiting this page for the first time.
       loadInventory();
+    } else {
+      // This will be true if the user navigated back to this page by either
+      // clicking the navbar or using the browser's back button
+      loader.stopLoading({ delay: 100 });
     }
 
     return () => {
@@ -78,13 +86,9 @@ const MainPage = (): JSX.Element | null => {
     };
   }, []);
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className="main-page">
-      <Navbar />
+      <Navbar sticky />
       <div className="search-input-wrapper">
         <h2>Search</h2>
         <Input
@@ -97,11 +101,7 @@ const MainPage = (): JSX.Element | null => {
       </div>
       <div className="items">
         {loader.isLoading && <LoadingSpinner text="Loading..." />}
-        {inventory.items.length === 0 && !loader.isLoading ? (
-          <EmptyTableContent icon={<FaBoxOpen size={120} />} text="No items available" />
-        ) : (
-          inventory.items.map(item => <ItemCard item={item} key={item.ID} />)
-        )}
+        {renderInventory()}
       </div>
     </div>
   );

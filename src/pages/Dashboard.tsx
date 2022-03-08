@@ -9,6 +9,8 @@ import InventoryTable from '../components/dashboard/inventory/InventoryTable';
 import ReservationTable from '../components/dashboard/ReservationTable';
 import AddItemDrawer from '../components/drawers/AddItemDrawer';
 import useDrawer from '../hooks/drawer';
+import useUser from '../hooks/user';
+import PageNotFound from '../components/PageNotFound';
 
 type TabKey = 'inventory' | 'users' | 'reservations';
 
@@ -16,6 +18,7 @@ const { TabPane } = Tabs;
 
 const Dashboard = (): JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const user = useUser();
 
   const [activeTab, setActiveTab] = useState<TabKey>(() => {
     const tab = (searchParams.get('tab') || 'inventory') as TabKey;
@@ -56,12 +59,20 @@ const Dashboard = (): JSX.Element => {
   );
 
   useEffect(() => {
-    document.title = 'CHDR Inventory - Dashboard';
+    if (user.isAdminOrSuper()) {
+      document.title = 'CHDR Inventory - Dashboard';
+    }
   }, []);
 
   useEffect(() => {
-    setSearchParams({ tab: activeTab }, { replace: true });
+    if (user.isAdminOrSuper()) {
+      setSearchParams({ tab: activeTab }, { replace: true });
+    }
   }, [activeTab]);
+
+  if (!user.isAdminOrSuper()) {
+    return <PageNotFound />;
+  }
 
   return (
     <div className="dashboard">

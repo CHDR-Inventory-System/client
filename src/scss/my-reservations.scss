@@ -1,0 +1,98 @@
+@import './variables';
+
+.my-reservations {
+  $breakpoint: 600px;
+  $container-width: 85%;
+
+  padding-bottom: 2em;
+
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    align-items: unset;
+  }
+
+  .ant-collapse-borderless > .ant-collapse-item {
+    border-bottom: none;
+  }
+
+  .ant-collapse-content > .ant-collapse-content-box {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .ant-collapse-content {
+    background-color: $body-color;
+  }
+
+  .ant-collapse-header {
+    border: 1px solid rgb(217, 217, 217);
+    border-radius: 6px !important;
+
+    & > div {
+      display: flex;
+      align-items: center;
+    }
+
+    h2 {
+      margin: 0;
+    }
+  }
+
+  .page-header {
+    margin: 1em auto 3em auto;
+    width: $container-width;
+
+    @media screen and (max-width: $breakpoint) {
+      width: 85%;
+    }
+
+    h2 {
+      font-size: 1.7em;
+    }
+
+    p {
+      font-size: 1.1em;
+      color: map-get($colors, 'text-muted');
+    }
+  }
+
+  .loading-spinner {
+    margin-top: 30vh;
+  }
+
+  .reservations-container {
+    display: flex;
+    flex-direction: column;
+    width: $container-width;
+    margin: 1em auto;
+
+    @media screen and (max-width: $breakpoint) {
+      width: 93%;
+    }
+
+    & > h2 {
+      font-size: 1.7em;
+      margin: 1em 0 0 1em;
+      z-index: 1;
+    }
+  }
+
+  .reservations {
+    display: flex;
+
+    &::after {
+      content: '';
+      flex: 0 0 16px;
+    }
+  }
+
+  .empty-reservation-list {
+    margin-top: 10vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    p {
+      font-size: 1.2em;
+    }
+  }
+}
