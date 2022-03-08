@@ -1,0 +1,17 @@
+@import './variables';
+
+.update-reservation-modal {
+  .ant-modal-body {
+    padding-bottom: 0.5em;
+    padding-top: 1em;
+  }
+
+  .modal-description {
+    margin-bottom: 2em;
+    color: map-get($colors, 'text-muted');
+  }
+
+  b {
+    text-decoration: underline dashed;
+  }
+}

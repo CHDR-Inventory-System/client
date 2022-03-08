@@ -326,3 +326,8 @@ td.ant-table-column-sort {
 .ant-checkbox-input:focus + .ant-checkbox-inner {
   border-color: map-get($colors, 'monochromatic-3');
 }
+
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  height: 38px;
+  padding: 3px 11px;
+}

@@ -16,6 +16,7 @@ import useReservations from '../hooks/reservation';
 import LoadingSpinner from '../components/LoadingSpinner';
 import NoContent from '../components/dashboard/NoContent';
 import { BsCalendarX } from 'react-icons/bs';
+import UpdateReservationModal from '../components/modals/UpdateReservationModal';
 
 interface CalendarEvent extends RBCEvent {
   resource: Reservation;
@@ -47,6 +48,10 @@ const ReservationCalendar = (): JSX.Element => {
   const calendarContainerElement = useRef<HTMLDivElement | null>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [hasError, setHasError] = useState(true);
+  const [isReservationModalShowing, setReservationModalShowing] = useState(false);
+  const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(
+    null
+  );
   const [calendarHeight, setCalendarHeight] = useState(
     window.innerHeight - defaultNavbarHeight
   );
@@ -86,7 +91,8 @@ const ReservationCalendar = (): JSX.Element => {
   };
 
   const onSelectEvent = (event: CalendarEvent) => {
-    console.log(event.resource);
+    setSelectedReservation(event.resource);
+    setReservationModalShowing(true);
   };
 
   const loadAllReservations = async () => {
@@ -167,6 +173,13 @@ const ReservationCalendar = (): JSX.Element => {
   return (
     <div className="reservation-calendar">
       <Navbar />
+      {selectedReservation && (
+        <UpdateReservationModal
+          visible={isReservationModalShowing}
+          reservation={selectedReservation}
+          onClose={() => setReservationModalShowing(false)}
+        />
+      )}
       <div className="calendar-container" ref={calendarContainerElement}>
         <Calendar
           popup
