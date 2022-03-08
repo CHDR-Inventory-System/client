@@ -99,7 +99,7 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
       ]);
     }
 
-    if (checkoutDate.isAfter(returnDate)) {
+    if (checkoutDate.isSameOrAfter(returnDate)) {
       hasError = true;
       form.setFields([
         {

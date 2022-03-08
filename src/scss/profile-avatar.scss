@@ -11,7 +11,7 @@
     margin: 4px 0;
   }
 
-  @media screen and (min-width: 700px) {
+  @media screen and (min-width: $navbar-link-breakpoint) {
     .menu-item-mobile {
       display: none;
     }

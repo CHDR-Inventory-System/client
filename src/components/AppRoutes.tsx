@@ -22,8 +22,9 @@ const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
 const UpdateEmailPage = lazy(() => import('../pages/UpdateEmailPage'));
 const ReservationPage = lazy(() => import('../pages/ReservationPage'));
 const MyReservations = lazy(() => import('../pages/MyReservations'));
+const ReservationCalendar = lazy(() => import('../pages/ReservationCalendar'));
 
-const requiredAuthPaths = ['/', '/dashboard', '/reservations'];
+const requiredAuthPaths = ['/', '/dashboard', '/reservations', '/calendar'];
 const reserveRouteRegex = /reserve\/[0-9]/;
 
 const AppRoutes = (): JSX.Element => {
@@ -124,6 +125,14 @@ const AppRoutes = (): JSX.Element => {
         element={
           <Suspense fallback={<Navbar showAvatar={false} />}>
             <MyReservations />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <Suspense fallback={<Navbar showAvatar={false} />}>
+            <ReservationCalendar />
           </Suspense>
         }
       />

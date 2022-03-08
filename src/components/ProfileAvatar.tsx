@@ -8,6 +8,7 @@ import {
   AiOutlineEdit,
   AiOutlineLogout
 } from 'react-icons/ai';
+import { BsCalendarWeek } from 'react-icons/bs';
 import useUser from '../hooks/user';
 import EditAccountModal from './modals/EditAccountModal';
 
@@ -42,6 +43,7 @@ const ProfileAvatar = (): JSX.Element => {
   };
 
   const goToDashboard = () => navigate('/dashboard');
+  const goToReservationCalendar = () => navigate('/calendar');
 
   const menu = (
     <Menu className="profile-avatar-dropdown-menu">
@@ -69,6 +71,16 @@ const ProfileAvatar = (): JSX.Element => {
           onClick={goToDashboard}
         >
           Admin Dashboard
+        </Menu.Item>
+      )}
+      {user.isAdminOrSuper() && (
+        <Menu.Item
+          className="menu-item-mobile"
+          key="calendar"
+          icon={<BsCalendarWeek size={16} />}
+          onClick={goToReservationCalendar}
+        >
+          Reservation Calendar
         </Menu.Item>
       )}
       <Menu.Item

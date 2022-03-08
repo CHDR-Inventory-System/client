@@ -54,6 +54,7 @@ const MyReservations = (): JSX.Element => {
 
   const loadReservations = async () => {
     loader.startLoading();
+    setHasError(false);
 
     try {
       await reservation.getReservationsForUser(user.state.ID);
@@ -110,7 +111,7 @@ const MyReservations = (): JSX.Element => {
     );
   }
 
-  if (reservation.state.length === 0) {
+  if (reservation.state.length === 0 || hasError) {
     return (
       <div className="my-reservations">
         <Navbar />
