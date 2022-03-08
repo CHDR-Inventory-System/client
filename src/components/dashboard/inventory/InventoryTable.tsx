@@ -1,6 +1,6 @@
 import '../../../scss/inventory-table.scss';
 import React, { useRef, useState, useEffect } from 'react';
-import { Table, Card, Input, Button, notification } from 'antd';
+import { Table, Card, Input, Button, notification, InputRef } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
@@ -36,7 +36,7 @@ const InventoryTable = (): JSX.Element => {
     editItem: false
   });
   const loader = useLoader();
-  const searchInputRef = useRef<Input>(null);
+  const searchInputRef = useRef<InputRef>(null);
 
   const handleSearch = (
     searchQuery: string,

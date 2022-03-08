@@ -9,7 +9,8 @@ import {
   Modal,
   Input,
   Button,
-  notification
+  notification,
+  InputRef
 } from 'antd';
 // Disabled so we don't have to install an extra library just
 // to access this type. It's a dependency of Ant Design
@@ -39,7 +40,7 @@ const UserTable = (): JSX.Element => {
   const registeredUsers = useRegisteredUsers();
   const loader = useLoader();
   const currentUser = useUser();
-  const searchInputRef = useRef<Input>(null);
+  const searchInputRef = useRef<InputRef>(null);
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof BaseUser>();
 

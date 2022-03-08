@@ -8,7 +8,8 @@ import {
   Modal,
   Tooltip,
   Dropdown,
-  notification
+  notification,
+  InputRef
 } from 'antd';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import type { MenuInfo } from 'rc-menu/lib/interface';
@@ -52,7 +53,7 @@ const ReservationTable = (): JSX.Element => {
   const user = useUser();
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInputRef = useRef<Input>(null);
+  const searchInputRef = useRef<InputRef>(null);
 
   const updateReservationStatus = async (
     reservation: Reservation,
