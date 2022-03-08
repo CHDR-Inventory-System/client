@@ -21,6 +21,7 @@ body {
   color: hsl(0deg, 0%, 30%);
   background-color: $body-color;
   margin: 0;
+  overscroll-behavior-x: none;
 }
 
 h1 {

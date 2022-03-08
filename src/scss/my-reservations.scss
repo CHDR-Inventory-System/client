@@ -2,18 +2,27 @@
 
 .my-reservations {
   $breakpoint: 1000px;
+  padding-bottom: 2em;
 
   .page-title {
     margin: 1em auto 0 auto;
-    font-size: 1.7em;
-    width: 80%;
+    width: 87%;
+
+    h2 {
+      font-size: 1.7em;
+    }
+
+    p {
+      font-size: 1.1em;
+      color: map-get($colors, 'text-muted');
+    }
   }
 
   .reservations-container {
     display: flex;
     flex-direction: column;
-    width: 80%;
-    margin: 0 auto;
+    width: 90%;
+    margin: 1em auto;
 
     & > h2 {
       font-size: 1.7em;
@@ -39,12 +48,10 @@
 
   .reservations {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
 
-    @media screen and (max-width: $breakpoint) {
-      margin: 0 auto;
-      justify-content: center;
+    &::after {
+      content: '';
+      flex: 0 0 32px;
     }
   }
 }

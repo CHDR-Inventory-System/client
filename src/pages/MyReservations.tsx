@@ -6,6 +6,7 @@ import mockReservations from '../assets/mocks/reservations.json';
 import ReservationCard from '../components/ReservationCard';
 import { Reservation, ReservationStatus } from '../types/API';
 import useReservations from '../hooks/reservation';
+import SimpleBar from 'simplebar-react';
 
 const MyReservations = (): JSX.Element => {
   // const reservation  = useReservations();
@@ -13,20 +14,16 @@ const MyReservations = (): JSX.Element => {
   const reservationMap = useMemo(() => {
     const resMap = {
       Pending: [],
+      Approved: [],
       'Checked Out': [],
       Cancelled: [],
-      Denied: [],
       Late: [],
       Missed: [],
-      Returned: [],
-      Approved: []
+      Denied: [],
+      Returned: []
     } as Record<ReservationStatus, Reservation[]>;
 
     (mockReservations as Reservation[]).forEach(res => {
-      if (!resMap[res.status]) {
-        resMap[res.status] = [];
-      }
-
       resMap[res.status].push(res);
     });
 
@@ -45,7 +42,13 @@ const MyReservations = (): JSX.Element => {
   return (
     <div className="my-reservations">
       <Navbar sticky />
-      <h2 className="page-title">Reservations</h2>
+      <header className="page-title">
+        <h2>My Reservations</h2>
+        <p>
+          All of your reservations will appear here. If you cancel a reservation,
+          you&apos;ll need to submit a new one.
+        </p>
+      </header>
       {reservationMapKeys.map(key => {
         if (reservationMap[key].length === 0) {
           return null;
@@ -54,11 +57,13 @@ const MyReservations = (): JSX.Element => {
         return (
           <div className="reservations-container">
             <h2>{key}</h2>
-            <div className="reservations">
-              {reservationMap[key].map(res => (
-                <ReservationCard key={res.ID} reservation={res as Reservation} />
-              ))}
-            </div>
+            <SimpleBar>
+              <div className="reservations">
+                {reservationMap[key].map(res => (
+                  <ReservationCard key={res.ID} reservation={res as Reservation} />
+                ))}
+              </div>
+            </SimpleBar>
           </div>
         );
       })}

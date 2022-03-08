@@ -1,9 +1,9 @@
 /* eslint-disable */
 import '../scss/item-card.scss';
+import '../scss/reservation-card.scss';
 import React, { useState } from 'react';
-import { Card, Image, Button } from 'antd';
+import { Card, Image, Button, Modal } from 'antd';
 import { Reservation } from '../types/API';
-import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 import moment from 'moment';
 
 type ReservationCardProps = {
@@ -18,8 +18,33 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
   const [isPreviewVisible, setPreviewVisible] = useState(false);
   const item = reservation.item;
 
+  const cancelReservation = async () => {};
+
+  const confirmDCancelReservation = () => {
+    Modal.confirm({
+      centered: true,
+      maskClosable: true,
+      maskStyle: {
+        backgroundColor: 'rgba(0, 0, 0, 50%)'
+      },
+      title: 'Cancel Reservation',
+      content: (
+        <p>
+          Are you sure you want to cancel your reservation for <b>{item.name}</b>? This
+          action cannot be undone.
+        </p>
+      ),
+      okText: 'Cancel Reservation',
+      cancelText: 'Close',
+      okButtonProps: {
+        className: 'ant-btn-dangerous'
+      },
+      onOk: () => cancelReservation()
+    });
+  };
+
   return (
-    <Card className="item-card" bordered={false}>
+    <Card className="reservation-card item-card" bordered={false}>
       <Image
         className="item-image"
         preview={{ visible: false }}
@@ -54,13 +79,15 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
       <p>
         <b>Return</b>: {formatDate(reservation.endDateTime)}
       </p>
-      <Button
-        type="primary"
-        className="reserve-button"
-        disabled={reservation.status !== 'Pending'}
-      >
-        Cancel Reservation
-      </Button>
+      {reservation.status === 'Pending' && (
+        <Button
+          type="primary"
+          className="cancel-button"
+          onClick={confirmDCancelReservation}
+        >
+          Cancel Reservation
+        </Button>
+      )}
     </Card>
   );
 };
