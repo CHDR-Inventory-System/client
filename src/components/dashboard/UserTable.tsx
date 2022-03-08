@@ -23,7 +23,7 @@ import type { BaseUser, UserRole } from '../../types/API';
 import useRegisteredUsers from '../../hooks/registered-users';
 import useLoader from '../../hooks/loading';
 import LoadingSpinner from '../LoadingSpinner';
-import EmptyTableContent from './EmptyTableContent';
+import NoContent from './NoContent';
 import useUser from '../../hooks/user';
 
 /**
@@ -279,10 +279,7 @@ const UserTable = (): JSX.Element => {
         dataSource={registeredUsers.state}
         locale={{
           emptyText: (
-            <EmptyTableContent
-              icon={<AiOutlineUser size={84} />}
-              text="No users to display."
-            />
+            <NoContent icon={<AiOutlineUser size={84} />} text="No users to display." />
           )
         }}
         columns={columns}

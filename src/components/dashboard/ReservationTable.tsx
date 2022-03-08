@@ -29,7 +29,7 @@ import type { Reservation, ReservationStatus } from '../../types/API';
 import useReservations from '../../hooks/reservation';
 import useLoader from '../../hooks/loading';
 import LoadingSpinner from '../LoadingSpinner';
-import EmptyTableContent from './EmptyTableContent';
+import NoContent from './NoContent';
 import useUser from '../../hooks/user';
 
 const createDateSorter = (first: Reservation, second: Reservation) =>
@@ -316,7 +316,7 @@ const ReservationTable = (): JSX.Element => {
         }}
         locale={{
           emptyText: (
-            <EmptyTableContent
+            <NoContent
               icon={<AiOutlineCalendar size={84} />}
               text="No reservations to display."
             />

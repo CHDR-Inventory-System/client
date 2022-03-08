@@ -9,7 +9,7 @@ import { Item } from '../types/API';
 import ItemCard from '../components/ItemCard';
 import useInventory from '../hooks/inventory';
 import useLoader from '../hooks/loading';
-import EmptyTableContent from '../components/dashboard/EmptyTableContent';
+import NoContent from '../components/dashboard/NoContent';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const MainPage = (): JSX.Element | null => {
@@ -60,7 +60,11 @@ const MainPage = (): JSX.Element | null => {
     }
 
     return inventory.items.length === 0 ? (
-      <EmptyTableContent icon={<FaBoxOpen size={120} />} text="No items available" />
+      <NoContent
+        icon={<FaBoxOpen size={120} />}
+        text="No items available"
+        className="empty-inventory-list"
+      />
     ) : (
       inventory.items.map(item => <ItemCard item={item} key={item.ID} />)
     );

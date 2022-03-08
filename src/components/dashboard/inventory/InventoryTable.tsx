@@ -15,7 +15,7 @@ import useLoader from '../../../hooks/loading';
 import useInventory from '../../../hooks/inventory';
 import AddItemDrawer from '../../drawers/AddItemDrawer';
 import LoadingSpinner from '../../LoadingSpinner';
-import EmptyTableContent from '../EmptyTableContent';
+import NoContent from '../NoContent';
 import type { Item } from '../../../types/API';
 import useDrawer from '../../../hooks/drawer';
 
@@ -271,10 +271,7 @@ const InventoryTable = (): JSX.Element => {
         columns={columns}
         locale={{
           emptyText: (
-            <EmptyTableContent
-              icon={<BsBoxSeam size={84} />}
-              text="No items in inventory."
-            />
+            <NoContent icon={<BsBoxSeam size={84} />} text="No items in inventory." />
           )
         }}
         pagination={{

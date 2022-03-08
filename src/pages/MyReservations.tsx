@@ -10,7 +10,7 @@ import useReservations from '../hooks/reservation';
 import useLoader from '../hooks/loading';
 import LoadingSpinner from '../components/LoadingSpinner';
 import useUser from '../hooks/user';
-import EmptyTableContent from '../components/dashboard/EmptyTableContent';
+import NoContent from '../components/dashboard/NoContent';
 
 const header = (
   <header className="page-header">
@@ -115,10 +115,13 @@ const MyReservations = (): JSX.Element => {
       <div className="my-reservations">
         <Navbar />
         {header}
-        <EmptyTableContent
+        <NoContent
           icon={<BsCalendarX size={84} />}
+          className="empty-reservation-list"
           text={
-            hasError ? 'Error loading reservations.' : "You don't have any reservations."
+            hasError
+              ? 'Error loading reservations.'
+              : "Looks like you don't have any reservations."
           }
         />
       </div>
