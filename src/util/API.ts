@@ -10,7 +10,7 @@ import {
   ResetPasswordOpts,
   UserRole,
   CreateReservationOpts,
-  UpdateReservationStatusOpts,
+  UpdateReservationOpts,
   UpdateEmailOpts
 } from '../types/API';
 import APIError from './APIError';
@@ -185,14 +185,18 @@ class API {
     return response.data;
   }
 
-  static async updateReservationStatus({
+  static async updateReservation({
     reservationId,
     adminId,
-    status
-  }: UpdateReservationStatusOpts): Promise<void> {
+    status,
+    startDateTime,
+    endDateTime
+  }: UpdateReservationOpts): Promise<Reservation> {
     const response = await axios.patch(`/reservations/${reservationId}/status`, {
       status,
-      adminId
+      adminId,
+      startDateTime,
+      endDateTime
     });
     return response.data;
   }

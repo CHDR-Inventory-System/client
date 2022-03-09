@@ -1,4 +1,3 @@
-/* eslint-disable */
 import '../scss/reservation-calendar.scss';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, momentLocalizer, Event as RBCEvent } from 'react-big-calendar';
@@ -7,6 +6,7 @@ import debounce from 'lodash/debounce';
 import moment from 'moment';
 import { BiExitFullscreen, BiFullscreen } from 'react-icons/bi';
 import { Button, notification } from 'antd';
+import { BsCalendarX } from 'react-icons/bs';
 import Navbar from '../components/Navbar';
 import useUser from '../hooks/user';
 import PageNotFound from '../components/PageNotFound';
@@ -15,8 +15,8 @@ import useLoader from '../hooks/loading';
 import useReservations from '../hooks/reservation';
 import LoadingSpinner from '../components/LoadingSpinner';
 import NoContent from '../components/dashboard/NoContent';
-import { BsCalendarX } from 'react-icons/bs';
 import UpdateReservationModal from '../components/modals/UpdateReservationModal';
+import useModal from '../hooks/modal';
 
 interface CalendarEvent extends RBCEvent {
   resource: Reservation;
@@ -44,11 +44,11 @@ const statusColorMap: Record<ReservationStatus, string> = {
 const ReservationCalendar = (): JSX.Element => {
   const user = useUser();
   const loader = useLoader();
+  const reservationModal = useModal();
   const reservation = useReservations();
   const calendarContainerElement = useRef<HTMLDivElement | null>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [hasError, setHasError] = useState(true);
-  const [isReservationModalShowing, setReservationModalShowing] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(
     null
   );
@@ -92,7 +92,7 @@ const ReservationCalendar = (): JSX.Element => {
 
   const onSelectEvent = (event: CalendarEvent) => {
     setSelectedReservation(event.resource);
-    setReservationModalShowing(true);
+    reservationModal.open();
   };
 
   const loadAllReservations = async () => {
@@ -175,9 +175,9 @@ const ReservationCalendar = (): JSX.Element => {
       <Navbar />
       {selectedReservation && (
         <UpdateReservationModal
-          visible={isReservationModalShowing}
+          visible={reservationModal.visible}
           reservation={selectedReservation}
-          onClose={() => setReservationModalShowing(false)}
+          onClose={reservationModal.close}
         />
       )}
       <div className="calendar-container" ref={calendarContainerElement}>

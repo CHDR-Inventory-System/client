@@ -73,13 +73,13 @@ const MyReservations = (): JSX.Element => {
 
   const reservationList = useMemo(
     () =>
-      reservationMapKeys.map(key => {
+      reservationMapKeys.map((key, index) => {
         if (reservationMap[key].length === 0) {
           return null;
         }
 
         return (
-          <div className="reservations-container">
+          <div className="reservations-container" key={index}>
             <Collapse bordered={false} defaultActiveKey="Pending">
               <Collapse.Panel header={<h2>{key}</h2>} key={key}>
                 <SimpleBar>

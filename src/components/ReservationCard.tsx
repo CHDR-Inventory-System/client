@@ -2,18 +2,14 @@ import '../scss/item-card.scss';
 import '../scss/reservation-card.scss';
 import React, { useState } from 'react';
 import { Card, Image, Button, Modal, notification } from 'antd';
-import moment from 'moment';
 import { Reservation } from '../types/API';
 import useLoader from '../hooks/loading';
 import useReservations from '../hooks/reservation';
+import { formatDate } from '../util/date';
 
 type ReservationCardProps = {
   reservation: Reservation;
 };
-
-// The server returns GMT dates so we need to add 5 hours to convert it to EST
-const formatDate = (date: string) =>
-  moment(date).add({ hours: 5 }).format('MMM D, YYYY, hh:mm A');
 
 const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => {
   const { item } = reservation;
@@ -29,7 +25,7 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
     loader.startLoading();
 
     try {
-      await res.updateStatus({
+      await res.update({
         reservationId: reservation.ID,
         status: 'Cancelled'
       });
@@ -109,10 +105,10 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
         <b>Status</b>: {reservation.status}
       </p>
       <p>
-        <b>Checkout</b>: {formatDate(reservation.startDateTime)}
+        <b>Checkout</b>: {formatDate(Date.parse(reservation.startDateTime))}
       </p>
       <p>
-        <b>Return</b>: {formatDate(reservation.endDateTime)}
+        <b>Return</b>: {formatDate(Date.parse(reservation.endDateTime))}
       </p>
       {reservation.status === 'Pending' && (
         <Button

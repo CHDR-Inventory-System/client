@@ -1,6 +1,5 @@
-/* eslint-disable */
 import '../../scss/update-reservation-modal.scss';
-import { Modal, Form, DatePicker, Select } from 'antd';
+import { Modal, Form, DatePicker, Select, notification } from 'antd';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 import moment from 'moment';
@@ -8,6 +7,10 @@ import * as yup from 'yup';
 import { Reservation, ReservationStatus } from '../../types/API';
 import { BaseModalProps } from './base-modal-props';
 import useLoader from '../../hooks/loading';
+import { formatDate } from '../../util/date';
+import useReservations from '../../hooks/reservation';
+import useUser from '../../hooks/user';
+import APIError from '../../util/APIError';
 
 type UpdateReservationModalProps = BaseModalProps & {
   reservation: Reservation;
@@ -39,7 +42,10 @@ const schema = yup.object({
     .number()
     .min(yup.ref('startDateTime'), 'Return date must be after checkout date')
     .min(0, 'A return date is required'),
-  status: yup.string().required('A reservation status is required')
+  status: yup
+    .string()
+    .required('A reservation status is required')
+    .oneOf(STATUSES, 'Invalid status')
 });
 
 const UpdateReservationModal = ({
@@ -48,9 +54,12 @@ const UpdateReservationModal = ({
   reservation
 }: UpdateReservationModalProps): JSX.Element => {
   const { item } = reservation;
+  const user = useUser();
   const loader = useLoader();
   const [form] = Form.useForm();
+  const reservations = useReservations();
   const formik = useFormik<FormValues>({
+    enableReinitialize: true,
     initialValues: {
       startDateTime: Date.parse(reservation.startDateTime),
       endDateTime: Date.parse(reservation.endDateTime),
@@ -60,6 +69,14 @@ const UpdateReservationModal = ({
   });
 
   const updateReservation = async (values: FormValues) => {
+    if (!user.isAdminOrSuper()) {
+      notification.error({
+        key: 'reservation-update-permission-error',
+        message: 'Insufficient Permission',
+        description: "You don't have permission to perform this action."
+      });
+    }
+
     loader.startLoading();
 
     // Reset all errors in the form
@@ -70,10 +87,31 @@ const UpdateReservationModal = ({
       }))
     );
 
-    console.log(values);
-
     try {
-      schema.validateSync(values, { abortEarly: false });
+      const { startDateTime, endDateTime, status } = schema.validateSync(values, {
+        abortEarly: false
+      });
+
+      await reservations.update({
+        startDateTime,
+        endDateTime,
+        status: status as ReservationStatus,
+        reservationId: reservation.ID,
+        adminId: user.state.ID
+      });
+
+      notification.success({
+        key: 'reservation-update-success',
+        message: 'Reservation Update',
+        description: (
+          <p>
+            <b>{reservation.user.fullName}</b>&apos;s reservation on <b>{item.name}</b>{' '}
+            was updated.
+          </p>
+        )
+      });
+
+      onClose();
     } catch (err) {
       if (err instanceof yup.ValidationError) {
         // Because errors are handled by Formik, we need to make sure Ant's form
@@ -85,21 +123,37 @@ const UpdateReservationModal = ({
           }))
         );
       }
+
+      if (err instanceof APIError) {
+        notification.error({
+          duration: 5,
+          key: 'error-updating',
+          message: 'Error Updating',
+          description: `
+            An error occurred while updating this reservation.
+            Please try again.`
+        });
+      }
     }
 
     loader.stopLoading();
   };
 
   useEffect(() => {
-    form.setFieldsValue({
-      status: reservation.status,
-      startDateTime: moment(reservation.startDateTime),
-      endDateTime: moment(reservation.endDateTime)
-    });
-  }, [reservation]);
+    // Makes sure the form's values get set back to this reservation's values
+    // when the modal is closed and opened again
+    if (visible) {
+      form.setFieldsValue({
+        status: reservation.status,
+        startDateTime: moment(Date.parse(reservation.startDateTime)),
+        endDateTime: moment(Date.parse(reservation.endDateTime))
+      });
+    }
+  }, [reservation, visible]);
 
   return (
     <Modal
+      destroyOnClose
       className="update-reservation-modal"
       onCancel={onClose}
       visible={visible}
@@ -115,7 +169,7 @@ const UpdateReservationModal = ({
       <p className="modal-description">
         <b>{reservation.user.fullName}</b> ({reservation.user.email}) has a reservation on{' '}
         <b>{item.name}</b>. This reservation was created on{' '}
-        <b>{moment(reservation.created).format('MM/DD/YYYY [at] h:mm A')}</b>
+        <b>{formatDate(reservation.created)}</b>
       </p>
       <Form form={form} layout="vertical">
         <Form.Item label="Checkout Date" name="startDateTime">
