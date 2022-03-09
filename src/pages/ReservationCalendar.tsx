@@ -1,12 +1,13 @@
 import '../scss/reservation-calendar.scss';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Calendar, momentLocalizer, Event as RBCEvent } from 'react-big-calendar';
+import { Calendar, momentLocalizer, Event as RBCEvent, View } from 'react-big-calendar';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
 import { BiExitFullscreen, BiFullscreen } from 'react-icons/bi';
 import { Button, notification } from 'antd';
 import { BsCalendarX } from 'react-icons/bs';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import useUser from '../hooks/user';
 import PageNotFound from '../components/PageNotFound';
@@ -47,6 +48,10 @@ const ReservationCalendar = (): JSX.Element => {
   const reservationModal = useModal();
   const reservation = useReservations();
   const calendarContainerElement = useRef<HTMLDivElement | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [calendarView, setCalendarView] = useState<View>(
+    () => (searchParams.get('view') || 'month') as View
+  );
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [hasError, setHasError] = useState(true);
   const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(
@@ -117,6 +122,12 @@ const ReservationCalendar = (): JSX.Element => {
   useLayoutEffect(() => calculateCalendarHeight(), []);
 
   useEffect(() => {
+    if (!user.isAdminOrSuper()) {
+      return () => {};
+    }
+
+    document.title = 'CHDR Inventory - Calendar';
+
     loadAllReservations();
     window.addEventListener('resize', onWindowResize);
 
@@ -143,6 +154,12 @@ const ReservationCalendar = (): JSX.Element => {
       document.exitFullscreen();
     }
   }, [isFullScreen]);
+
+  useEffect(() => {
+    if (user.isAdminOrSuper()) {
+      setSearchParams({ view: calendarView }, { replace: true });
+    }
+  }, [calendarView]);
 
   if (!user.isAdminOrSuper()) {
     return <PageNotFound />;
@@ -182,6 +199,9 @@ const ReservationCalendar = (): JSX.Element => {
       )}
       <div className="calendar-container" ref={calendarContainerElement}>
         <Calendar
+          defaultView={calendarView}
+          view={calendarView}
+          onView={setCalendarView}
           localizer={localizer}
           events={calendarEvents}
           className="calendar"
