@@ -45,6 +45,7 @@ const ProfileAvatar = (): JSX.Element => {
 
   const goToDashboard = () => navigate('/dashboard');
   const goToReservationCalendar = () => navigate('/calendar');
+  const goToReservations = () => navigate('/reservations');
 
   const menu = (
     <Menu className="profile-avatar-dropdown-menu">
@@ -60,6 +61,7 @@ const ProfileAvatar = (): JSX.Element => {
       <Menu.Item
         key="reservations"
         className="menu-item-mobile"
+        onClick={goToReservations}
         icon={<AiOutlineCalendar size={18} />}
       >
         My Reservations
