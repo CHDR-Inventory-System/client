@@ -187,6 +187,17 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
   // https://github.com/ant-design/ant-design/issues/25150#issuecomment-652226167
   return (
     <Form layout="vertical" form={form} className="reservation-form">
+      <Form.Item label="Checkout Date">
+        <p>The date your reservation for this item starts</p>
+        <Form.Item name="checkoutDate">
+          <Calendar
+            fullscreen={false}
+            validRange={[todayDate, maxReservationDate]}
+            onChange={value => formik.setFieldValue('checkoutDate', value)}
+          />
+        </Form.Item>
+      </Form.Item>
+
       <Form.Item label="Checkout Time">
         <p>The time your reservation for this item starts</p>
         <TimePicker
@@ -200,13 +211,13 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
         />
       </Form.Item>
 
-      <Form.Item label="Checkout Date">
-        <p>The date your reservation for this item starts</p>
-        <Form.Item name="checkoutDate">
+      <Form.Item label="Return Date">
+        <p>The date your reservation for this item ends</p>
+        <Form.Item name="returnDate">
           <Calendar
             fullscreen={false}
             validRange={[todayDate, maxReservationDate]}
-            onChange={value => formik.setFieldValue('checkoutDate', value)}
+            onChange={value => formik.setFieldValue('returnDate', value)}
           />
         </Form.Item>
       </Form.Item>
@@ -222,17 +233,6 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
           onKeyDown={event => onTimePickerKeyDown(event, 'returnTime')}
           onSelect={value => formik.setFieldValue('returnTime', value)}
         />
-      </Form.Item>
-
-      <Form.Item label="Return Date">
-        <p>The date your reservation for this item ends</p>
-        <Form.Item name="returnDate">
-          <Calendar
-            fullscreen={false}
-            validRange={[todayDate, maxReservationDate]}
-            onChange={value => formik.setFieldValue('returnDate', value)}
-          />
-        </Form.Item>
       </Form.Item>
 
       <Form.Item help={getDisabledText()}>
