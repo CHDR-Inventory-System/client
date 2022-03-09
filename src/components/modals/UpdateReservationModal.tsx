@@ -1,5 +1,5 @@
 import '../../scss/update-reservation-modal.scss';
-import { Modal, Form, DatePicker, Select, notification } from 'antd';
+import { Form, DatePicker, Select, notification, Button, Modal } from 'antd';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 import moment from 'moment';
@@ -69,14 +69,6 @@ const UpdateReservationModal = ({
   });
 
   const updateReservation = async (values: FormValues) => {
-    if (!user.isAdminOrSuper()) {
-      notification.error({
-        key: 'reservation-update-permission-error',
-        message: 'Insufficient Permission',
-        description: "You don't have permission to perform this action."
-      });
-    }
-
     loader.startLoading();
 
     // Reset all errors in the form
@@ -139,6 +131,60 @@ const UpdateReservationModal = ({
     loader.stopLoading();
   };
 
+  const deleteReservation = async () => {
+    loader.startLoading();
+
+    try {
+      await reservations.deleteReservation(reservation.ID);
+
+      notification.success({
+        key: 'reservation-delete-success',
+        message: 'Reservation Deleted',
+        description: (
+          <div>
+            <b>{reservation.user.fullName}</b>&apos;s reservation on <b>{item.name}</b>
+            &apos;s was deleted.
+          </div>
+        )
+      });
+
+      onClose();
+    } catch {
+      notification.error({
+        key: 'reservation-delete-error',
+        message: 'Error Deleting Reservation',
+        description: `
+          An unexpected error occurred while deleting this reservation,
+          please try again.
+        `
+      });
+    }
+
+    loader.stopLoading();
+  };
+
+  const confirmDelete = () => {
+    Modal.confirm({
+      centered: true,
+      maskStyle: {
+        backgroundColor: 'rgba(0, 0, 0, 50%)'
+      },
+      title: 'Delete Item',
+      content: (
+        <p>
+          Are you sure you want to delete <b>{reservation.user.fullName}</b>&apos;s{' '}
+          <b>{item.name}</b>&apos;s? <b>This action cannot be undone</b>.
+        </p>
+      ),
+      className: 'modal--dangerous',
+      okText: 'Delete',
+      okButtonProps: {
+        className: 'ant-btn-dangerous'
+      },
+      onOk: () => deleteReservation()
+    });
+  };
+
   useEffect(() => {
     // Makes sure the form's values get set back to this reservation's values
     // when the modal is closed and opened again
@@ -158,13 +204,23 @@ const UpdateReservationModal = ({
       onCancel={onClose}
       visible={visible}
       title="Update Reservation"
-      cancelText="Close"
-      okText="Save Changes"
-      onOk={() => formik.submitForm()}
-      okButtonProps={{
-        loading: loader.isLoading,
-        disabled: loader.isLoading
-      }}
+      footer={[
+        <Button onClick={onClose} key="close">
+          Close
+        </Button>,
+        <Button danger key="delete" onClick={confirmDelete}>
+          Delete Reservation
+        </Button>,
+        <Button
+          onClick={() => formik.submitForm()}
+          loading={loader.isLoading}
+          disabled={loader.isLoading}
+          type="primary"
+          key="save"
+        >
+          Save Changes
+        </Button>
+      ]}
     >
       <p className="modal-description">
         <b>{reservation.user.fullName}</b> ({reservation.user.email}) has a reservation on{' '}

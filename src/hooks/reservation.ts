@@ -18,6 +18,7 @@ type UserReservationHook = {
    */
   getReservationsForItem: (itemId: number) => Promise<Reservation[]>;
   getReservationsForUser: (userId: number) => Promise<Reservation[]>;
+  deleteReservation: (reservationId: number) => Promise<void>;
 };
 
 const useReservations = (): UserReservationHook => {
@@ -97,13 +98,25 @@ const useReservations = (): UserReservationHook => {
     return reservations;
   };
 
+  const deleteReservation = async (reservationId: number): Promise<void> => {
+    await API.deleteReservation(reservationId);
+
+    dispatch({
+      type: 'DELETE',
+      payload: {
+        reservationId
+      }
+    });
+  };
+
   return {
     state,
     createReservation,
     initAllReservations,
     update,
     getReservationsForItem,
-    getReservationsForUser
+    getReservationsForUser,
+    deleteReservation
   };
 };
 

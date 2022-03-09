@@ -186,6 +186,7 @@ const EditItemDrawer = ({
 
   const confirmDelete = () => {
     Modal.confirm({
+      className: 'modal--dangerous',
       centered: true,
       maskStyle: {
         backgroundColor: 'rgba(0, 0, 0, 50%)'
@@ -209,6 +210,7 @@ const EditItemDrawer = ({
 
   const confirmRetire = () => {
     Modal.confirm({
+      className: 'modal--dangerous',
       centered: true,
       maskStyle: {
         backgroundColor: 'rgba(0, 0, 0, 50%)'

@@ -200,6 +200,7 @@ const ReservationCalendar = (): JSX.Element => {
       )}
       <div className="calendar-container" ref={calendarContainerElement}>
         <Calendar
+          step={15}
           defaultView={calendarView}
           view={calendarView}
           onView={setCalendarView}

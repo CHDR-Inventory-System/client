@@ -345,3 +345,11 @@ td.ant-table-column-sort {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.ant-modal-confirm-confirm .ant-modal-confirm-body > .anticon {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.modal--dangerous.ant-modal-confirm-confirm .ant-modal-confirm-body > .anticon {
+  color: map-get($colors, 'danger');
+}

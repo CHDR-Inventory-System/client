@@ -68,6 +68,7 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
           action cannot be undone.
         </p>
       ),
+      className: 'modal--dangerous',
       okText: 'Cancel Reservation',
       cancelText: 'Close',
       okButtonProps: {

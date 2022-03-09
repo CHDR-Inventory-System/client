@@ -35,6 +35,7 @@ const ItemImageList = ({ itemId, loader }: ItemImageListProps): JSX.Element => {
 
   const showDeleteModal = (imageId: number) => {
     Modal.confirm({
+      className: 'modal--dangerous',
       maskClosable: true,
       title: 'Delete Image',
       content: 'Are you sure you want to delete this image?',

@@ -228,6 +228,11 @@ class API {
     const response = await axios.get(`/reservations/user/${userId}`);
     return response.data;
   }
+
+  static async deleteReservation(reservationId: number): Promise<void> {
+    const response = await axios.delete(`/reservations/${reservationId}`);
+    return response.data;
+  }
 }
 
 export default API;

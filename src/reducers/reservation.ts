@@ -22,6 +22,12 @@ export type ReservationAction =
         startDateTime?: string;
         endDateTime?: string;
       };
+    }
+  | {
+      type: 'DELETE';
+      payload: {
+        reservationId: number;
+      };
     };
 
 const reservationReducer = (
@@ -52,6 +58,8 @@ const reservationReducer = (
         return reservation;
       });
     }
+    case 'DELETE':
+      return state.filter(reservation => reservation.ID !== action.payload.reservationId);
     default:
       throw new Error(`Invalid action ${action}`);
   }
