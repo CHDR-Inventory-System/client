@@ -4,6 +4,13 @@ import { ImageUploadParams, Item, ItemImage } from '../types/API';
 import API from '../util/API';
 import { AtLeast } from '../util/types';
 
+type InventoryInitOpts = {
+  /**
+   * If true, retired item won't be loaded into state.
+   */
+  hideRetired: boolean;
+};
+
 type UseInventoryHook = {
   readonly items: Readonly<Item[]>;
   /**
@@ -12,7 +19,7 @@ type UseInventoryHook = {
    * with those items. For convenience, this method returns the response from
    * {@link API.getAllItems}
    */
-  init: () => Promise<Item[]>;
+  init: (opts?: InventoryInitOpts) => Promise<Item[]>;
   setItems: (items: Item[]) => void;
   updateItem: (item: AtLeast<Item, 'ID'>) => Promise<void>;
   /**
@@ -78,8 +85,13 @@ const useInventory = (): UseInventoryHook => {
     });
   };
 
-  const init = async (): Promise<Item[]> => {
-    const items = await API.getAllItems();
+  const init = async (opts?: InventoryInitOpts): Promise<Item[]> => {
+    let items = await API.getAllItems();
+
+    if (opts?.hideRetired) {
+      items = items.filter(item => !item.retiredDateTime);
+    }
+
     setItems(items);
     return items;
   };

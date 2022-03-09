@@ -36,7 +36,7 @@ const MainPage = (): JSX.Element | null => {
     loader.startLoading();
 
     try {
-      const items = await inventory.init();
+      const items = await inventory.init({ hideRetired: true });
       setInventoryCache(items);
     } catch {
       notification.error({
@@ -71,15 +71,7 @@ const MainPage = (): JSX.Element | null => {
   };
 
   useEffect(() => {
-    if (inventory.items.length === 0) {
-      // This check prevents layout shift/flicker. This will
-      // be true if the user is visiting this page for the first time.
-      loadInventory();
-    } else {
-      // This will be true if the user navigated back to this page by either
-      // clicking the navbar or using the browser's back button
-      loader.stopLoading({ delay: 100 });
-    }
+    loadInventory();
 
     return () => {
       notification.destroy();
