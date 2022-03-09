@@ -12,9 +12,6 @@ if (module.hot) {
 }
 
 message.config({ maxCount: 1 });
-
-notification.config({
-  placement: 'top'
-});
+notification.config({ placement: 'top' });
 
 ReactDOM.render(<App />, document.getElementById('app'));

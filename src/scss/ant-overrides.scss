@@ -353,3 +353,14 @@ td.ant-table-column-sort {
 .modal--dangerous.ant-modal-confirm-confirm .ant-modal-confirm-body > .anticon {
   color: map-get($colors, 'danger');
 }
+
+// Ant's notifications block all pointer evens from the top of the page
+// so we need to disable pointer events from the notification wrapper
+// while enabling pointer events on the actual notification itself.
+.ant-notification {
+  pointer-events: none;
+}
+
+.ant-notification-notice {
+  pointer-events: auto;
+}
