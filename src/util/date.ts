@@ -1,5 +1,15 @@
 /* eslint-disable import/prefer-default-export */
 import moment from 'moment';
 
-export const formatDate = (date: string | number): string =>
-  moment.utc(date).format('MMM D, YYYY, hh:mm A');
+type FormatOpts = {
+  dateFormat?: string;
+};
+
+const defaultOptions: FormatOpts = {
+  dateFormat: 'MMM D, YYYY, hh:mm A'
+};
+
+export const formatDate = (
+  date: string | number,
+  { dateFormat } = defaultOptions
+): string => moment.utc(date).format(dateFormat);

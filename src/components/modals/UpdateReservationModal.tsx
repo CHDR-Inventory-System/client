@@ -169,7 +169,9 @@ const UpdateReservationModal = ({
       <p className="modal-description">
         <b>{reservation.user.fullName}</b> ({reservation.user.email}) has a reservation on{' '}
         <b>{item.name}</b>. This reservation was created on{' '}
-        <b>{formatDate(reservation.created)}</b>
+        <b>
+          {formatDate(reservation.created, { dateFormat: 'MMM D, YYYY [at] hh:mm A' })}
+        </b>
       </p>
       <Form form={form} layout="vertical">
         <Form.Item label="Checkout Date" name="startDateTime">

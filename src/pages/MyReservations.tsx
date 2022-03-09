@@ -22,6 +22,17 @@ const header = (
   </header>
 );
 
+const STATUSES: ReservationStatus[] = [
+  'Approved',
+  'Cancelled',
+  'Checked Out',
+  'Denied',
+  'Late',
+  'Missed',
+  'Pending',
+  'Returned'
+];
+
 const MyReservations = (): JSX.Element => {
   const reservation = useReservations();
   const user = useUser();
@@ -80,7 +91,11 @@ const MyReservations = (): JSX.Element => {
 
         return (
           <div className="reservations-container" key={index}>
-            <Collapse bordered={false} defaultActiveKey="Pending">
+            <Collapse
+              bordered={false}
+              defaultActiveKey={STATUSES}
+              className="reservation-collapse"
+            >
               <Collapse.Panel header={<h2>{key}</h2>} key={key}>
                 <SimpleBar>
                   <div className="reservations">

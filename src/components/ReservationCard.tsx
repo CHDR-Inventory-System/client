@@ -2,6 +2,8 @@ import '../scss/item-card.scss';
 import '../scss/reservation-card.scss';
 import React, { useState } from 'react';
 import { Card, Image, Button, Modal, notification } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
 import { Reservation } from '../types/API';
 import useLoader from '../hooks/loading';
 import useReservations from '../hooks/reservation';
@@ -16,6 +18,7 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
   const [isPreviewVisible, setPreviewVisible] = useState(false);
   const loader = useLoader();
   const res = useReservations();
+  const navigate = useNavigate();
 
   const cancelReservation = async () => {
     if (loader.isLoading) {
@@ -51,7 +54,7 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
     loader.stopLoading();
   };
 
-  const confirmDCancelReservation = () => {
+  const confirmCancelReservation = () => {
     Modal.confirm({
       centered: true,
       maskClosable: true,
@@ -73,6 +76,8 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
       onOk: () => cancelReservation()
     });
   };
+
+  const goToReservationPage = () => navigate(`/reserve/${reservation.item.ID}`);
 
   return (
     <Card className="reservation-card item-card" bordered={false}>
@@ -110,15 +115,17 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
       <p>
         <b>Return</b>: {formatDate(Date.parse(reservation.endDateTime))}
       </p>
-      {reservation.status === 'Pending' && (
-        <Button
-          type="primary"
-          className="cancel-button"
-          onClick={confirmDCancelReservation}
-        >
-          Cancel Reservation
-        </Button>
-      )}
+      <Button
+        type="primary"
+        className={classNames({ 'cancel-button': reservation.status === 'Pending' })}
+        onClick={
+          reservation.status === 'Pending'
+            ? confirmCancelReservation
+            : goToReservationPage
+        }
+      >
+        {reservation.status === 'Pending' ? 'Cancel Reservation' : 'New Reservation'}
+      </Button>
     </Card>
   );
 };
