@@ -200,6 +200,7 @@ const UpdateReservationModal = ({
   return (
     <Modal
       destroyOnClose
+      centered
       className="update-reservation-modal"
       onCancel={onClose}
       visible={visible}

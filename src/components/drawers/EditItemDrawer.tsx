@@ -418,23 +418,25 @@ const EditItemDrawer = ({
             Delete
           </Button>
           {item.main && (
-            <Button
-              type="primary"
-              className="form-action-button"
-              disabled={loader.isLoading}
-              onClick={confirmRetire}
-            >
-              {item.retiredDateTime ? 'Undo Retire' : 'Retire'}
-            </Button>
+            <>
+              <Button
+                type="primary"
+                className="form-action-button"
+                disabled={loader.isLoading}
+                onClick={confirmRetire}
+              >
+                {item.retiredDateTime ? 'Undo Retire' : 'Retire'}
+              </Button>
+              <Button
+                type="primary"
+                className="form-action-button"
+                disabled={loader.isLoading || !!item.retiredDateTime}
+                onClick={() => drawer.open('reservation')}
+              >
+                Create Reservation
+              </Button>
+            </>
           )}
-          <Button
-            type="primary"
-            className="form-action-button"
-            disabled={loader.isLoading || !!item.retiredDateTime}
-            onClick={() => drawer.open('reservation')}
-          >
-            Create Reservation
-          </Button>
         </div>
       </Form>
     </Drawer>

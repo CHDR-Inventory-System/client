@@ -148,11 +148,37 @@ const ReservationCalendar = (): JSX.Element => {
     };
   }, []);
 
+  const enterFullScreen = () => {
+    const element = calendarContainerElement.current;
+
+    if (!element) {
+      return;
+    }
+
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.mozRequestFullscreen) {
+      element.mozRequestFullscreen();
+    }
+  };
+
+  const exitFullScreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else if (document.webkitFullscreenElement) {
+      document.webkitExitFullscreen?.();
+    } else if (document.mozFullScreenElement) {
+      document.mozCancelFullScreen?.();
+    }
+  };
+
   useEffect(() => {
     if (isFullScreen) {
-      calendarContainerElement.current?.requestFullscreen();
-    } else if (document.fullscreenElement) {
-      document.exitFullscreen();
+      enterFullScreen();
+    } else {
+      exitFullScreen();
     }
   }, [isFullScreen]);
 
