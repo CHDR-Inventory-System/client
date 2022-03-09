@@ -331,3 +331,17 @@ td.ant-table-column-sort {
   height: 38px;
   padding: 3px 11px;
 }
+
+.ant-drawer-header {
+  gap: 8px;
+}
+
+.ant-drawer-header-title {
+  overflow: hidden;
+}
+
+.ant-drawer-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

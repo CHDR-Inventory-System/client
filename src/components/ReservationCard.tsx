@@ -105,7 +105,9 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
           </Image.PreviewGroup>
         )}
       </div>
-      <h2>{item.name}</h2>
+      <h2 className="item-name" title={item.name}>
+        {item.name}
+      </h2>
       <p>
         <b>Status</b>: {reservation.status}
       </p>

@@ -193,8 +193,10 @@ const EditItemDrawer = ({
       title: 'Delete Item',
       content: (
         <p>
-          Are you sure you want to delete <b>{item.name}</b>? This action cannot be
-          undone.
+          Are you sure you want to delete <b>{item.name}</b>? This will delete all{' '}
+          <b>images</b>
+          and <b>reservations</b> associated with this item.{' '}
+          <b>This action cannot be undone</b>.
         </p>
       ),
       okText: 'Delete',

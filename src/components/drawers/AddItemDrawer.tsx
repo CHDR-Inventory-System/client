@@ -147,7 +147,7 @@ const AddItemDrawer = ({
         moveable: parentItem.moveable
       });
     }
-  }, [parentItem]);
+  }, [parentItem, visible]);
 
   return (
     <Drawer
@@ -165,7 +165,7 @@ const AddItemDrawer = ({
           disabled={loader.isLoading}
           onClick={() => formik.submitForm()}
         >
-          Save
+          Add Item
         </Button>
       }
     >

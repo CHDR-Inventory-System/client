@@ -15,6 +15,12 @@
     flex-direction: column;
   }
 
+  .item-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
   p.item-status {
     margin-bottom: 0.5em;
   }

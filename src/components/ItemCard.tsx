@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button, Card, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
+import classNames from 'classnames';
 import { Item } from '../types/API';
 
 type ItemCardProps = {
@@ -39,13 +40,16 @@ const ItemCard = ({ item }: ItemCardProps): JSX.Element => {
           </Image.PreviewGroup>
         )}
       </div>
-      <h2>{item.name}</h2>
+      <h2 className="item-name" title={item.name}>
+        {item.name}
+      </h2>
       <p className="item-status">
         <b>Status</b>:{' '}
         <span
-          className={`item-status item-status-${
-            item.available ? 'available' : 'unavailable'
-          }`}
+          className={classNames('item-status', {
+            'item-status-available': item.available,
+            'item-status-unavailable': !item.available
+          })}
         >
           {item.available ? 'Available' : 'Unavailable'}
           {item.available ? (

@@ -26,18 +26,19 @@ interface CalendarEvent extends RBCEvent {
 const localizer = momentLocalizer(moment);
 const defaultNavbarHeight = 82;
 const renderableStatuses: Set<ReservationStatus> = new Set([
-  'Pending',
+  'Approved',
   'Checked Out',
-  'Approved'
+  'Late',
+  'Pending'
 ] as ReservationStatus[]);
 
 const statusColorMap: Record<ReservationStatus, string> = {
   Approved: '#3F791C',
   Cancelled: '#9E1E01',
   'Checked Out': '#791c2a',
-  Denied: '#EB826B',
-  Late: '#F1DE32',
-  Missed: '#FF2E00',
+  Denied: '#DE411E',
+  Late: '#0700BC',
+  Missed: '#464400',
   Pending: '#887b29',
   Returned: '#5452F6'
 };
