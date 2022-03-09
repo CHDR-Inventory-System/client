@@ -1,5 +1,5 @@
 import '../scss/profile-avatar.scss';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Divider, Dropdown, Menu, Modal } from 'antd';
 import {
@@ -11,9 +11,10 @@ import {
 import { BsCalendarWeek } from 'react-icons/bs';
 import useUser from '../hooks/user';
 import EditAccountModal from './modals/EditAccountModal';
+import useModal from '../hooks/modal';
 
 const ProfileAvatar = (): JSX.Element => {
-  const [isAccountModalShowing, setAccountModalShowing] = useState(false);
+  const accountModal = useModal();
   const navigate = useNavigate();
   const user = useUser();
   const userInitials = useMemo(() => {
@@ -52,7 +53,7 @@ const ProfileAvatar = (): JSX.Element => {
       <Menu.Item
         key="edit-account"
         icon={<AiOutlineEdit size={18} />}
-        onClick={() => setAccountModalShowing(true)}
+        onClick={accountModal.open}
       >
         Edit Account
       </Menu.Item>
@@ -98,10 +99,7 @@ const ProfileAvatar = (): JSX.Element => {
       <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
         <Avatar>{userInitials}</Avatar>
       </Dropdown>
-      <EditAccountModal
-        visible={isAccountModalShowing}
-        onClose={() => setAccountModalShowing(false)}
-      />
+      <EditAccountModal visible={accountModal.isVisible} onClose={accountModal.close} />
     </>
   );
 };

@@ -6,11 +6,12 @@ import useUser from '../../hooks/user';
 import useLoader from '../../hooks/loading';
 import VerifyEmailModal from '../modals/VerifyEmailModal';
 import APIError from '../../util/APIError';
+import useModal from '../../hooks/modal';
 
 const LogInCard = ({ className, description }: CardProps): JSX.Element => {
   const [form] = Form.useForm();
-  const [isVerifyModalVisible, setVerifyModalVisible] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const verifyModal = useModal();
   const loader = useLoader();
   const user = useUser();
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const LogInCard = ({ className, description }: CardProps): JSX.Element => {
       const response = await user.login(email, password);
 
       if (!response.verified) {
-        setVerifyModalVisible(true);
+        verifyModal.open();
         loader.stopLoading();
         return;
       }
@@ -57,8 +58,8 @@ const LogInCard = ({ className, description }: CardProps): JSX.Element => {
     <Card bordered={false} title="Log In With Your Email" className={className}>
       <VerifyEmailModal
         email={userEmail}
-        visible={isVerifyModalVisible}
-        onClose={() => setVerifyModalVisible(false)}
+        visible={verifyModal.isVisible}
+        onClose={verifyModal.close}
       />
       <Card.Meta description={description} />
       <Form

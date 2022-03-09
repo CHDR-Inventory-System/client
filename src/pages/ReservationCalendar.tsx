@@ -175,14 +175,13 @@ const ReservationCalendar = (): JSX.Element => {
       <Navbar />
       {selectedReservation && (
         <UpdateReservationModal
-          visible={reservationModal.visible}
+          visible={reservationModal.isVisible}
           reservation={selectedReservation}
           onClose={reservationModal.close}
         />
       )}
       <div className="calendar-container" ref={calendarContainerElement}>
         <Calendar
-          popup
           localizer={localizer}
           events={calendarEvents}
           className="calendar"

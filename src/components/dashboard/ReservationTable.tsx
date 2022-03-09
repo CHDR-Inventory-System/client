@@ -238,7 +238,7 @@ const ReservationTable = (): JSX.Element => {
       {selectedReservation && (
         <UpdateReservationModal
           reservation={selectedReservation}
-          visible={updateReservationModal.visible}
+          visible={updateReservationModal.isVisible}
           onClose={updateReservationModal.close}
         />
       )}
