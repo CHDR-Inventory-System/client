@@ -226,7 +226,11 @@ const EditItemDrawer = ({
   };
 
   useEffect(() => {
-    form.setFieldsValue(item);
+    form.setFieldsValue({
+      ...item,
+      purchaseDate:
+        (item.purchaseDate && moment.utc(Date.parse(item.purchaseDate))) || null
+    });
   }, [item]);
 
   return (
@@ -371,12 +375,11 @@ const EditItemDrawer = ({
           </Select>
         </Form.Item>
 
-        <Form.Item label="Purchase Date">
+        <Form.Item label="Purchase Date" name="purchaseDate">
           <DatePicker
             onChange={value =>
               formik.setFieldValue('purchaseDate', value?.format() || null)
             }
-            defaultValue={(item.purchaseDate && moment(item.purchaseDate)) || undefined}
           />
         </Form.Item>
 

@@ -15,6 +15,7 @@ import LoadingSpinner from '../LoadingSpinner';
 import NoContent from './NoContent';
 import useModal from '../../hooks/modal';
 import UpdateReservationModal from '../modals/UpdateReservationModal';
+import { formatDate } from '../../util/date';
 
 const createDateSorter = (first: Reservation, second: Reservation) =>
   Date.parse(first.endDateTime) - Date.parse(second.endDateTime);
@@ -190,6 +191,15 @@ const ReservationTable = (): JSX.Element => {
         dataIndex: ['user', 'email'],
         sorter: (first, second) => first.user.email.localeCompare(second.user.email),
         ...getColumnSearchProps('user.email', 'user email')
+      },
+      {
+        title: 'Created',
+        key: 'created',
+        dataIndex: 'created',
+        ellipsis: true,
+        defaultSortOrder: 'descend',
+        sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
+        render: (created: string) => <span>{formatDate(created)}</span>
       }
     ],
     [reservations.state]

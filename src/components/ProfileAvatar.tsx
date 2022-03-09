@@ -95,7 +95,7 @@ const ProfileAvatar = (): JSX.Element => {
 
   return (
     <>
-      <Dropdown overlay={menu} trigger={['click']}>
+      <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
         <Avatar>{userInitials}</Avatar>
       </Dropdown>
       <EditAccountModal

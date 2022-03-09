@@ -9,7 +9,6 @@ import classNames from 'classnames';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RenderExpandIconProps } from 'rc-table/lib/interface';
-import moment from 'moment';
 import EditItemDrawer from '../../drawers/EditItemDrawer';
 import useLoader from '../../../hooks/loading';
 import useInventory from '../../../hooks/inventory';
@@ -18,6 +17,7 @@ import LoadingSpinner from '../../LoadingSpinner';
 import NoContent from '../NoContent';
 import type { Item } from '../../../types/API';
 import useDrawer from '../../../hooks/drawer';
+import { formatDate } from '../../../util/date';
 
 /**
  * Used to show the current table count along with the
@@ -178,7 +178,7 @@ const InventoryTable = (): JSX.Element => {
       ellipsis: true,
       defaultSortOrder: 'descend',
       sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
-      render: (created: string) => <span>{moment(created).format('MMMM Do YYYY')}</span>
+      render: (created: string) => <span>{formatDate(created)}</span>
     }
   ];
 
