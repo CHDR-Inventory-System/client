@@ -14,6 +14,8 @@ import LoadingSpinner from '../LoadingSpinner';
 import useReservations from '../../hooks/reservation';
 import NoContent from '../dashboard/NoContent';
 import { CalendarEvent } from '../../types/calendar';
+import useUser from '../../hooks/user';
+import StatusFilterButton from '../reservation-calendar/StatusFilterButton';
 
 type ItemAvailabilityModalProps = BaseModalProps & {
   item: Item;
@@ -21,13 +23,16 @@ type ItemAvailabilityModalProps = BaseModalProps & {
 
 const localizer = momentLocalizer(moment);
 const now = new Date();
-
-const renderableStatuses: Set<ReservationStatus> = new Set([
-  'Approved',
-  'Checked Out',
-  'Late',
-  'Pending'
-] as ReservationStatus[]);
+const statusColorMap: Record<ReservationStatus, string> = {
+  Approved: '#3F791C',
+  Cancelled: '#9E1E01',
+  'Checked Out': '#791c2a',
+  Denied: '#DE411E',
+  Late: '#0700BC',
+  Missed: '#464400',
+  Pending: '#887b29',
+  Returned: '#5452F6'
+};
 
 const ItemAvailabilityModal = ({
   onClose,
@@ -35,21 +40,27 @@ const ItemAvailabilityModal = ({
   item
 }: ItemAvailabilityModalProps): JSX.Element => {
   const loader = useLoader();
+  const user = useUser();
   const res = useReservations();
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [calendarView, setCalendarView] = useState<View>('month');
   const [calendarDate, setCalendarDate] = useState(new Date());
+  const [selectedStatuses, setSelectedStatuses] = useState<Set<ReservationStatus>>(
+    new Set<ReservationStatus>(['Approved', 'Checked Out', 'Late', 'Pending'])
+  );
   const calendarEvents: CalendarEvent[] = useMemo(
     () =>
       reservations
-        .filter(reservation => renderableStatuses.has(reservation.status))
+        .filter(reservation => selectedStatuses.has(reservation.status))
         .map(reservation => ({
           start: new Date(reservation.startDateTime),
           end: new Date(reservation.endDateTime),
-          title: reservation.item.name,
+          title: user.isAdminOrSuper()
+            ? `${reservation.user.fullName} - ${reservation.item.name} [${reservation.status}]`
+            : reservation.item.name,
           resource: reservation
         })),
-    [reservations]
+    [reservations, selectedStatuses]
   );
 
   const fetchReservations = async () => {
@@ -73,6 +84,7 @@ const ItemAvailabilityModal = ({
     switch (view) {
       case 'month':
       case 'week':
+      case 'agenda':
         if (newDate.getMonth() >= now.getMonth()) {
           setCalendarDate(newDate);
         }
@@ -104,6 +116,23 @@ const ItemAvailabilityModal = ({
     }
   };
 
+  const onSelectStatus = (status: ReservationStatus, selected: boolean) => {
+    const clone = new Set(selectedStatuses);
+
+    if (selected) {
+      clone.add(status);
+    } else {
+      clone.delete(status);
+    }
+
+    setSelectedStatuses(clone);
+  };
+
+  // Admins will be able to see blocked times in all colors while normal
+  // users should only see blocked times in one color
+  const getEventColor = (reservation: Reservation) =>
+    statusColorMap[user.isAdminOrSuper() ? reservation.status : 'Checked Out'];
+
   const renderCalendar = () => {
     if (loader.isLoading) {
       return <LoadingSpinner text="Loading availability..." />;
@@ -131,9 +160,18 @@ const ItemAvailabilityModal = ({
         onNavigate={onNavigate}
         view={calendarView}
         onView={setCalendarView}
-        views={['month', 'week', 'day']}
+        views={
+          user.isAdminOrSuper()
+            ? ['month', 'week', 'day', 'agenda']
+            : ['month', 'week', 'day']
+        }
         localizer={localizer}
         events={calendarEvents}
+        eventPropGetter={({ resource }) => ({
+          style: {
+            backgroundColor: getEventColor(resource)
+          }
+        })}
         className={classNames('calendar', {
           'calendar-month-view': calendarView === 'month'
         })}
@@ -157,6 +195,13 @@ const ItemAvailabilityModal = ({
       footer={null}
     >
       {renderCalendar()}
+      {user.isAdminOrSuper() && (
+        <StatusFilterButton
+          className="status-filter-button"
+          selectedStatuses={Array.from(selectedStatuses)}
+          onSelectStatus={onSelectStatus}
+        />
+      )}
     </Modal>
   );
 };
