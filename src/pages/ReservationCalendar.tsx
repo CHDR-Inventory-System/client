@@ -2,7 +2,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../scss/reservation-calendar.scss';
 import '../scss/react-big-calendar-overrides.scss';
 import { Calendar, momentLocalizer, View, SlotInfo } from 'react-big-calendar';
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
 import { BiExitFullscreen, BiFullscreen } from 'react-icons/bi';
@@ -20,6 +20,8 @@ import NoContent from '../components/dashboard/NoContent';
 import UpdateReservationModal from '../components/modals/UpdateReservationModal';
 import useModal from '../hooks/modal';
 import type { CalendarEvent } from '../types/calendar';
+import HideInactive from '../components/HideInactive';
+import useRefWithCallback from '../hooks/ref-with-callback';
 
 const now = new Date();
 const localizer = momentLocalizer(moment);
@@ -47,7 +49,6 @@ const ReservationCalendar = (): JSX.Element => {
   const loader = useLoader();
   const reservationModal = useModal();
   const reservation = useReservations();
-  const calendarContainerElement = useRef<HTMLDivElement | null>(null);
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [searchParams, setSearchParams] = useSearchParams();
   const [calendarView, setCalendarView] = useState<View>(
@@ -72,6 +73,11 @@ const ReservationCalendar = (): JSX.Element => {
           resource: res as Reservation
         })),
     [reservation.state]
+  );
+
+  const [calendarContainerElement, setCalendarRef] = useRefWithCallback<HTMLDivElement>(
+    element => element.addEventListener('fullscreenchange', onCalendarFullscreenChange),
+    element => element.removeEventListener('fullscreenchange', onCalendarFullscreenChange)
   );
 
   const calculateCalendarHeight = () => {
@@ -132,19 +138,9 @@ const ReservationCalendar = (): JSX.Element => {
     loadAllReservations();
     window.addEventListener('resize', onWindowResize);
 
-    calendarContainerElement.current?.addEventListener(
-      'fullscreenchange',
-      onCalendarFullscreenChange
-    );
-
     return () => {
       notification.destroy();
       window.removeEventListener('resize', onWindowResize);
-
-      calendarContainerElement.current?.removeEventListener(
-        'fullscreenchange',
-        onCalendarFullscreenChange
-      );
     };
   }, []);
 
@@ -233,7 +229,7 @@ const ReservationCalendar = (): JSX.Element => {
           onClose={reservationModal.close}
         />
       )}
-      <div className="calendar-container" ref={calendarContainerElement}>
+      <div className="calendar-container" ref={setCalendarRef}>
         <Calendar
           selectable
           onSelectSlot={onSelectSlot}
@@ -252,13 +248,15 @@ const ReservationCalendar = (): JSX.Element => {
             style: { backgroundColor: statusColorMap[resource.status] }
           })}
         />
-        <Button
-          type="primary"
-          className="fullscreen-button"
-          title={isFullScreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-          onClick={() => setIsFullScreen(!isFullScreen)}
-          icon={isFullScreen ? <BiExitFullscreen /> : <BiFullscreen />}
-        />
+        <HideInactive timeout={1500} enabled={isFullScreen}>
+          <Button
+            type="primary"
+            className="fullscreen-button"
+            title={isFullScreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+            onClick={() => setIsFullScreen(!isFullScreen)}
+            icon={isFullScreen ? <BiExitFullscreen /> : <BiFullscreen />}
+          />
+        </HideInactive>
       </div>
     </div>
   );
