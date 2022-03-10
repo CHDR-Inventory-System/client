@@ -17,11 +17,16 @@
     }
   }
 
-  .fullscreen-button {
+  .actions {
     z-index: 10;
+    right: 1em;
     position: absolute;
     bottom: 1em;
-    right: 1em;
+    display: flex;
+    gap: 16px;
+  }
+
+  .action {
     width: 48px;
     height: 48px;
     border-radius: 50% !important;

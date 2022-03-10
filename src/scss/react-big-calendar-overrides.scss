@@ -3,6 +3,7 @@
 
 div.rbc-calendar {
   $breakpoint: 800px;
+  $border-radius: 12px;
 
   padding: 1em;
   border-color: rgb(217, 217, 217);
@@ -63,7 +64,7 @@ div.rbc-calendar {
     height: 2px;
   }
 
-  .rbc-agenda-table {
+  .rbc-agenda-content {
     color: white;
   }
 
@@ -77,5 +78,18 @@ div.rbc-calendar {
 
   .rbc-event-content {
     line-height: 1.25;
+  }
+
+  .rbc-month-view,
+  .rbc-time-view {
+    border-radius: $border-radius;
+  }
+
+  .rbc-month-row:last-child .rbc-day-bg:last-child {
+    border-bottom-right-radius: $border-radius;
+  }
+
+  .rbc-month-row:last-child .rbc-day-bg:first-child {
+    border-bottom-left-radius: $border-radius;
   }
 }

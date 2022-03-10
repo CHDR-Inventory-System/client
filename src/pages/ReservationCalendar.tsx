@@ -22,17 +22,11 @@ import useModal from '../hooks/modal';
 import type { CalendarEvent } from '../types/calendar';
 import HideInactive from '../components/HideInactive';
 import useRefWithCallback from '../hooks/ref-with-callback';
+import StatusFilterButton from '../components/reservation-calendar/StatusFilterButton';
 
 const now = new Date();
 const localizer = momentLocalizer(moment);
 const defaultNavbarHeight = 82;
-const renderableStatuses: Set<ReservationStatus> = new Set([
-  'Approved',
-  'Checked Out',
-  'Late',
-  'Pending'
-] as ReservationStatus[]);
-
 const statusColorMap: Record<ReservationStatus, string> = {
   Approved: '#3F791C',
   Cancelled: '#9E1E01',
@@ -49,6 +43,9 @@ const ReservationCalendar = (): JSX.Element => {
   const loader = useLoader();
   const reservationModal = useModal();
   const reservation = useReservations();
+  const [selectedStatuses, setSelectedStatuses] = useState<Set<ReservationStatus>>(
+    new Set<ReservationStatus>(['Approved', 'Checked Out', 'Late', 'Pending'])
+  );
   const [calendarDate, setCalendarDate] = useState(new Date());
   const [searchParams, setSearchParams] = useSearchParams();
   const [calendarView, setCalendarView] = useState<View>(
@@ -65,14 +62,14 @@ const ReservationCalendar = (): JSX.Element => {
   const calendarEvents: CalendarEvent[] = useMemo(
     () =>
       reservation.state
-        .filter(res => renderableStatuses.has(res.status as ReservationStatus))
+        .filter(res => selectedStatuses.has(res.status as ReservationStatus))
         .map(res => ({
           start: new Date(res.startDateTime),
           end: new Date(res.endDateTime),
           title: `${res.user.fullName} - ${res.item.name} [${res.status}]`,
           resource: res as Reservation
         })),
-    [reservation.state]
+    [reservation.state, selectedStatuses]
   );
 
   const [calendarContainerElement, setCalendarRef] = useRefWithCallback<HTMLDivElement>(
@@ -179,6 +176,18 @@ const ReservationCalendar = (): JSX.Element => {
     }
   };
 
+  const onSelectStatus = (status: ReservationStatus, selected: boolean) => {
+    const clone = new Set(selectedStatuses);
+
+    if (selected) {
+      clone.add(status);
+    } else {
+      clone.delete(status);
+    }
+
+    setSelectedStatuses(clone);
+  };
+
   useEffect(() => {
     if (isFullScreen) {
       enterFullScreen();
@@ -249,13 +258,22 @@ const ReservationCalendar = (): JSX.Element => {
           })}
         />
         <HideInactive timeout={1500} enabled={isFullScreen}>
-          <Button
-            type="primary"
-            className="fullscreen-button"
-            title={isFullScreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-            onClick={() => setIsFullScreen(!isFullScreen)}
-            icon={isFullScreen ? <BiExitFullscreen /> : <BiFullscreen />}
-          />
+          <div className="actions">
+            {!isFullScreen && (
+              <StatusFilterButton
+                className="action"
+                selectedStatuses={Array.from(selectedStatuses)}
+                onSelectStatus={onSelectStatus}
+              />
+            )}
+            <Button
+              type="primary"
+              className="action"
+              title={isFullScreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+              onClick={() => setIsFullScreen(!isFullScreen)}
+              icon={isFullScreen ? <BiExitFullscreen /> : <BiFullscreen />}
+            />
+          </div>
         </HideInactive>
       </div>
     </div>

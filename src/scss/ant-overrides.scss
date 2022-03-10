@@ -230,6 +230,7 @@
   border-color: map-get($colors, 'monochromatic-3');
 }
 
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
   border-color: map-get($colors, 'monochromatic-3');
 }
