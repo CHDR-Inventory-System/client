@@ -1,5 +1,5 @@
 import '../scss/profile-avatar.scss';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Divider, Dropdown, Menu, Modal } from 'antd';
 import {
@@ -8,11 +8,13 @@ import {
   AiOutlineEdit,
   AiOutlineLogout
 } from 'react-icons/ai';
+import { BsCalendarWeek } from 'react-icons/bs';
 import useUser from '../hooks/user';
 import EditAccountModal from './modals/EditAccountModal';
+import useModal from '../hooks/modal';
 
 const ProfileAvatar = (): JSX.Element => {
-  const [isAccountModalShowing, setAccountModalShowing] = useState(false);
+  const accountModal = useModal();
   const navigate = useNavigate();
   const user = useUser();
   const userInitials = useMemo(() => {
@@ -42,6 +44,8 @@ const ProfileAvatar = (): JSX.Element => {
   };
 
   const goToDashboard = () => navigate('/dashboard');
+  const goToReservationCalendar = () => navigate('/calendar');
+  const goToReservations = () => navigate('/reservations');
 
   const menu = (
     <Menu className="profile-avatar-dropdown-menu">
@@ -50,13 +54,14 @@ const ProfileAvatar = (): JSX.Element => {
       <Menu.Item
         key="edit-account"
         icon={<AiOutlineEdit size={18} />}
-        onClick={() => setAccountModalShowing(true)}
+        onClick={accountModal.open}
       >
         Edit Account
       </Menu.Item>
       <Menu.Item
         key="reservations"
         className="menu-item-mobile"
+        onClick={goToReservations}
         icon={<AiOutlineCalendar size={18} />}
       >
         My Reservations
@@ -71,6 +76,16 @@ const ProfileAvatar = (): JSX.Element => {
           Admin Dashboard
         </Menu.Item>
       )}
+      {user.isAdminOrSuper() && (
+        <Menu.Item
+          className="menu-item-mobile"
+          key="calendar"
+          icon={<BsCalendarWeek size={16} />}
+          onClick={goToReservationCalendar}
+        >
+          Reservation Calendar
+        </Menu.Item>
+      )}
       <Menu.Item
         key="logout"
         icon={<AiOutlineLogout size={18} />}
@@ -83,13 +98,10 @@ const ProfileAvatar = (): JSX.Element => {
 
   return (
     <>
-      <Dropdown overlay={menu} trigger={['click']}>
+      <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
         <Avatar>{userInitials}</Avatar>
       </Dropdown>
-      <EditAccountModal
-        visible={isAccountModalShowing}
-        onClose={() => setAccountModalShowing(false)}
-      />
+      <EditAccountModal visible={accountModal.isVisible} onClose={accountModal.close} />
     </>
   );
 };

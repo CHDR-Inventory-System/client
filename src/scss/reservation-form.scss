@@ -113,7 +113,7 @@
   }
 
   .ant-form-item-label > label {
-    font-size: 1.2em;
+    font-size: 1.1em;
   }
 
   .ant-form-item-control-input-content > p {
@@ -131,7 +131,22 @@
     border-color: rgb(217, 217, 217) !important;
   }
 
+  .reservation-form-item
+    .ant-select-single:not(.ant-select-customize-input)
+    .ant-select-selector {
+    height: 36px;
+    padding: 0 11px;
+  }
+
   .form-submit-button {
     width: 100%;
+  }
+
+  .email-form-item {
+    margin-bottom: 0;
+  }
+
+  .reservation-form-item {
+    margin-bottom: 2.5em;
   }
 }

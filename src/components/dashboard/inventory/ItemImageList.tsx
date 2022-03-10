@@ -1,10 +1,11 @@
 import '../../../scss/item-image-list.scss';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Image, Button, Modal, notification } from 'antd';
 import SimpleBar from 'simplebar-react';
 import useInventory from '../../../hooks/inventory';
 import { UseLoadingHook } from '../../../hooks/loading';
 import ImageUploadModal from '../../modals/ImageUploadModal';
+import useModal from '../../../hooks/modal';
 
 type ItemImageListProps = {
   itemId: number;
@@ -12,7 +13,7 @@ type ItemImageListProps = {
 };
 
 const ItemImageList = ({ itemId, loader }: ItemImageListProps): JSX.Element => {
-  const [isUploadModalVisible, setShowUploadModal] = useState(false);
+  const uploadModal = useModal();
   const inventory = useInventory();
   const images = useMemo(() => inventory.getImages(itemId), [itemId, inventory.items]);
 
@@ -34,6 +35,7 @@ const ItemImageList = ({ itemId, loader }: ItemImageListProps): JSX.Element => {
 
   const showDeleteModal = (imageId: number) => {
     Modal.confirm({
+      className: 'modal--dangerous',
       maskClosable: true,
       title: 'Delete Image',
       content: 'Are you sure you want to delete this image?',
@@ -47,8 +49,8 @@ const ItemImageList = ({ itemId, loader }: ItemImageListProps): JSX.Element => {
   return (
     <div className="item-image-list">
       <ImageUploadModal
-        visible={isUploadModalVisible}
-        onClose={() => setShowUploadModal(false)}
+        visible={uploadModal.isVisible}
+        onClose={uploadModal.close}
         itemId={itemId}
       />
       <p className="title">Images</p>
@@ -86,7 +88,7 @@ const ItemImageList = ({ itemId, loader }: ItemImageListProps): JSX.Element => {
         type="primary"
         className="image-upload-button"
         disabled={loader.isLoading}
-        onClick={() => setShowUploadModal(true)}
+        onClick={uploadModal.open}
       >
         Upload Image
       </Button>

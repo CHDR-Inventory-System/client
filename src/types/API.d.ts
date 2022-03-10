@@ -72,7 +72,7 @@ export type ReservationStatus =
 
 export type Reservation = {
   ID: number;
-  admin: Omit<User, 'token'> | null;
+  admin: BaseUser | null;
   created: string;
   endDateTime: string;
   item: Item;
@@ -106,13 +106,15 @@ export type CreateReservationOpts = {
   adminId?: number;
 };
 
-export type UpdateReservationStatusOpts = {
+export type UpdateReservationOpts = {
   reservationId: number;
   status: ReservationStatus;
   /**
    * The ID of the admin who changed the status of this reservation
    */
   adminId?: number;
+  startDateTime?: number;
+  endDateTime?: number;
 };
 
 export type UpdateEmailOpts = {

@@ -1,4 +1,5 @@
-import type { Reservation, ReservationStatus } from '../types/API';
+import type { BaseUser, Reservation, ReservationStatus } from '../types/API';
+import { formatDate } from '../util/date';
 
 export type ReservationAction =
   | {
@@ -10,10 +11,22 @@ export type ReservationAction =
       payload: Reservation[];
     }
   | {
-      type: 'UPDATE_STATUS';
+      type: 'UPDATE';
       payload: {
         reservationId: number;
-        status: ReservationStatus;
+        status?: ReservationStatus;
+        /**
+         * The admin who changed the status of this reservation
+         */
+        admin: BaseUser | null;
+        startDateTime?: string;
+        endDateTime?: string;
+      };
+    }
+  | {
+      type: 'DELETE';
+      payload: {
+        reservationId: number;
       };
     };
 
@@ -26,14 +39,27 @@ const reservationReducer = (
       return action.payload;
     case 'ADD_RESERVATION':
       return [action.payload, ...state];
-    case 'UPDATE_STATUS':
+    case 'UPDATE': {
+      const { status, startDateTime, endDateTime, admin, reservationId } = action.payload;
+
       return state.map(reservation => {
-        if (reservation.ID === action.payload.reservationId) {
-          reservation.status = action.payload.status;
+        if (reservation.ID === reservationId) {
+          reservation.status = status || reservation.status;
+
+          reservation.startDateTime =
+            (startDateTime && formatDate(startDateTime)) || reservation.endDateTime;
+
+          reservation.endDateTime =
+            (endDateTime && formatDate(endDateTime)) || reservation.endDateTime;
+
+          reservation.admin = admin;
         }
 
         return reservation;
       });
+    }
+    case 'DELETE':
+      return state.filter(reservation => reservation.ID !== action.payload.reservationId);
     default:
       throw new Error(`Invalid action ${action}`);
   }

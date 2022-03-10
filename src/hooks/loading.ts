@@ -6,6 +6,7 @@ type StopLoadingOpts = {
 
 export type UseLoadingHook = {
   readonly isLoading: boolean;
+  readonly hasError: boolean;
   startLoading: () => void;
   stopLoading: (opts?: StopLoadingOpts) => void;
   toggleLoading: (isLoading: boolean) => void;
@@ -17,6 +18,7 @@ export type UseLoadingHook = {
    * @param ms The amount of time (in milliseconds) to wait.
    */
   sleep: (ms: number) => Promise<void>;
+  setError: (hasError: boolean) => void;
 };
 
 /**
@@ -45,12 +47,18 @@ export type UseLoadingHook = {
  */
 const useLoader = (initialValue = false): UseLoadingHook => {
   const [isLoading, setLoading] = useState(initialValue);
+  const [hasError, setHasError] = useState(false);
 
-  const startLoading = () => setLoading(true);
+  const startLoading = () => {
+    setLoading(true);
+    setHasError(false);
+  };
 
   const stopLoading = (opts?: StopLoadingOpts) => {
     setTimeout(() => setLoading(false), opts?.delay ?? 0);
   };
+
+  const setError = (err: boolean) => setHasError(err);
 
   const toggleLoading = (loading: boolean) => setLoading(loading);
 
@@ -68,7 +76,9 @@ const useLoader = (initialValue = false): UseLoadingHook => {
 
   return {
     isLoading,
+    hasError,
     startLoading,
+    setError,
     stopLoading,
     toggleLoading,
     sleep

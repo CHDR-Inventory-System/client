@@ -1,5 +1,5 @@
 import '../scss/my-reservations.scss';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import SimpleBar from 'simplebar-react';
 import { Collapse, notification } from 'antd';
 import { BsCalendarX } from 'react-icons/bs';
@@ -22,12 +22,21 @@ const header = (
   </header>
 );
 
+const STATUSES: ReservationStatus[] = [
+  'Approved',
+  'Cancelled',
+  'Checked Out',
+  'Denied',
+  'Late',
+  'Missed',
+  'Pending',
+  'Returned'
+];
+
 const MyReservations = (): JSX.Element => {
   const reservation = useReservations();
   const user = useUser();
   const loader = useLoader();
-  const [hasError, setHasError] = useState(false);
-
   const reservationMap = useMemo(() => {
     const resMap = {
       Pending: [],
@@ -58,7 +67,7 @@ const MyReservations = (): JSX.Element => {
     try {
       await reservation.getReservationsForUser(user.state.ID);
     } catch {
-      setHasError(true);
+      loader.setError(true);
       notification.error({
         message: 'Error Loading Reservations',
         description: `
@@ -72,14 +81,18 @@ const MyReservations = (): JSX.Element => {
 
   const reservationList = useMemo(
     () =>
-      reservationMapKeys.map(key => {
+      reservationMapKeys.map((key, index) => {
         if (reservationMap[key].length === 0) {
           return null;
         }
 
         return (
-          <div className="reservations-container">
-            <Collapse bordered={false} defaultActiveKey="Pending">
+          <div className="reservations-container" key={index}>
+            <Collapse
+              bordered={false}
+              defaultActiveKey={STATUSES}
+              className="reservation-collapse"
+            >
               <Collapse.Panel header={<h2>{key}</h2>} key={key}>
                 <SimpleBar>
                   <div className="reservations">
@@ -105,12 +118,13 @@ const MyReservations = (): JSX.Element => {
     return (
       <div className="my-reservations">
         <Navbar />
+        {header}
         <LoadingSpinner text="Loading Reservations..." />
       </div>
     );
   }
 
-  if (reservation.state.length === 0) {
+  if (reservation.state.length === 0 || loader.hasError) {
     return (
       <div className="my-reservations">
         <Navbar />
@@ -119,7 +133,7 @@ const MyReservations = (): JSX.Element => {
           icon={<BsCalendarX size={84} />}
           className="empty-reservation-list"
           text={
-            hasError
+            loader.hasError
               ? 'Error loading reservations.'
               : "Looks like you don't have any reservations."
           }

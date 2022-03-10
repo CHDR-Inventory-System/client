@@ -2,24 +2,23 @@ import '../scss/item-card.scss';
 import '../scss/reservation-card.scss';
 import React, { useState } from 'react';
 import { Card, Image, Button, Modal, notification } from 'antd';
-import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
+import classNames from 'classnames';
 import { Reservation } from '../types/API';
 import useLoader from '../hooks/loading';
 import useReservations from '../hooks/reservation';
+import { formatDate } from '../util/date';
 
 type ReservationCardProps = {
   reservation: Reservation;
 };
-
-// The server returns GMT dates so we need to add 5 hours to convert it to EST
-const formatDate = (date: string) =>
-  moment(date).add({ hours: 5 }).format('MMM D, YYYY, hh:mm A');
 
 const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => {
   const { item } = reservation;
   const [isPreviewVisible, setPreviewVisible] = useState(false);
   const loader = useLoader();
   const res = useReservations();
+  const navigate = useNavigate();
 
   const cancelReservation = async () => {
     if (loader.isLoading) {
@@ -29,7 +28,7 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
     loader.startLoading();
 
     try {
-      await res.updateStatus({
+      await res.update({
         reservationId: reservation.ID,
         status: 'Cancelled'
       });
@@ -55,7 +54,7 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
     loader.stopLoading();
   };
 
-  const confirmDCancelReservation = () => {
+  const confirmCancelReservation = () => {
     Modal.confirm({
       centered: true,
       maskClosable: true,
@@ -69,6 +68,7 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
           action cannot be undone.
         </p>
       ),
+      className: 'modal--dangerous',
       okText: 'Cancel Reservation',
       cancelText: 'Close',
       okButtonProps: {
@@ -77,6 +77,8 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
       onOk: () => cancelReservation()
     });
   };
+
+  const goToReservationPage = () => navigate(`/reserve/${reservation.item.ID}`);
 
   return (
     <Card className="reservation-card item-card" bordered={false}>
@@ -104,25 +106,29 @@ const ReservationCard = ({ reservation }: ReservationCardProps): JSX.Element => 
           </Image.PreviewGroup>
         )}
       </div>
-      <h2>{item.name}</h2>
+      <h2 className="item-name" title={item.name}>
+        {item.name}
+      </h2>
       <p>
         <b>Status</b>: {reservation.status}
       </p>
       <p>
-        <b>Checkout</b>: {formatDate(reservation.startDateTime)}
+        <b>Checkout</b>: {formatDate(Date.parse(reservation.startDateTime))}
       </p>
       <p>
-        <b>Return</b>: {formatDate(reservation.endDateTime)}
+        <b>Return</b>: {formatDate(Date.parse(reservation.endDateTime))}
       </p>
-      {reservation.status === 'Pending' && (
-        <Button
-          type="primary"
-          className="cancel-button"
-          onClick={confirmDCancelReservation}
-        >
-          Cancel Reservation
-        </Button>
-      )}
+      <Button
+        type="primary"
+        className={classNames({ 'cancel-button': reservation.status === 'Pending' })}
+        onClick={
+          reservation.status === 'Pending'
+            ? confirmCancelReservation
+            : goToReservationPage
+        }
+      >
+        {reservation.status === 'Pending' ? 'Cancel Reservation' : 'New Reservation'}
+      </Button>
     </Card>
   );
 };

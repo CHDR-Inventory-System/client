@@ -4,6 +4,18 @@
 .reservation-page {
   $breakpoint: 900px;
 
+  @mixin mobile() {
+    @media screen and (max-width: $breakpoint) {
+      @content;
+    }
+  }
+
+  @mixin desktop() {
+    @media screen and (min-width: $breakpoint + 1px) {
+      @content;
+    }
+  }
+
   b {
     color: rgba(0, 0, 0, 0.85);
   }
@@ -27,10 +39,9 @@
     max-width: 1300px;
     margin: 2.5em auto 0 auto;
 
-    @media screen and (max-width: $breakpoint) {
+    @include mobile() {
       flex-direction: column;
       margin-top: 0em;
-      gap: 38px;
     }
   }
 
@@ -46,22 +57,40 @@
     flex-direction: column;
     padding: 0 3em;
 
-    @media screen and (max-width: $breakpoint) {
+    @include mobile() {
       padding: 0 1.5em;
+      max-width: 100%;
+    }
+  }
+
+  .item-detail {
+    @include desktop() {
+      max-width: 50%;
+    }
+
+    p {
+      margin-bottom: 0;
     }
   }
 
   .item-detail-sticky-container {
-    position: sticky;
-    top: 32px;
+    @include desktop() {
+      position: sticky;
+      top: 32px;
+    }
 
-    @media screen and (max-width: $breakpoint) {
-      position: relative;
+    @include mobile() {
+      margin-top: 32px;
     }
   }
 
   .item-name {
-    margin: 1.5em 0 0.1em 0;
+    margin: 1.5em 0 0.25em 0;
+    overflow-wrap: break-word;
+
+    @include mobile() {
+      max-width: 100%;
+    }
   }
 
   .item-status {
@@ -90,12 +119,17 @@
     margin-top: 0.25em;
   }
 
-  .item-detail p {
-    margin-bottom: 0;
+  .availability-button {
+    width: 100%;
+    margin-bottom: 2em;
+
+    @include mobile() {
+      margin-bottom: 0;
+    }
   }
 
   .reservation-container {
-    @media screen and (max-width: $breakpoint) {
+    @include mobile() {
       margin-top: 2em;
     }
   }

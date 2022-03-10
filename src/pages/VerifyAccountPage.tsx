@@ -62,7 +62,7 @@ const VerifyAccount = (): JSX.Element => {
       await user.verifyAccount(userId, verificationCode);
       setTimeout(() => {
         navigate('/auth');
-      }, 3000);
+      }, 6000);
     } catch {
       setLinkInvalid(true);
     }

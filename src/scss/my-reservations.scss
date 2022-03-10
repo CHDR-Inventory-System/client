@@ -56,7 +56,7 @@
   }
 
   .loading-spinner {
-    margin-top: 30vh;
+    margin-top: 23vh;
   }
 
   .reservations-container {
@@ -85,8 +85,12 @@
     }
   }
 
+  .reservation-collapse {
+    margin-bottom: 1em;
+  }
+
   .empty-reservation-list {
-    margin-top: 10vw;
+    margin-top: 19vh;
     display: flex;
     align-items: center;
     flex-direction: column;

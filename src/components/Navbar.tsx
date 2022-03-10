@@ -41,6 +41,17 @@ const Navbar = ({
               Dashboard
             </Link>
           ),
+          user.isAdminOrSuper() && (
+            <Link
+              to="/calendar"
+              key="calendar"
+              className={classNames('nav-link', {
+                'nav-link--active': location.pathname === '/calendar'
+              })}
+            >
+              Calendar
+            </Link>
+          ),
           <Link
             to="/reservations"
             key="reservations"

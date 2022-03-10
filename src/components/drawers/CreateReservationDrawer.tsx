@@ -3,6 +3,7 @@ import React from 'react';
 import { Button, DatePicker, Drawer, Form, Input, notification, Select } from 'antd';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
+import { ArgsProps } from 'antd/lib/notification';
 import useLoader from '../../hooks/loading';
 import APIError from '../../util/APIError';
 import { Item, ReservationStatus } from '../../types/API';
@@ -110,12 +111,32 @@ const CreateReservationDrawer = ({
       }
 
       if (err instanceof APIError) {
+        const { status } = err;
+        const { email } = formik.values;
+        const notificationProps: Partial<ArgsProps> = {};
+
+        switch (status) {
+          case 404:
+            notificationProps.message = 'User Not Found';
+            notificationProps.description = "Couldn't find a user with this email.";
+            break;
+          case 409:
+            notificationProps.message = "Couldn't Create Reservation";
+            notificationProps.description =
+              email === user.state.email
+                ? 'You already have a reservation for this item.'
+                : `${email} already has a reservation for this item`;
+            break;
+          default:
+            notificationProps.message = "Couldn't Create Reservation";
+            notificationProps.description =
+              'An error occurred while creating this reservation, please try again.';
+        }
+
         notification.error({
-          key: 'create-reservation-error',
-          message: 'Error Creating Reservation',
-          description: `
-            An error occurred while creating this reservation, please try again.
-          `
+          key: 'form-create-reservation-error',
+          message: notificationProps.message,
+          description: notificationProps.description
         });
       }
     }

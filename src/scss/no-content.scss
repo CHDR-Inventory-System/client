@@ -7,4 +7,9 @@
     margin-top: 1em;
     color: map-get($colors, 'text-muted');
   }
+
+  .retry-button {
+    margin-top: 0.5em;
+    width: 150px;
+  }
 }

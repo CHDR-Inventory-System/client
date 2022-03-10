@@ -133,6 +133,7 @@ const EditAccountModal = ({ onClose, visible }: BaseModalProps): JSX.Element => 
 
   return (
     <Modal
+      centered
       destroyOnClose
       visible={visible}
       onCancel={onClose}

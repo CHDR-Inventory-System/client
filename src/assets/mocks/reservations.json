@@ -69,13 +69,6 @@
       "description": "This was updated through the mobile app!!!!!",
       "images": [
         {
-          "ID": 15,
-          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
-          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "itemChild": 10
-        },
-        {
           "ID": 36,
           "created": "Sun, 27 Feb 2022 17:04:16 GMT",
           "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
@@ -268,7 +261,7 @@
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
       "email": "ctcuff@gmail.com",
-      "fullName": "Cameron Cuff",
+      "fullName": "Emmet Brown",
       "role": "User",
       "verified": true
     }
@@ -561,13 +554,6 @@
       "description": "This was updated through the mobile app!!!!!",
       "images": [
         {
-          "ID": 15,
-          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
-          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "itemChild": 10
-        },
-        {
           "ID": 36,
           "created": "Sun, 27 Feb 2022 17:04:16 GMT",
           "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
@@ -594,7 +580,7 @@
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
       "email": "ctcuff@gmail.com",
-      "fullName": "Cameron Cuff",
+      "fullName": "Emmet Brown",
       "role": "User",
       "verified": true
     }
@@ -669,13 +655,6 @@
       "description": "This was updated through the mobile app!!!!!",
       "images": [
         {
-          "ID": 15,
-          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
-          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "itemChild": 10
-        },
-        {
           "ID": 36,
           "created": "Sun, 27 Feb 2022 17:04:16 GMT",
           "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
@@ -702,7 +681,7 @@
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
       "email": "ctcuff@gmail.com",
-      "fullName": "Cameron Cuff",
+      "fullName": "Emmet Brown",
       "role": "User",
       "verified": true
     }
@@ -754,7 +733,7 @@
       "ID": 4,
       "created": "Wed, 12 Jan 2022 16:42:38 GMT",
       "email": "ctcuff@gmail.com",
-      "fullName": "Cameron Cuff",
+      "fullName": "Emmet Brown",
       "role": "User",
       "verified": true
     }
@@ -1603,7 +1582,7 @@
       "vendorPrice": 3252.21
     },
     "startDateTime": "Sat, 05 Mar 2022 21:25:39 GMT",
-    "status": "Pending",
+    "status": "Cancelled",
     "user": {
       "ID": 9,
       "created": "Tue, 22 Feb 2022 20:18:41 GMT",
@@ -1682,13 +1661,6 @@
       "created": "Wed, 12 Jan 2022 16:57:34 GMT",
       "description": "This was updated through the mobile app!!!!!",
       "images": [
-        {
-          "ID": 15,
-          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
-          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "itemChild": 10
-        },
         {
           "ID": 36,
           "created": "Sun, 27 Feb 2022 17:04:16 GMT",
@@ -1791,13 +1763,6 @@
       "description": "This was updated through the mobile app!!!!!",
       "images": [
         {
-          "ID": 15,
-          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
-          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "itemChild": 10
-        },
-        {
           "ID": 36,
           "created": "Sun, 27 Feb 2022 17:04:16 GMT",
           "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
@@ -1899,13 +1864,6 @@
       "description": "This was updated through the mobile app!!!!!",
       "images": [
         {
-          "ID": 15,
-          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
-          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "itemChild": 10
-        },
-        {
           "ID": 36,
           "created": "Sun, 27 Feb 2022 17:04:16 GMT",
           "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
@@ -2000,13 +1958,6 @@
       "description": "This was updated through the mobile app!!!!!",
       "images": [
         {
-          "ID": 15,
-          "created": "Sat, 12 Feb 2022 23:52:07 GMT",
-          "imagePath": "/home/CHDR_CSI/public_html/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "imageURL": "https://chdr.cs.ucf.edu/csi/images/83A8EB19-1264-40A2-9F42-A36E3853B7A9.jpg",
-          "itemChild": 10
-        },
-        {
           "ID": 36,
           "created": "Sun, 27 Feb 2022 17:04:16 GMT",
           "imagePath": "/home/CHDR_CSI/public_html/images/FCD61554-4265-4A54-85D3-E02FFCA6E41D.jpg",
@@ -2073,7 +2024,7 @@
       "vendorPrice": 4.98
     },
     "startDateTime": "Sun, 06 Mar 2022 12:30:59 GMT",
-    "status": "Pending",
+    "status": "Cancelled",
     "user": {
       "ID": 9,
       "created": "Tue, 22 Feb 2022 20:18:41 GMT",
@@ -2158,6 +2109,96 @@
       "email": "dev.ctcuff@gmail.com",
       "fullName": "Cameron Cuff",
       "role": "Super",
+      "verified": true
+    }
+  },
+  {
+    "ID": 47,
+    "admin": null,
+    "created": "Mon, 07 Mar 2022 23:14:02 GMT",
+    "endDateTime": "Mon, 14 Mar 2022 12:30:34 GMT",
+    "item": {
+      "ID": 18,
+      "available": true,
+      "barcode": "CHDR1234",
+      "children": [],
+      "created": "Wed, 09 Feb 2022 11:12:49 GMT",
+      "description": "It can play Pok\u00e9mon. That\u2019s pretty cool right?",
+      "images": [
+        {
+          "ID": 16,
+          "created": "Sat, 12 Feb 2022 23:56:53 GMT",
+          "imagePath": "/home/CHDR_CSI/public_html/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "imageURL": "https://chdr.cs.ucf.edu/csi/images/E8C74946-1A13-4BD6-9C61-1A245D3B79EA.jpg",
+          "itemChild": 18
+        }
+      ],
+      "item": 14,
+      "location": "Cam\u2019s Apartment",
+      "main": true,
+      "moveable": true,
+      "name": "Nintendo Switch",
+      "purchaseDate": "Fri, 04 Feb 2022 00:00:00 GMT",
+      "quantity": 5,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Tech",
+      "vendorName": "Nintendo",
+      "vendorPrice": 4.98
+    },
+    "startDateTime": "Mon, 14 Mar 2022 12:30:34 GMT",
+    "status": "Pending",
+    "user": {
+      "ID": 4,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "ctcuff@gmail.com",
+      "fullName": "Emmet Brown",
+      "role": "User",
+      "verified": true
+    }
+  },
+  {
+    "ID": 48,
+    "admin": null,
+    "created": "Mon, 07 Mar 2022 23:14:57 GMT",
+    "endDateTime": "Wed, 16 Mar 2022 13:30:21 GMT",
+    "item": {
+      "ID": 16,
+      "available": true,
+      "barcode": "CHDR9593",
+      "children": [],
+      "created": "Wed, 12 Jan 2022 16:57:34 GMT",
+      "description": "Here's a study room",
+      "images": [
+        {
+          "ID": 10,
+          "created": "Wed, 12 Jan 2022 16:59:35 GMT",
+          "imagePath": "images/physical/rooms/study1_1.jpg",
+          "imageURL": "",
+          "itemChild": 16
+        }
+      ],
+      "item": 12,
+      "location": "321A",
+      "main": true,
+      "moveable": false,
+      "name": "Study Room 1",
+      "purchaseDate": null,
+      "quantity": 6,
+      "retiredDateTime": null,
+      "serial": null,
+      "type": "Room",
+      "vendorName": null,
+      "vendorPrice": null
+    },
+    "startDateTime": "Wed, 16 Mar 2022 12:30:21 GMT",
+    "status": "Cancelled",
+    "user": {
+      "ID": 4,
+      "created": "Wed, 12 Jan 2022 16:42:38 GMT",
+      "email": "ctcuff@gmail.com",
+      "fullName": "Emmet Brown",
+      "role": "User",
       "verified": true
     }
   }

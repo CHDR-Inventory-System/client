@@ -1,28 +1,25 @@
 import { useContext } from 'react';
-import moment from 'moment';
 import ReservationContext from '../contexts/ReservationContext';
 import type {
   CreateReservationOpts,
   Reservation,
-  UpdateReservationStatusOpts
+  UpdateReservationOpts
 } from '../types/API';
 import API from '../util/API';
+import { formatDate } from '../util/date';
 
 type UserReservationHook = {
   readonly state: Reservation[];
   createReservation: (opts: CreateReservationOpts) => Promise<Reservation>;
   initAllReservations: () => Promise<Reservation[]>;
-  updateStatus: (opts: UpdateReservationStatusOpts) => Promise<void>;
+  update: (opts: UpdateReservationOpts) => Promise<void>;
   /**
    * @param itemId Refers to the ID of the item in the `item` table
    */
   getReservationsForItem: (itemId: number) => Promise<Reservation[]>;
   getReservationsForUser: (userId: number) => Promise<Reservation[]>;
+  deleteReservation: (reservationId: number) => Promise<void>;
 };
-
-// The server returns GMT dates so we need to add 5 hours to convert it to EST
-const formatDate = (date: string) =>
-  moment(date).add({ hours: 5 }).format('MMM D, YYYY, hh:mm A');
 
 const useReservations = (): UserReservationHook => {
   const context = useContext(ReservationContext);
@@ -68,14 +65,19 @@ const useReservations = (): UserReservationHook => {
     return reservations;
   };
 
-  const updateStatus = async (opts: UpdateReservationStatusOpts): Promise<void> => {
-    await API.updateReservationStatus(opts);
+  const update = async (opts: UpdateReservationOpts): Promise<void> => {
+    const { admin, startDateTime, endDateTime, status, ID } = await API.updateReservation(
+      opts
+    );
 
     dispatch({
-      type: 'UPDATE_STATUS',
+      type: 'UPDATE',
       payload: {
-        reservationId: opts.reservationId,
-        status: opts.status
+        reservationId: ID,
+        status,
+        admin,
+        startDateTime,
+        endDateTime
       }
     });
   };
@@ -96,13 +98,25 @@ const useReservations = (): UserReservationHook => {
     return reservations;
   };
 
+  const deleteReservation = async (reservationId: number): Promise<void> => {
+    await API.deleteReservation(reservationId);
+
+    dispatch({
+      type: 'DELETE',
+      payload: {
+        reservationId
+      }
+    });
+  };
+
   return {
     state,
     createReservation,
     initAllReservations,
-    updateStatus,
+    update,
     getReservationsForItem,
-    getReservationsForUser
+    getReservationsForUser,
+    deleteReservation
   };
 };
 

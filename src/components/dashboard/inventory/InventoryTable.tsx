@@ -1,6 +1,6 @@
 import '../../../scss/inventory-table.scss';
-import React, { useRef, useState, useEffect } from 'react';
-import { Table, Card, Input, Button, notification } from 'antd';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
+import { Table, Card, Input, Button, notification, InputRef } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
@@ -9,7 +9,6 @@ import classNames from 'classnames';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RenderExpandIconProps } from 'rc-table/lib/interface';
-import moment from 'moment';
 import EditItemDrawer from '../../drawers/EditItemDrawer';
 import useLoader from '../../../hooks/loading';
 import useInventory from '../../../hooks/inventory';
@@ -18,6 +17,7 @@ import LoadingSpinner from '../../LoadingSpinner';
 import NoContent from '../NoContent';
 import type { Item } from '../../../types/API';
 import useDrawer from '../../../hooks/drawer';
+import { formatDate } from '../../../util/date';
 
 /**
  * Used to show the current table count along with the
@@ -36,7 +36,7 @@ const InventoryTable = (): JSX.Element => {
     editItem: false
   });
   const loader = useLoader();
-  const searchInputRef = useRef<Input>(null);
+  const searchInputRef = useRef<InputRef>(null);
 
   const handleSearch = (
     searchQuery: string,
@@ -114,73 +114,76 @@ const InventoryTable = (): JSX.Element => {
     }
   });
 
-  const columns: ColumnsType<Item> = [
-    {
-      title: 'Name',
-      key: 'name',
-      dataIndex: 'name',
-      ellipsis: true,
-      sorter: (first, second) => first.name.localeCompare(second.name),
-      ...getColumnSearchProps('name')
-    },
-    {
-      title: 'Barcode',
-      key: 'barcode',
-      dataIndex: 'barcode',
-      sorter: (first, second) => first.barcode.localeCompare(second.barcode),
-      ...getColumnSearchProps('barcode')
-    },
-    {
-      title: 'Type',
-      key: 'type',
-      dataIndex: 'type',
-      sorter: (first, second) => first.type.localeCompare(second.type),
-      ...getColumnSearchProps('type')
-    },
-    {
-      title: 'Quantity',
-      key: 'quantity',
-      dataIndex: 'quantity',
-      sorter: (first, second) => first.quantity - second.quantity
-    },
-    {
-      title: 'Location',
-      key: 'location',
-      dataIndex: 'location',
-      ...getColumnSearchProps('location'),
-      sorter: (first, second) => first.location.localeCompare(second.location)
-    },
-    {
-      title: 'Status',
-      key: 'available',
-      dataIndex: 'available',
-      filters: [
-        {
-          value: true,
-          text: 'Available'
-        },
-        {
-          value: false,
-          text: 'Unavailable'
-        }
-      ],
-      sorter: (first, second) => +first.available - +second.available,
-      onFilter: (value, item) => item.available === (value as boolean),
-      className: 'row-status',
-      render: (available: boolean) => (
-        <span>{available ? 'Available' : 'Unavailable'}</span>
-      )
-    },
-    {
-      title: 'Created',
-      key: 'created',
-      dataIndex: 'created',
-      ellipsis: true,
-      defaultSortOrder: 'descend',
-      sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
-      render: (created: string) => <span>{moment(created).format('MMMM Do YYYY')}</span>
-    }
-  ];
+  const columns: ColumnsType<Item> = useMemo(
+    () => [
+      {
+        title: 'Name',
+        key: 'name',
+        dataIndex: 'name',
+        ellipsis: true,
+        sorter: (first, second) => first.name.localeCompare(second.name),
+        ...getColumnSearchProps('name')
+      },
+      {
+        title: 'Barcode',
+        key: 'barcode',
+        dataIndex: 'barcode',
+        sorter: (first, second) => first.barcode.localeCompare(second.barcode),
+        ...getColumnSearchProps('barcode')
+      },
+      {
+        title: 'Type',
+        key: 'type',
+        dataIndex: 'type',
+        sorter: (first, second) => first.type.localeCompare(second.type),
+        ...getColumnSearchProps('type')
+      },
+      {
+        title: 'Quantity',
+        key: 'quantity',
+        dataIndex: 'quantity',
+        sorter: (first, second) => first.quantity - second.quantity
+      },
+      {
+        title: 'Location',
+        key: 'location',
+        dataIndex: 'location',
+        ...getColumnSearchProps('location'),
+        sorter: (first, second) => first.location.localeCompare(second.location)
+      },
+      {
+        title: 'Status',
+        key: 'available',
+        dataIndex: 'available',
+        filters: [
+          {
+            value: true,
+            text: 'Available'
+          },
+          {
+            value: false,
+            text: 'Unavailable'
+          }
+        ],
+        sorter: (first, second) => +first.available - +second.available,
+        onFilter: (value, item) => item.available === (value as boolean),
+        className: 'row-status',
+        render: (available: boolean) => (
+          <span>{available ? 'Available' : 'Unavailable'}</span>
+        )
+      },
+      {
+        title: 'Created',
+        key: 'created',
+        dataIndex: 'created',
+        ellipsis: true,
+        defaultSortOrder: 'descend',
+        sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
+        render: (created: string) => <span>{formatDate(created)}</span>
+      }
+    ],
+    [inventory.items]
+  );
 
   const loadInventory = async () => {
     loader.startLoading();

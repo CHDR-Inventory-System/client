@@ -1,6 +1,8 @@
 $base-hue: 241deg;
 $base-saturation: 79%;
 $body-color: hsl(0, 0%, 98%);
+// The size at which the links in the navbar will be hidden
+$navbar-link-breakpoint: 800px;
 
 $colors: (
   'monochromatic-1': hsl($base-hue, $base-saturation, 10%),

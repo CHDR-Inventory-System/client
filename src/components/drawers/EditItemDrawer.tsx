@@ -186,6 +186,7 @@ const EditItemDrawer = ({
 
   const confirmDelete = () => {
     Modal.confirm({
+      className: 'modal--dangerous',
       centered: true,
       maskStyle: {
         backgroundColor: 'rgba(0, 0, 0, 50%)'
@@ -193,8 +194,10 @@ const EditItemDrawer = ({
       title: 'Delete Item',
       content: (
         <p>
-          Are you sure you want to delete <b>{item.name}</b>? This action cannot be
-          undone.
+          Are you sure you want to delete <b>{item.name}</b>? This will delete all{' '}
+          <b>images</b>
+          and <b>reservations</b> associated with this item.{' '}
+          <b>This action cannot be undone</b>.
         </p>
       ),
       okText: 'Delete',
@@ -207,6 +210,7 @@ const EditItemDrawer = ({
 
   const confirmRetire = () => {
     Modal.confirm({
+      className: 'modal--dangerous',
       centered: true,
       maskStyle: {
         backgroundColor: 'rgba(0, 0, 0, 50%)'
@@ -226,7 +230,11 @@ const EditItemDrawer = ({
   };
 
   useEffect(() => {
-    form.setFieldsValue(item);
+    form.setFieldsValue({
+      ...item,
+      purchaseDate:
+        (item.purchaseDate && moment.utc(Date.parse(item.purchaseDate))) || null
+    });
   }, [item]);
 
   return (
@@ -371,12 +379,11 @@ const EditItemDrawer = ({
           </Select>
         </Form.Item>
 
-        <Form.Item label="Purchase Date">
+        <Form.Item label="Purchase Date" name="purchaseDate">
           <DatePicker
             onChange={value =>
               formik.setFieldValue('purchaseDate', value?.format() || null)
             }
-            defaultValue={(item.purchaseDate && moment(item.purchaseDate)) || undefined}
           />
         </Form.Item>
 
@@ -411,23 +418,25 @@ const EditItemDrawer = ({
             Delete
           </Button>
           {item.main && (
-            <Button
-              type="primary"
-              className="form-action-button"
-              disabled={loader.isLoading}
-              onClick={confirmRetire}
-            >
-              {item.retiredDateTime ? 'Undo Retire' : 'Retire'}
-            </Button>
+            <>
+              <Button
+                type="primary"
+                className="form-action-button"
+                disabled={loader.isLoading}
+                onClick={confirmRetire}
+              >
+                {item.retiredDateTime ? 'Undo Retire' : 'Retire'}
+              </Button>
+              <Button
+                type="primary"
+                className="form-action-button"
+                disabled={loader.isLoading || !!item.retiredDateTime}
+                onClick={() => drawer.open('reservation')}
+              >
+                Create Reservation
+              </Button>
+            </>
           )}
-          <Button
-            type="primary"
-            className="form-action-button"
-            disabled={loader.isLoading || !!item.retiredDateTime}
-            onClick={() => drawer.open('reservation')}
-          >
-            Create Reservation
-          </Button>
         </div>
       </Form>
     </Drawer>
