@@ -1,5 +1,5 @@
 import '../scss/my-reservations.scss';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import SimpleBar from 'simplebar-react';
 import { Collapse, notification } from 'antd';
 import { BsCalendarX } from 'react-icons/bs';
@@ -37,8 +37,6 @@ const MyReservations = (): JSX.Element => {
   const reservation = useReservations();
   const user = useUser();
   const loader = useLoader();
-  const [hasError, setHasError] = useState(false);
-
   const reservationMap = useMemo(() => {
     const resMap = {
       Pending: [],
@@ -65,12 +63,11 @@ const MyReservations = (): JSX.Element => {
 
   const loadReservations = async () => {
     loader.startLoading();
-    setHasError(false);
 
     try {
       await reservation.getReservationsForUser(user.state.ID);
     } catch {
-      setHasError(true);
+      loader.setError(true);
       notification.error({
         message: 'Error Loading Reservations',
         description: `
@@ -121,12 +118,13 @@ const MyReservations = (): JSX.Element => {
     return (
       <div className="my-reservations">
         <Navbar />
+        {header}
         <LoadingSpinner text="Loading Reservations..." />
       </div>
     );
   }
 
-  if (reservation.state.length === 0 || hasError) {
+  if (reservation.state.length === 0 || loader.hasError) {
     return (
       <div className="my-reservations">
         <Navbar />
@@ -135,7 +133,7 @@ const MyReservations = (): JSX.Element => {
           icon={<BsCalendarX size={84} />}
           className="empty-reservation-list"
           text={
-            hasError
+            loader.hasError
               ? 'Error loading reservations.'
               : "Looks like you don't have any reservations."
           }

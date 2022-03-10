@@ -32,55 +32,7 @@
     }
   }
 
-  .rbc-calendar {
-    padding: 1em;
-    border-color: rgb(217, 217, 217);
+  .calendar {
     background-color: $body-color;
-
-    * {
-      border-color: inherit !important;
-    }
-
-    .rbc-toolbar-label {
-      @include font-fallback('Gotham-Bold');
-      color: rgba(0, 0, 0, 0.85);
-      font-size: 1.5em;
-    }
-
-    .rbc-btn-group button {
-      transition: background-color 250ms ease-in-out, color 250ms ease-in-out;
-    }
-
-    .rbc-btn-group button:hover {
-      background-color: map-get($colors, 'monochromatic-3');
-      color: white;
-    }
-
-    .rbc-toolbar button:active,
-    .rbc-toolbar button.rbc-active {
-      box-shadow: none;
-    }
-
-    .rbc-active {
-      background-color: map-get($colors, 'monochromatic-1');
-      color: white;
-    }
-
-    .rbc-today {
-      background-color: hsl(230, 100%, 97%);
-    }
-
-    .rbc-current-time-indicator {
-      background-color: map-get($colors, 'monochromatic-1');
-      height: 2px;
-    }
-
-    .rbc-agenda-table {
-      color: white;
-    }
-
-    .rbc-agenda-event-cell {
-      cursor: pointer;
-    }
   }
 }

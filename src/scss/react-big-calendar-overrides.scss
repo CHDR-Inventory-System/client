@@ -1,0 +1,81 @@
+@import './variables';
+@import './mixins';
+
+div.rbc-calendar {
+  $breakpoint: 800px;
+
+  padding: 1em;
+  border-color: rgb(217, 217, 217);
+  background-color: white;
+
+  * {
+    border-color: inherit !important;
+  }
+
+  .rbc-toolbar {
+    @media screen and (max-width: $breakpoint) {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+
+  .rbc-toolbar-label {
+    @include font-fallback('Gotham-Bold');
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 1.5em;
+
+    @media screen and (max-width: $breakpoint) {
+      font-size: 1.2em;
+    }
+  }
+
+  .rbc-btn-group button {
+    transition: background-color 250ms ease-in-out, color 250ms ease-in-out;
+  }
+
+  .rbc-btn-group button:hover {
+    background-color: map-get($colors, 'monochromatic-3');
+    color: white;
+  }
+
+  .rbc-toolbar button:active,
+  .rbc-toolbar button.rbc-active {
+    box-shadow: none;
+  }
+
+  .rbc-active {
+    background-color: map-get($colors, 'monochromatic-1');
+    color: white;
+  }
+
+  .rbc-today {
+    background-color: hsl(230, 100%, 97%);
+  }
+
+  .rbc-date-cell,
+  .rbc-row,
+  .rbc-row-bg {
+    cursor: pointer;
+  }
+
+  .rbc-current-time-indicator {
+    background-color: map-get($colors, 'monochromatic-1');
+    height: 2px;
+  }
+
+  .rbc-agenda-table {
+    color: white;
+  }
+
+  .rbc-agenda-event-cell {
+    cursor: pointer;
+  }
+
+  .rbc-event-label {
+    white-space: normal;
+  }
+
+  .rbc-event-content {
+    line-height: 1.25;
+  }
+}

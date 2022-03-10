@@ -1,6 +1,7 @@
-import '../scss/reservation-calendar.scss';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { Calendar, momentLocalizer, Event as RBCEvent, View } from 'react-big-calendar';
+import '../scss/reservation-calendar.scss';
+import '../scss/react-big-calendar-overrides.scss';
+import { Calendar, momentLocalizer, View, SlotInfo } from 'react-big-calendar';
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
@@ -18,11 +19,9 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import NoContent from '../components/dashboard/NoContent';
 import UpdateReservationModal from '../components/modals/UpdateReservationModal';
 import useModal from '../hooks/modal';
+import type { CalendarEvent } from '../types/calendar';
 
-interface CalendarEvent extends RBCEvent {
-  resource: Reservation;
-}
-
+const now = new Date();
 const localizer = momentLocalizer(moment);
 const defaultNavbarHeight = 82;
 const renderableStatuses: Set<ReservationStatus> = new Set([
@@ -49,6 +48,7 @@ const ReservationCalendar = (): JSX.Element => {
   const reservationModal = useModal();
   const reservation = useReservations();
   const calendarContainerElement = useRef<HTMLDivElement | null>(null);
+  const [calendarDate, setCalendarDate] = useState(new Date());
   const [searchParams, setSearchParams] = useSearchParams();
   const [calendarView, setCalendarView] = useState<View>(
     () => (searchParams.get('view') || 'month') as View
@@ -174,6 +174,15 @@ const ReservationCalendar = (): JSX.Element => {
     }
   };
 
+  const onSelectSlot = (slot: SlotInfo) => {
+    const slotDate = new Date(slot.start);
+
+    if (calendarView === 'month' && slotDate.getMonth() >= now.getMonth()) {
+      setCalendarDate(slotDate);
+      setCalendarView('day');
+    }
+  };
+
   useEffect(() => {
     if (isFullScreen) {
       enterFullScreen();
@@ -226,12 +235,16 @@ const ReservationCalendar = (): JSX.Element => {
       )}
       <div className="calendar-container" ref={calendarContainerElement}>
         <Calendar
+          selectable
+          onSelectSlot={onSelectSlot}
           step={15}
           defaultView={calendarView}
           view={calendarView}
           onView={setCalendarView}
           localizer={localizer}
           events={calendarEvents}
+          date={calendarDate}
+          onNavigate={newDate => setCalendarDate(newDate)}
           className="calendar"
           onSelectEvent={onSelectEvent}
           style={{ height: calendarHeight }}

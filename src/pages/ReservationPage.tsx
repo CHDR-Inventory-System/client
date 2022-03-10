@@ -1,7 +1,7 @@
 import '../scss/reservation-page.scss';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Image, notification } from 'antd';
+import { Button, Image, notification } from 'antd';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
 import { BsBoxSeam } from 'react-icons/bs';
 import classNames from 'classnames';
@@ -12,6 +12,8 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { Item } from '../types/API';
 import APIError from '../util/APIError';
 import ReservationForm from '../components/reservation-page/ReservationForm';
+import useModal from '../hooks/modal';
+import ItemAvailabilityModal from '../components/modals/ItemAvailabilityModal';
 
 type ReservationParams = {
   itemId: string;
@@ -21,6 +23,7 @@ const ReservationPage = (): JSX.Element | null => {
   const params = useParams<ReservationParams>();
   const inventory = useInventory();
   const loader = useLoader(true);
+  const availabilityModal = useModal();
   const [item, setItem] = useState<Item | null>(null);
   const [isImagePreviewVisible, setImagePreviewVisible] = useState(false);
 
@@ -84,6 +87,11 @@ const ReservationPage = (): JSX.Element | null => {
   return (
     <div className="reservation-page">
       <Navbar />
+      <ItemAvailabilityModal
+        item={item}
+        visible={availabilityModal.isVisible}
+        onClose={availabilityModal.close}
+      />
       <div className="container">
         <div className="item-detail">
           <div className="item-detail-sticky-container">
@@ -130,6 +138,13 @@ const ReservationPage = (): JSX.Element | null => {
               <b>Description</b>
               <p>{item.description || 'No description available'}</p>
             </div>
+            <Button
+              type="primary"
+              className="availability-button"
+              onClick={availabilityModal.open}
+            >
+              View Availability
+            </Button>
           </div>
         </div>
         <div className="reservation-container">
