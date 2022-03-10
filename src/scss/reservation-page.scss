@@ -42,7 +42,6 @@
     @include mobile() {
       flex-direction: column;
       margin-top: 0em;
-      gap: 38px;
     }
   }
 
@@ -123,6 +122,10 @@
   .availability-button {
     width: 100%;
     margin-bottom: 2em;
+
+    @include mobile() {
+      margin-bottom: 0;
+    }
   }
 
   .reservation-container {
