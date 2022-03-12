@@ -1,9 +1,9 @@
-import { BaseUser, UserRole } from '../types/API';
+import { User, UserRole } from '../types/API';
 
 export type RegisteredUsersAction =
   | {
       type: 'SET_USERS';
-      payload: BaseUser[];
+      payload: User[];
     }
   | {
       type: 'UPDATE_ROLE';
@@ -13,10 +13,7 @@ export type RegisteredUsersAction =
       };
     };
 
-const registeredUsersReducer = (
-  state: BaseUser[],
-  action: RegisteredUsersAction
-): BaseUser[] => {
+const registeredUsersReducer = (state: User[], action: RegisteredUsersAction): User[] => {
   switch (action.type) {
     case 'SET_USERS':
       return action.payload;

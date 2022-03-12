@@ -27,8 +27,9 @@ const ProfileAvatar = (): JSX.Element => {
     return firstName[0] + lastName[0];
   }, [user]);
 
-  const logout = () => {
-    user.logout();
+  const logout = async () => {
+    await user.logout();
+    Modal.destroyAll();
     navigate('/auth', { replace: true });
   };
 
@@ -37,9 +38,7 @@ const ProfileAvatar = (): JSX.Element => {
       title: 'Log Out',
       content: 'Are you sure you want to log out?',
       okText: 'Log Out',
-      onOk: () => {
-        setTimeout(logout, 500);
-      }
+      onOk: () => logout()
     });
   };
 

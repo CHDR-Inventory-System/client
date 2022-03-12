@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import Cookies from 'js-cookie';
 import {
   User,
   CreateAccountOptions,
@@ -6,7 +7,6 @@ import {
   Reservation,
   ItemImage,
   ImageUploadParams,
-  BaseUser,
   ResetPasswordOpts,
   UserRole,
   CreateReservationOpts,
@@ -21,13 +21,24 @@ axios.defaults.headers.put['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
 axios.defaults.headers.delete['Content-Type'] = 'application/json';
 axios.defaults.baseURL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.DEBUG_API_URL
-    : process.env.PROD_API_URL;
+  process.env.NODE_ENV === 'development' ? '/api' : process.env.PROD_API_URL;
 
 axios.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
+    const errorMessage = error.response?.data.error as string | undefined;
+
+    if (
+      errorMessage?.toLowerCase().includes('missing cookie') &&
+      error.response?.status === 401
+    ) {
+      localStorage.clear();
+      Cookies.remove(process.env.COOKIE_CSRF_TOKEN_KEY);
+      Cookies.remove(process.env.COOKIE_SESSION_EXP_KEY);
+      window.location.replace('/#/auth');
+      return Promise.resolve();
+    }
+
     if (axios.isCancel(error)) {
       // 499 represents a request that was cancelled by the user
       throw new APIError({
@@ -43,6 +54,17 @@ axios.interceptors.response.use(
   }
 );
 
+// HTTP methods that require the csrf token to be set as a header
+const csrfMethods = new Set(['post', 'put', 'patch', 'delete']);
+
+axios.interceptors.request.use(config => {
+  if (csrfMethods.has(config.method?.toLowerCase() || '')) {
+    config.headers = config.headers || {};
+    config.headers['X-CSRF-TOKEN'] = Cookies.get(process.env.COOKIE_CSRF_TOKEN_KEY) || '';
+  }
+  return config;
+});
+
 class API {
   static async login(email: string, password: string): Promise<User> {
     const response = await axios.post('/users/login', {
@@ -50,6 +72,11 @@ class API {
       password
     });
 
+    return response.data;
+  }
+
+  static async logout(): Promise<void> {
+    const response = await axios.post('/users/logout');
     return response.data;
   }
 
@@ -132,7 +159,7 @@ class API {
     return response.data;
   }
 
-  static async getAllUsers(): Promise<BaseUser[]> {
+  static async getAllUsers(): Promise<User[]> {
     const response = await axios.get('/users/');
     return response.data;
   }

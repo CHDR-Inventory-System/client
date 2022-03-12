@@ -20,7 +20,7 @@ import { AiOutlineDown, AiOutlineUser, AiOutlineSearch } from 'react-icons/ai';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import type { ColumnsType, ColumnType } from 'antd/lib/table';
 import type { FilterDropdownProps } from 'antd/lib/table/interface';
-import type { BaseUser, UserRole } from '../../types/API';
+import type { User, UserRole } from '../../types/API';
 import useRegisteredUsers from '../../hooks/registered-users';
 import useLoader from '../../hooks/loading';
 import LoadingSpinner from '../LoadingSpinner';
@@ -42,9 +42,9 @@ const UserTable = (): JSX.Element => {
   const currentUser = useUser();
   const searchInputRef = useRef<InputRef>(null);
   const [searchedText, setSearchedText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState<keyof BaseUser>();
+  const [searchedColumn, setSearchedColumn] = useState<keyof User>();
 
-  const updateUserRole = async (user: BaseUser, role: UserRole) => {
+  const updateUserRole = async (user: User, role: UserRole) => {
     if (currentUser.state.ID === user.ID) {
       return;
     }
@@ -79,7 +79,7 @@ const UserTable = (): JSX.Element => {
   const handleSearch = (
     searchQuery: string,
     confirm: () => void,
-    dataIndex: keyof BaseUser
+    dataIndex: keyof User
   ) => {
     setSearchedColumn(dataIndex);
     setSearchedText(searchQuery);
@@ -92,7 +92,7 @@ const UserTable = (): JSX.Element => {
     confirm();
   };
 
-  const onMenuItemClick = (user: BaseUser, role: UserRole) => {
+  const onMenuItemClick = (user: User, role: UserRole) => {
     Modal.confirm({
       title: "Are you sure you want to change this user's role?",
       content: (
@@ -117,7 +117,7 @@ const UserTable = (): JSX.Element => {
   /**
    * Renders the menu that drops down when a user's role is clicked
    */
-  const createRoleMenu = (user: BaseUser) => (
+  const createRoleMenu = (user: User) => (
     <Menu>
       {USER_ROLES.map(role => (
         <Menu.Item
@@ -136,7 +136,7 @@ const UserTable = (): JSX.Element => {
    * search icon in the table's header is clicked
    */
   const createFilterDropdown = (
-    dataIndex: keyof BaseUser,
+    dataIndex: keyof User,
     { setSelectedKeys, selectedKeys, confirm, clearFilters }: FilterDropdownProps
   ) => (
     <div className="table-filter-dropdown">
@@ -162,7 +162,7 @@ const UserTable = (): JSX.Element => {
     </div>
   );
 
-  const getColumnSearchProps = (dataIndex: keyof BaseUser): ColumnType<BaseUser> => ({
+  const getColumnSearchProps = (dataIndex: keyof User): ColumnType<User> => ({
     filterDropdown: props => createFilterDropdown(dataIndex, { ...props }),
     onFilterDropdownVisibleChange: (visible: boolean) => {
       // Focus the input after the dropdown opens
@@ -171,7 +171,7 @@ const UserTable = (): JSX.Element => {
       }
     },
     filterIcon: <AiOutlineSearch size="1.5em" />,
-    onFilter: (value: string | number | boolean, record: BaseUser) =>
+    onFilter: (value: string | number | boolean, record: User) =>
       record[dataIndex].toString().toLowerCase().includes(value.toString().toLowerCase()),
     render: (text: string) => {
       if (searchedColumn === dataIndex) {
@@ -188,7 +188,7 @@ const UserTable = (): JSX.Element => {
     }
   });
 
-  const columns: ColumnsType<BaseUser> = [
+  const columns: ColumnsType<User> = [
     {
       ellipsis: true,
       title: 'Name',
@@ -215,7 +215,7 @@ const UserTable = (): JSX.Element => {
         text: role
       })),
       onFilter: (value, user) => user.role.indexOf(value as string) === 0,
-      render: (text: string, user: BaseUser) => (
+      render: (text: string, user: User) => (
         <Tooltip
           placement="right"
           title={
@@ -253,7 +253,6 @@ const UserTable = (): JSX.Element => {
       await registeredUsers.init();
     } catch {
       notification.error({
-        duration: 0,
         key: 'user-load-error',
         message: "Couldn't Load Users",
         description:

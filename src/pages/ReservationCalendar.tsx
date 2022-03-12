@@ -123,24 +123,6 @@ const ReservationCalendar = (): JSX.Element => {
     loader.stopLoading();
   };
 
-  useLayoutEffect(() => calculateCalendarHeight(), []);
-
-  useEffect(() => {
-    if (!user.isAdminOrSuper()) {
-      return () => {};
-    }
-
-    document.title = 'CHDR Inventory - Calendar';
-
-    loadAllReservations();
-    window.addEventListener('resize', onWindowResize);
-
-    return () => {
-      notification.destroy();
-      window.removeEventListener('resize', onWindowResize);
-    };
-  }, []);
-
   const enterFullScreen = () => {
     const element = calendarContainerElement.current;
 
@@ -187,6 +169,24 @@ const ReservationCalendar = (): JSX.Element => {
 
     setSelectedStatuses(clone);
   };
+
+  useLayoutEffect(() => calculateCalendarHeight(), []);
+
+  useEffect(() => {
+    if (!user.isAdminOrSuper()) {
+      return () => {};
+    }
+
+    document.title = 'CHDR Inventory - Calendar';
+
+    loadAllReservations();
+    window.addEventListener('resize', onWindowResize);
+
+    return () => {
+      notification.destroy();
+      window.removeEventListener('resize', onWindowResize);
+    };
+  }, []);
 
   useEffect(() => {
     if (isFullScreen) {

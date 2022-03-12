@@ -73,6 +73,8 @@ const MainPage = (): JSX.Element | null => {
   useEffect(() => {
     loadInventory();
 
+    document.title = 'CHDR Inventory';
+
     return () => {
       notification.destroy();
     };

@@ -13,7 +13,7 @@ const PageNotFound = (): JSX.Element => {
 
   return (
     <div className="page-not-found">
-      <Navbar showAvatar={!!user.state.token} />
+      <Navbar showAvatar={user.isAuthenticated()} />
       <div className="container">
         <h1>404</h1>
         <p>

@@ -48,7 +48,10 @@ module.exports = (env, argv) => {
       historyApiFallback: true,
       // Using 0.0.0.0 allows the project to be accessed by all
       // devices on the same network as the host
-      host: '0.0.0.0'
+      host: '0.0.0.0',
+      proxy: {
+        '/api': 'http://127.0.0.1:4565/'
+      }
     },
     module: {
       rules: [

@@ -1,4 +1,5 @@
 import { useContext, useMemo } from 'react';
+import Cookies from 'js-cookie';
 import UserContext from '../contexts/UserContext';
 import API from '../util/API';
 import type {
@@ -21,7 +22,7 @@ type UseUserHook = {
    * @throws {AxiosError} Will throw an error if login was unsuccessful
    */
   login: (email: string, password: string) => Promise<User>;
-  logout: () => void;
+  logout: () => Promise<void>;
   createAccount: (opts: CreateAccountOptions) => Promise<void>;
   resendVerificationEmail: (email: string) => Promise<void>;
   verifyAccount: (userId: number, verificationCode: string) => Promise<void>;
@@ -35,6 +36,11 @@ type UseUserHook = {
   updateEmail: (opts: UpdateEmailOpts) => Promise<void>;
   updateName: (firstName: string, lastName: string) => Promise<void>;
   isAdminOrSuper: () => boolean;
+  /**
+   * Checks localStorage and information in cookies to see if the user is logged in.
+   * Note that this my not be 100% accurate and fool-proof.
+   */
+  isAuthenticated: () => boolean;
 };
 
 const updateLocalStorage = (updatedUser: Partial<User>) => {
@@ -94,8 +100,17 @@ const useUser = (): UseUserHook => {
     return user;
   };
 
-  const logout = () => {
-    localStorage.removeItem('user');
+  const logout = async () => {
+    try {
+      await API.logout();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err);
+    }
+
+    localStorage.clear();
+    Cookies.remove(process.env.COOKIE_CSRF_TOKEN_KEY);
+    Cookies.remove(process.env.COOKIE_SESSION_EXP_KEY);
     dispatch({ type: 'LOG_OUT' });
   };
 
@@ -152,6 +167,28 @@ const useUser = (): UseUserHook => {
 
   const isAdminOrSuper = () => state.role === 'Admin' || state.role === 'Super';
 
+  const isAuthenticated = (): boolean => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '') as User | null;
+      const hasMissingKey = Object.values(user || {}).some(
+        value => value === null || value === undefined
+      );
+      const csrfToken = Cookies.get(process.env.COOKIE_CSRF_TOKEN_KEY);
+      const sessionExpiration =
+        parseInt(Cookies.get(process.env.COOKIE_SESSION_EXP_KEY) || '', 10) * 1000;
+
+      return (
+        !!user &&
+        !hasMissingKey &&
+        !!csrfToken &&
+        !Number.isNaN(sessionExpiration) &&
+        Date.now() < sessionExpiration
+      );
+    } catch {
+      return false;
+    }
+  };
+
   return {
     state: {
       ...state,
@@ -169,7 +206,8 @@ const useUser = (): UseUserHook => {
     sendUpdateEmail,
     updateEmail,
     updateName,
-    isAdminOrSuper
+    isAdminOrSuper,
+    isAuthenticated
   };
 };
 

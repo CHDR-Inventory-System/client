@@ -339,7 +339,7 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
             !formik.values.returnTime
           }
         >
-          Create Reservation
+          {loader.isLoading ? 'Creating Reservation' : 'Create Reservation'}
         </Button>
       </Form.Item>
     </Form>

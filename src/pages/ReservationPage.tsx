@@ -19,7 +19,7 @@ type ReservationParams = {
   itemId: string;
 };
 
-const ReservationPage = (): JSX.Element | null => {
+const ReservationPage = (): JSX.Element => {
   const params = useParams<ReservationParams>();
   const inventory = useInventory();
   const loader = useLoader(true);

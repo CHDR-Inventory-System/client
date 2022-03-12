@@ -2,10 +2,10 @@ import React, { createContext, useMemo, useReducer } from 'react';
 import registeredUsersReducer, {
   RegisteredUsersAction
 } from '../reducers/registeredUsers';
-import { BaseUser } from '../types/API';
+import { User } from '../types/API';
 
 export type RegisteredUsersContextType = {
-  state: BaseUser[];
+  state: User[];
   dispatch: React.Dispatch<RegisteredUsersAction>;
 };
 
