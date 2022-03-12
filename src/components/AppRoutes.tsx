@@ -32,7 +32,7 @@ const AppRoutes = (): JSX.Element | null => {
     try {
       const storedUser = JSON.parse(localStorage.getItem('user') || '') as User;
       const hasMissingValues = Object.values(user.state || {}).some(
-        value => value === null || value === undefined
+        value => value === null || value === undefined || value === ''
       );
 
       if (user.isAuthenticated() && hasMissingValues) {

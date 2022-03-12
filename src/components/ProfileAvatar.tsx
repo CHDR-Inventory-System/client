@@ -1,5 +1,5 @@
 import '../scss/profile-avatar.scss';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Divider, Dropdown, Menu, Modal } from 'antd';
 import {
@@ -17,15 +17,7 @@ const ProfileAvatar = (): JSX.Element => {
   const accountModal = useModal();
   const navigate = useNavigate();
   const user = useUser();
-  const userInitials = useMemo(() => {
-    if (!user.state.fullName) {
-      return '';
-    }
-
-    const [firstName, lastName] = user.state.fullName.split(' ');
-
-    return firstName[0] + lastName[0];
-  }, [user]);
+  const userInitials = user.state.firstName[0] + user.state.lastName[0];
 
   const logout = async () => {
     await user.logout();

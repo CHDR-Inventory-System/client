@@ -194,8 +194,8 @@ const useUser = (): UseUserHook => {
   return {
     state: {
       ...state,
-      firstName,
-      lastName: lastName.join(' ')
+      firstName: firstName || '',
+      lastName: lastName.join(' ') || ''
     },
     init,
     login,
