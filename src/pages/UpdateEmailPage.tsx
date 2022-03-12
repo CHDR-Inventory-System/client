@@ -4,7 +4,7 @@ import { Button, Card, Form, Input, notification } from 'antd';
 import { motion, Transition, Variants } from 'framer-motion';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ArgsProps } from 'antd/lib/notification';
 import useLoader from '../hooks/loading';
 import useUser from '../hooks/user';
@@ -13,6 +13,11 @@ import APIError from '../util/APIError';
 type FormValues = {
   email: string;
   password: string;
+};
+
+type PageParams = {
+  userId: string;
+  verificationCode: string;
 };
 
 const animationOpts: Transition = {
@@ -40,7 +45,7 @@ const schema = yup.object({
 const UpdateEmailPage = (): JSX.Element => {
   const loader = useLoader();
   const user = useUser();
-  const [searchParams] = useSearchParams();
+  const { userId = '', verificationCode = '' } = useParams<PageParams>();
   const [form] = Form.useForm();
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -51,9 +56,6 @@ const UpdateEmailPage = (): JSX.Element => {
   });
 
   const updateEmail = async (values: FormValues) => {
-    const userId = parseInt(searchParams.get('id') || '', 10);
-    const verificationCode = searchParams.get('verificationCode') || '';
-
     loader.startLoading();
 
     // Reset all errors in the form
@@ -68,8 +70,8 @@ const UpdateEmailPage = (): JSX.Element => {
       const parsedValues = await schema.validate(values, { abortEarly: false });
 
       await user.updateEmail({
+        userId: parseInt(userId, 10),
         verificationCode,
-        userId,
         email: parsedValues.email,
         password: parsedValues.password
       });

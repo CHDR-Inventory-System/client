@@ -24,33 +24,37 @@ const AppRoutes = (): JSX.Element | null => {
   const navigate = useNavigate();
   const loader = useLoader();
 
+  /**
+   * When the browser is refreshed, React's state is cleared so we need to
+   * check if the user's state is set. If not, we'll set it from localStorage
+   */
+  const loadUserFromStorage = () => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem('user') || '') as User;
+      const hasMissingValues = Object.values(user.state || {}).some(
+        value => value === null || value === undefined
+      );
+
+      if (user.isAuthenticated() && hasMissingValues) {
+        user.init(storedUser);
+      }
+    } catch (err) {
+      // Ignored
+    }
+  };
+
+  /**
+   * Before the user goes to a route that requires them to be authenticated,
+   * we need to make sure the user's credentials are still valid.
+   */
   const validateAuth = async () => {
-    // Before the user goes to a route that requires them to be authenticated,
-    // we need to make sure the user's credentials are still valid.
     if (
       requiredAuthPaths.includes(location.pathname) ||
       reserveRouteRegex.test(location.pathname)
     ) {
       loader.startLoading();
 
-      try {
-        const storedUser = JSON.parse(localStorage.getItem('user') || '') as User;
-
-        // When the browser is refreshed, React's state is cleared so we need to
-        // check if the user's state is set. If not, we'll set it from localStorage
-        const hasMissingValue = Object.values(user.state || {}).some(
-          value => value === null || value === undefined
-        );
-
-        if (user.isAuthenticated()) {
-          if (hasMissingValue) {
-            user.init(storedUser);
-          }
-        } else {
-          await user.logout();
-          navigate('/auth', { replace: true });
-        }
-      } catch (err) {
+      if (!user.isAuthenticated()) {
         await user.logout();
         navigate('/auth', { replace: true });
       }
@@ -60,6 +64,7 @@ const AppRoutes = (): JSX.Element | null => {
   };
 
   useEffect(() => {
+    loadUserFromStorage();
     validateAuth();
   }, [location.pathname]);
 
@@ -117,7 +122,7 @@ const AppRoutes = (): JSX.Element | null => {
         }
       />
       <Route
-        path="/verify"
+        path="/verify/:userId/:verificationCode"
         element={
           <Suspense fallback={<div />}>
             <VerifyAccountPage />
@@ -125,7 +130,7 @@ const AppRoutes = (): JSX.Element | null => {
         }
       />
       <Route
-        path="/reset-password"
+        path="/reset-password/:userId/:verificationCode"
         element={
           <Suspense fallback={<div />}>
             <ResetPasswordPage />
@@ -133,7 +138,7 @@ const AppRoutes = (): JSX.Element | null => {
         }
       />
       <Route
-        path="/update-email"
+        path="/update-email/:userId/:verificationCode"
         element={
           <Suspense fallback={<div />}>
             <UpdateEmailPage />

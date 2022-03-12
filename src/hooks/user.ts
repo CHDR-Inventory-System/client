@@ -57,9 +57,8 @@ const updateLocalStorage = (updatedUser: Partial<User>) => {
           ...updatedUser
         })
       );
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.warn('Invalid cookie', err);
+    } catch {
+      // Ignored
     }
   }
 };
@@ -173,7 +172,7 @@ const useUser = (): UseUserHook => {
   const isAuthenticated = (): boolean => {
     try {
       const user = JSON.parse(localStorage.getItem('user') || '') as User | null;
-      const hasMissingKey = Object.values(user || {}).some(
+      const hasMissingValues = Object.values(user || {}).some(
         value => value === null || value === undefined
       );
       const csrfToken = Cookies.get(process.env.COOKIE_CSRF_TOKEN_KEY);
@@ -182,7 +181,7 @@ const useUser = (): UseUserHook => {
 
       return (
         !!user &&
-        !hasMissingKey &&
+        !hasMissingValues &&
         !!csrfToken &&
         !Number.isNaN(sessionExpiration) &&
         Date.now() < sessionExpiration
