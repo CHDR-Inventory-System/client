@@ -66,7 +66,7 @@ axios.interceptors.request.use(config => {
 });
 
 class API {
-  static async login(email: string, password: string): Promise<User> {
+  static async login(email: string, password: string): Promise<User & { token: string }> {
     const response = await axios.post('/users/login', {
       email,
       password

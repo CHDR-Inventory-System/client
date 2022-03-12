@@ -91,7 +91,10 @@ const useUser = (): UseUserHook => {
   };
 
   const login = async (email: string, password: string): Promise<User> => {
-    const user = await API.login(email, password);
+    // Don't need to store the user's token in localStorage since it's handled
+    // as a cookie by the browser
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { token, ...user } = await API.login(email, password);
 
     localStorage.setItem('user', JSON.stringify(user));
 
