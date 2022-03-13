@@ -59,9 +59,6 @@ const ItemCard = ({ item }: ItemCardProps): JSX.Element => {
           )}
         </span>
       </p>
-      <p className="quantity">
-        <b>Quantity</b>: {item.quantity}
-      </p>
       <b>Description</b>
       <p className="item-description" title={item.description || undefined}>
         {item.description || 'No description available'}
