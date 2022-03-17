@@ -1,18 +1,9 @@
 import React, { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
+import useLoader from '../hooks/loading';
 import useUser from '../hooks/user';
-import { User, UserRole } from '../types/API';
-import Navbar from './Navbar';
+import { User } from '../types/API';
 import PageNotFound from './PageNotFound';
-
-type UserJwt = JwtPayload & {
-  sub?: {
-    ID: number;
-    role: UserRole;
-    verified: number;
-  };
-};
 
 const MainPage = lazy(() => import('../pages/MainPage'));
 const Auth = lazy(() => import('../pages/Auth'));
@@ -27,39 +18,59 @@ const ReservationCalendar = lazy(() => import('../pages/ReservationCalendar'));
 const requiredAuthPaths = ['/', '/dashboard', '/reservations', '/calendar'];
 const reserveRouteRegex = /reserve\/[0-9]/;
 
-const AppRoutes = (): JSX.Element => {
+const AppRoutes = (): JSX.Element | null => {
   const location = useLocation();
   const user = useUser();
   const navigate = useNavigate();
+  const loader = useLoader();
 
-  useEffect(() => {
-    // Before the user goes to a route that requires them to be authenticated,
-    // we need to make sure the user's credentials are still in local storage.
-    // We'll also make sure the stored JWT is valid
+  /**
+   * When the browser is refreshed, React's state is cleared so we need to
+   * check if the user's state is set. If not, we'll set it from localStorage
+   */
+  const loadUserFromStorage = () => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem('user') || '') as User;
+      const hasMissingValues = Object.values(user.state || {}).some(
+        value => value === null || value === undefined || value === ''
+      );
+
+      if (user.isAuthenticated() && hasMissingValues) {
+        user.init(storedUser);
+      }
+    } catch (err) {
+      // Ignored
+    }
+  };
+
+  /**
+   * Before the user goes to a route that requires them to be authenticated,
+   * we need to make sure the user's credentials are still valid.
+   */
+  const validateAuth = async () => {
     if (
       requiredAuthPaths.includes(location.pathname) ||
       reserveRouteRegex.test(location.pathname)
     ) {
-      try {
-        const parsedUser = JSON.parse(localStorage.getItem('user') || '') as User | null;
+      loader.startLoading();
 
-        if (!parsedUser || !parsedUser.token.trim()) {
-          navigate('/auth');
-          return;
-        }
-
-        const jwt = jwtDecode<UserJwt>(parsedUser.token);
-
-        if (!jwt.sub || !jwt.sub?.verified) {
-          navigate('/auth');
-        } else {
-          user.init(parsedUser);
-        }
-      } catch (err) {
-        navigate('/auth');
+      if (!user.isAuthenticated()) {
+        await user.logout();
+        navigate('/auth', { replace: true });
       }
+
+      loader.stopLoading();
     }
-  }, [location]);
+  };
+
+  useEffect(() => {
+    loadUserFromStorage();
+    validateAuth();
+  }, [location.pathname]);
+
+  if (loader.isLoading) {
+    return null;
+  }
 
   return (
     <Routes>
@@ -67,8 +78,38 @@ const AppRoutes = (): JSX.Element => {
       <Route
         path="/"
         element={
-          <Suspense fallback={<Navbar showAvatar={false} />}>
-            <MainPage />
+          <Suspense fallback={<div />}>{user.isAuthenticated() && <MainPage />}</Suspense>
+        }
+      />
+      <Route
+        path="/dashboard"
+        element={
+          <Suspense fallback={<div />}>
+            {user.isAuthenticated() && <Dashboard key="Dashboard" />}
+          </Suspense>
+        }
+      />
+      <Route
+        path="/reserve/:itemId"
+        element={
+          <Suspense fallback={<div />}>
+            {user.isAuthenticated() && <ReservationPage />}
+          </Suspense>
+        }
+      />
+      <Route
+        path="/reservations"
+        element={
+          <Suspense fallback={<div />}>
+            {user.isAuthenticated() && <MyReservations />}
+          </Suspense>
+        }
+      />
+      <Route
+        path="/calendar"
+        element={
+          <Suspense fallback={<div />}>
+            {user.isAuthenticated() && <ReservationCalendar />}
           </Suspense>
         }
       />
@@ -81,15 +122,7 @@ const AppRoutes = (): JSX.Element => {
         }
       />
       <Route
-        path="/dashboard"
-        element={
-          <Suspense fallback={<Navbar showAvatar={false} />}>
-            <Dashboard />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/verify"
+        path="/verify/:userId/:verificationCode"
         element={
           <Suspense fallback={<div />}>
             <VerifyAccountPage />
@@ -97,7 +130,7 @@ const AppRoutes = (): JSX.Element => {
         }
       />
       <Route
-        path="/reset-password"
+        path="/reset-password/:userId/:verificationCode"
         element={
           <Suspense fallback={<div />}>
             <ResetPasswordPage />
@@ -105,34 +138,10 @@ const AppRoutes = (): JSX.Element => {
         }
       />
       <Route
-        path="/update-email"
+        path="/update-email/:userId/:verificationCode"
         element={
           <Suspense fallback={<div />}>
             <UpdateEmailPage />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/reserve/:itemId"
-        element={
-          <Suspense fallback={<Navbar showAvatar={false} />}>
-            <ReservationPage />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/reservations"
-        element={
-          <Suspense fallback={<Navbar showAvatar={false} />}>
-            <MyReservations />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/calendar"
-        element={
-          <Suspense fallback={<Navbar showAvatar={false} />}>
-            <ReservationCalendar />
           </Suspense>
         }
       />

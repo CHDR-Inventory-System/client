@@ -2,11 +2,11 @@ import { useContext } from 'react';
 import moment from 'moment';
 import RegisteredUsersContext from '../contexts/RegisteredUsers';
 import API from '../util/API';
-import { BaseUser, UserRole } from '../types/API';
+import { User, UserRole } from '../types/API';
 
 type UseRegisteredUsersHook = {
-  readonly state: BaseUser[];
-  init: () => Promise<BaseUser[]>;
+  readonly state: User[];
+  init: () => Promise<User[]>;
   updateRole: (userId: number, role: UserRole) => Promise<void>;
 };
 
@@ -26,7 +26,7 @@ const useRegisteredUsers = (): UseRegisteredUsersHook => {
 
   const { state, dispatch } = context;
 
-  const init = async (): Promise<BaseUser[]> => {
+  const init = async (): Promise<User[]> => {
     const users = await API.getAllUsers();
 
     users.forEach(user => {

@@ -1,4 +1,4 @@
-import type { BaseUser, Reservation, ReservationStatus } from '../types/API';
+import type { User, Reservation, ReservationStatus } from '../types/API';
 import { formatDate } from '../util/date';
 
 export type ReservationAction =
@@ -18,7 +18,7 @@ export type ReservationAction =
         /**
          * The admin who changed the status of this reservation
          */
-        admin: BaseUser | null;
+        admin: User | null;
         startDateTime?: string;
         endDateTime?: string;
       };

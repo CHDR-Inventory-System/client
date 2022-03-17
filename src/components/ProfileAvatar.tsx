@@ -1,5 +1,5 @@
 import '../scss/profile-avatar.scss';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, Divider, Dropdown, Menu, Modal } from 'antd';
 import {
@@ -17,18 +17,11 @@ const ProfileAvatar = (): JSX.Element => {
   const accountModal = useModal();
   const navigate = useNavigate();
   const user = useUser();
-  const userInitials = useMemo(() => {
-    if (!user.state.fullName) {
-      return '';
-    }
+  const userInitials = user.state.firstName[0] + user.state.lastName[0];
 
-    const [firstName, lastName] = user.state.fullName.split(' ');
-
-    return firstName[0] + lastName[0];
-  }, [user]);
-
-  const logout = () => {
-    user.logout();
+  const logout = async () => {
+    await user.logout();
+    Modal.destroyAll();
     navigate('/auth', { replace: true });
   };
 
@@ -37,9 +30,7 @@ const ProfileAvatar = (): JSX.Element => {
       title: 'Log Out',
       content: 'Are you sure you want to log out?',
       okText: 'Log Out',
-      onOk: () => {
-        setTimeout(logout, 500);
-      }
+      onOk: () => logout()
     });
   };
 

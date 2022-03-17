@@ -9,7 +9,6 @@ import { Reservation, ReservationStatus } from '../types/API';
 import useReservations from '../hooks/reservation';
 import useLoader from '../hooks/loading';
 import LoadingSpinner from '../components/LoadingSpinner';
-import useUser from '../hooks/user';
 import NoContent from '../components/dashboard/NoContent';
 
 const header = (
@@ -35,7 +34,6 @@ const STATUSES: ReservationStatus[] = [
 
 const MyReservations = (): JSX.Element => {
   const reservation = useReservations();
-  const user = useUser();
   const loader = useLoader();
   const reservationMap = useMemo(() => {
     const resMap = {
@@ -65,10 +63,11 @@ const MyReservations = (): JSX.Element => {
     loader.startLoading();
 
     try {
-      await reservation.getReservationsForUser(user.state.ID);
+      await reservation.getReservationsForUser();
     } catch {
       loader.setError(true);
       notification.error({
+        key: 'user-reservation-load-error',
         message: 'Error Loading Reservations',
         description: `
           An error occurred while loading your reservations,

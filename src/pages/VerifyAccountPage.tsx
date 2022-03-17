@@ -1,11 +1,16 @@
 import '../scss/verify-account-page.scss';
 import { Card, Alert, AlertProps } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion, Transition, Variants } from 'framer-motion';
 import useUser from '../hooks/user';
 import useLoader from '../hooks/loading';
 import LoadingSpinner from '../components/LoadingSpinner';
+
+type RouteParams = {
+  userId: string;
+  verificationCode: string;
+};
 
 const animationOpts: Transition = {
   delay: 0.3,
@@ -44,22 +49,14 @@ const VerifyAccount = (): JSX.Element => {
   const navigate = useNavigate();
   const loader = useLoader(false);
   const user = useUser();
-  const [params] = useSearchParams();
+  const { userId = '', verificationCode = '' } = useParams<RouteParams>();
   const [isLinkInvalid, setLinkInvalid] = useState(false);
 
   const verifyAccount = async () => {
-    const userId = parseInt(params.get('id') || '', 10);
-    const verificationCode = params.get('verificationCode');
-
-    if (Number.isNaN(userId) || !verificationCode) {
-      setLinkInvalid(true);
-      return;
-    }
-
     loader.startLoading();
 
     try {
-      await user.verifyAccount(userId, verificationCode);
+      await user.verifyAccount(parseInt(userId, 10), verificationCode);
       setTimeout(() => {
         navigate('/auth');
       }, 6000);

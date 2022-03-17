@@ -2,8 +2,9 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production';
-      DEBUG_API_URL: string;
       PROD_API_URL: string;
+      COOKIE_CSRF_TOKEN_KEY: string;
+      COOKIE_SESSION_EXP_KEY: string;
     }
   }
 

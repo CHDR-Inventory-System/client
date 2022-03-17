@@ -9,11 +9,7 @@ export type CreateAccountOptions = {
 
 export type UserRole = 'Super' | 'Admin' | 'User';
 
-export type JWT = {
-  token: string;
-};
-
-export type User = JWT & {
+export type User = {
   ID: number;
   created: string;
   email: string;
@@ -21,8 +17,6 @@ export type User = JWT & {
   role: UserRole;
   verified: boolean;
 };
-
-export type BaseUser = Omit<User, 'token'>;
 
 export type ItemImage = {
   ID: number;
@@ -72,7 +66,7 @@ export type ReservationStatus =
 
 export type Reservation = {
   ID: number;
-  admin: BaseUser | null;
+  admin: User | null;
   created: string;
   endDateTime: string;
   item: Item;

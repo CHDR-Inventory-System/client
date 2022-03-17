@@ -1,7 +1,7 @@
 import '../scss/reset-password-page.scss';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Alert, Button, Card, Form, Input, notification } from 'antd';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Button, Card, Form, Input, notification } from 'antd';
 import { useFormik } from 'formik';
 import PasswordChecklist from 'react-password-checklist';
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai';
@@ -13,6 +13,11 @@ import APIError from '../util/APIError';
 type FormValues = {
   password: string;
   confirmedPassword: string;
+};
+
+type RouteParams = {
+  userId: string;
+  verificationCode: string;
 };
 
 const passwordSchema = yup.object({
@@ -27,7 +32,7 @@ const passwordSchema = yup.object({
 });
 
 const ResetPasswordPage = (): JSX.Element => {
-  const [params] = useSearchParams();
+  const { userId = '', verificationCode = '' } = useParams<RouteParams>();
   const [form] = Form.useForm();
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -38,15 +43,11 @@ const ResetPasswordPage = (): JSX.Element => {
   });
   const [isPasswordValid, setPasswordValid] = useState(false);
   const [wasPasswordReset, setWasPasswordReset] = useState(false);
-  const [isLinkValid, setLinkValid] = useState(false);
   const navigate = useNavigate();
   const loader = useLoader();
   const user = useUser();
 
   const resetPassword = async (formValues: FormValues) => {
-    const userId = parseInt(params.get('id') || '', 10);
-    const verificationCode = params.get('verificationCode') || '';
-
     // Reset all errors in the form
     form.setFields(
       Object.keys(formValues).map(key => ({
@@ -63,8 +64,8 @@ const ResetPasswordPage = (): JSX.Element => {
       });
 
       await user.resetPassword({
-        userId,
         verificationCode,
+        userId: parseInt(userId, 10),
         password: parsedValues.password
       });
 
@@ -117,67 +118,6 @@ const ResetPasswordPage = (): JSX.Element => {
     document.title = 'CHDR Inventory - Reset Password';
   }, []);
 
-  const renderForm = () => (
-    <Form
-      form={form}
-      layout="vertical"
-      spellCheck={false}
-      autoComplete="off"
-      autoCorrect="off"
-      autoCapitalize="off"
-    >
-      <Form.Item label="Password" name="password">
-        <Input.Password onChange={formik.handleChange('password')} />
-      </Form.Item>
-      <Form.Item label="Confirm Password" name="confirmedPassword">
-        <Input.Password onChange={formik.handleChange('confirmedPassword')} />
-      </Form.Item>
-      <PasswordChecklist
-        iconComponents={{
-          InvalidIcon: <AiFillCloseCircle className="checklist-icon valid" />,
-          ValidIcon: <AiFillCheckCircle className="checklist-icon invalid" />
-        }}
-        className="password-checklist"
-        rules={['minLength', 'specialChar', 'number', 'capital', 'match']}
-        minLength={8}
-        value={formik.values.password}
-        valueAgain={formik.values.confirmedPassword}
-        onChange={setPasswordValid}
-        messages={{
-          minLength: 'Password has at least 8 characters.',
-          specialChar: 'Password has at least one special character.'
-        }}
-      />
-      <Button
-        type="primary"
-        htmlType="submit"
-        disabled={!wasPasswordReset && (loader.isLoading || !isPasswordValid)}
-        loading={loader.isLoading}
-        onClick={onSubmitClick}
-      >
-        {wasPasswordReset ? 'Back To Login' : 'Reset Password'}
-      </Button>
-    </Form>
-  );
-
-  const renderInvalidLinkError = () => (
-    <Alert
-      message="Invalid Link"
-      type="error"
-      description={`
-        This link is invalid. Make sure the current URL matches
-        the URL from your email.
-      `}
-    />
-  );
-
-  useEffect(() => {
-    const id = params.get('id');
-    const verificationCode = params.get('verificationCode');
-
-    setLinkValid(!!id && !!verificationCode);
-  }, []);
-
   return (
     <div className="reset-password-page">
       <header>
@@ -192,7 +132,46 @@ const ResetPasswordPage = (): JSX.Element => {
             </p>
           }
         />
-        {isLinkValid ? renderForm() : renderInvalidLinkError()}
+        <Form
+          form={form}
+          layout="vertical"
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+        >
+          <Form.Item label="Password" name="password">
+            <Input.Password onChange={formik.handleChange('password')} />
+          </Form.Item>
+          <Form.Item label="Confirm Password" name="confirmedPassword">
+            <Input.Password onChange={formik.handleChange('confirmedPassword')} />
+          </Form.Item>
+          <PasswordChecklist
+            iconComponents={{
+              InvalidIcon: <AiFillCloseCircle className="checklist-icon valid" />,
+              ValidIcon: <AiFillCheckCircle className="checklist-icon invalid" />
+            }}
+            className="password-checklist"
+            rules={['minLength', 'specialChar', 'number', 'capital', 'match']}
+            minLength={8}
+            value={formik.values.password}
+            valueAgain={formik.values.confirmedPassword}
+            onChange={setPasswordValid}
+            messages={{
+              minLength: 'Password has at least 8 characters.',
+              specialChar: 'Password has at least one special character.'
+            }}
+          />
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!wasPasswordReset && (loader.isLoading || !isPasswordValid)}
+            loading={loader.isLoading}
+            onClick={onSubmitClick}
+          >
+            {wasPasswordReset ? 'Back To Login' : 'Reset Password'}
+          </Button>
+        </Form>
       </Card>
     </div>
   );

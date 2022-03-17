@@ -1,9 +1,18 @@
 @import './mixins';
 
 .edit-item-drawer {
+  .ant-drawer-body {
+    padding-bottom: 0;
+  }
+
   .form-actions {
     display: flex;
     margin-top: 3em;
+    position: sticky;
+    bottom: 0;
+    background-color: rgb(255, 255, 255);
+    padding-bottom: 16px;
+    padding-top: 24px;
   }
 
   .form-action-button {

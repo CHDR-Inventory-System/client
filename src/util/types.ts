@@ -13,3 +13,9 @@
  * ```
  */
 export type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>;
+
+/**
+ * Takes a type and a list of properties and marks all of those
+ * properties as optional.
+ */
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;

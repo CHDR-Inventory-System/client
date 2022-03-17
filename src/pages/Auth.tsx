@@ -1,41 +1,17 @@
 import '../scss/auth.scss';
 import React, { useEffect, useMemo, useState } from 'react';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import SignUpCard from '../components/cards/SignUpCard';
 import LogInCard from '../components/cards/LogInCard';
 import ResetPasswordCard from '../components/cards/ResetPasswordCard';
-import { User, UserRole } from '../types/API';
+import useUser from '../hooks/user';
 
 type CardType = 'login' | 'signUp' | 'forgotPassword';
-
-type UserJwt = JwtPayload & {
-  sub?: {
-    ID: number;
-    role: UserRole;
-    verified: number;
-  };
-};
-
-const isJwtValid = (): boolean => {
-  try {
-    const user = JSON.parse(localStorage.getItem('user') || '') as User | null;
-
-    if (!user || !user.token || !user.verified || !user.role || !user.email) {
-      return false;
-    }
-
-    const jwt = jwtDecode<UserJwt>(user.token);
-
-    return !!jwt.sub;
-  } catch {
-    return false;
-  }
-};
 
 const Auth = (): JSX.Element | null => {
   const [card, setCard] = useState<CardType>('login');
   const navigate = useNavigate();
+  const user = useUser();
 
   const cards: Record<CardType, JSX.Element> = useMemo(
     () => ({
@@ -96,7 +72,7 @@ const Auth = (): JSX.Element | null => {
   );
 
   useEffect(() => {
-    if (isJwtValid()) {
+    if (user.isAuthenticated()) {
       navigate('/', { replace: true });
     }
   }, []);

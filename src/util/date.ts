@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import moment from 'moment';
 
 type FormatOpts = {
