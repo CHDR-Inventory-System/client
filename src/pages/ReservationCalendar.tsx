@@ -6,8 +6,9 @@ import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import debounce from 'lodash/debounce';
 import moment from 'moment';
 import { BiExitFullscreen, BiFullscreen } from 'react-icons/bi';
-import { Button, notification } from 'antd';
 import { BsCalendarX } from 'react-icons/bs';
+import { MdOutlineCloudDownload, MdOutlineCloudOff } from 'react-icons/md';
+import { Button, notification } from 'antd';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import useUser from '../hooks/user';
@@ -23,7 +24,15 @@ import type { CalendarEvent } from '../types/calendar';
 import HideInactive from '../components/HideInactive';
 import useRefWithCallback from '../hooks/ref-with-callback';
 import StatusFilterButton from '../components/reservation-calendar/StatusFilterButton';
+import API from '../util/API';
+import APIError from '../util/APIError';
 
+/**
+ * The time (in seconds) the calendar will periodically fetch all reservations
+ * while in fullscreen mode.
+ */
+const CALENDAR_REFRESH_INTERVAL = 60_000;
+const REFRESH_ENABLED_KEY = 'refreshEnabled';
 const now = new Date();
 const localizer = momentLocalizer(moment);
 const defaultNavbarHeight = 82;
@@ -43,6 +52,16 @@ const ReservationCalendar = (): JSX.Element => {
   const loader = useLoader();
   const reservationModal = useModal();
   const reservation = useReservations();
+  const [isRefreshEnabled, setIsRefreshEnabled] = useState(() => {
+    const isRefreshInStorage = localStorage.getItem(REFRESH_ENABLED_KEY)?.trim();
+
+    if (!isRefreshInStorage) {
+      localStorage.setItem(REFRESH_ENABLED_KEY, 'true');
+    }
+
+    return isRefreshInStorage === 'true';
+  });
+  const [calendarUpdateInterval, setCalendarUpdateInterval] = useState(-1);
   const [selectedStatuses, setSelectedStatuses] = useState<Set<ReservationStatus>>(
     new Set<ReservationStatus>(['Approved', 'Checked Out', 'Late', 'Pending'])
   );
@@ -52,7 +71,6 @@ const ReservationCalendar = (): JSX.Element => {
     () => (searchParams.get('view') || 'month') as View
   );
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const [hasError, setHasError] = useState(true);
   const [selectedReservation, setSelectedReservation] = useState<Reservation | null>(
     null
   );
@@ -106,18 +124,21 @@ const ReservationCalendar = (): JSX.Element => {
 
   const loadAllReservations = async () => {
     loader.startLoading();
-    setHasError(false);
 
     try {
       await reservation.initAllReservations();
-    } catch {
-      notification.error({
-        message: 'Error Loading Reservations',
-        description: `
-          An error occurred while loading reservations,
-          refresh the page to try again.
-          `
-      });
+    } catch (err) {
+      if (err instanceof APIError && !err.cancelled) {
+        loader.setError(true);
+
+        notification.error({
+          message: 'Error Loading Reservations',
+          description: `
+            An error occurred while loading reservations,
+            refresh the page to try again.
+            `
+        });
+      }
     }
 
     loader.stopLoading();
@@ -158,6 +179,40 @@ const ReservationCalendar = (): JSX.Element => {
     }
   };
 
+  const backgroundRefresh = async () => {
+    if (API.hasActiveRequest) {
+      return;
+    }
+
+    try {
+      await reservation.initAllReservations();
+    } catch (err) {
+      if (err instanceof APIError && !err.cancelled) {
+        // eslint-disable-next-line no-console
+        console.warn(err);
+      }
+    }
+  };
+
+  const startCalendarUpdate = () => {
+    notification.info({
+      getContainer: () => calendarContainerElement.current || document.body,
+      key: 'calendar-refresh',
+      duration: 5,
+      message: 'Auto Refresh Enabled',
+      placement: 'bottom',
+      description: `
+        The calendar will periodically refresh every
+        ${CALENDAR_REFRESH_INTERVAL / 1_000} seconds while in fullscreen mode.
+      `
+    });
+
+    if (isFullScreen) {
+      const interval = window.setInterval(backgroundRefresh, CALENDAR_REFRESH_INTERVAL);
+      setCalendarUpdateInterval(interval);
+    }
+  };
+
   const onSelectStatus = (status: ReservationStatus, selected: boolean) => {
     const clone = new Set(selectedStatuses);
 
@@ -168,6 +223,26 @@ const ReservationCalendar = (): JSX.Element => {
     }
 
     setSelectedStatuses(clone);
+  };
+
+  const toggleAutoRefresh = () => {
+    if (isRefreshEnabled) {
+      window.clearInterval(calendarUpdateInterval);
+      notification.info({
+        getContainer: () => calendarContainerElement.current || document.body,
+        key: 'calendar-refresh',
+        placement: 'bottom',
+        message: 'Auto Refresh Disabled',
+        description: 'The calendar will not periodically refresh in fullscreen mode.'
+      });
+    } else {
+      startCalendarUpdate();
+    }
+
+    setIsRefreshEnabled(prevValue => {
+      localStorage.setItem(REFRESH_ENABLED_KEY, `${!prevValue}`);
+      return !prevValue;
+    });
   };
 
   useLayoutEffect(() => calculateCalendarHeight(), []);
@@ -183,7 +258,9 @@ const ReservationCalendar = (): JSX.Element => {
     window.addEventListener('resize', onWindowResize);
 
     return () => {
+      API.cancelRequests();
       notification.destroy();
+      window.clearInterval(calendarUpdateInterval);
       window.removeEventListener('resize', onWindowResize);
     };
   }, []);
@@ -192,7 +269,12 @@ const ReservationCalendar = (): JSX.Element => {
     if (isFullScreen) {
       enterFullScreen();
     } else {
+      window.clearInterval(calendarUpdateInterval);
       exitFullScreen();
+    }
+
+    if (isFullScreen && isRefreshEnabled) {
+      startCalendarUpdate();
     }
   }, [isFullScreen]);
 
@@ -215,7 +297,7 @@ const ReservationCalendar = (): JSX.Element => {
     );
   }
 
-  if (hasError) {
+  if (loader.hasError) {
     return (
       <div className="reservation-calendar">
         <Navbar />
@@ -233,6 +315,7 @@ const ReservationCalendar = (): JSX.Element => {
       <Navbar />
       {selectedReservation && (
         <UpdateReservationModal
+          container={calendarContainerElement.current || document.body}
           visible={reservationModal.isVisible}
           reservation={selectedReservation}
           onClose={reservationModal.close}
@@ -266,6 +349,13 @@ const ReservationCalendar = (): JSX.Element => {
                 onSelectStatus={onSelectStatus}
               />
             )}
+            <Button
+              type="primary"
+              className="action"
+              title={isRefreshEnabled ? 'Disable auto-refresh' : 'Enable auto-refresh'}
+              onClick={toggleAutoRefresh}
+              icon={isRefreshEnabled ? <MdOutlineCloudDownload /> : <MdOutlineCloudOff />}
+            />
             <Button
               type="primary"
               className="action"
