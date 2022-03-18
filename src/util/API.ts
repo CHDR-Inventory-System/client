@@ -1,4 +1,3 @@
-/* eslint-disable */
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 import {
