@@ -1,8 +1,9 @@
 import '../../../scss/inventory-table.scss';
 import React, { useRef, useState, useEffect, useMemo } from 'react';
-import { Table, Card, Input, Button, notification, InputRef } from 'antd';
+import { Table, Card, Input, Button, notification, InputRef, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai';
+import { GrLineChart } from 'react-icons/gr';
 import { BsBoxSeam } from 'react-icons/bs';
 import { ColumnsType, ColumnType } from 'antd/lib/table';
 import classNames from 'classnames';
@@ -18,6 +19,8 @@ import NoContent from '../NoContent';
 import type { Item } from '../../../types/API';
 import useDrawer from '../../../hooks/drawer';
 import { formatDate } from '../../../util/date';
+import useModal from '../../../hooks/modal';
+import UsageStatisticsModal from '../../modals/UsageStatisticsModal';
 
 /**
  * Used to show the current table count along with the
@@ -30,6 +33,7 @@ const InventoryTable = (): JSX.Element => {
   const inventory = useInventory();
   const [searchedText, setSearchedText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState<keyof Item>();
+  const usageStatisticsModal = useModal();
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const drawer = useDrawer({
     addItem: false,
@@ -233,14 +237,28 @@ const InventoryTable = (): JSX.Element => {
     }
 
     return (
-      <Button
-        className="row-action"
-        icon={<AiOutlineDown />}
-        onClick={event => {
-          onExpand(item, event);
-          event.stopPropagation();
-        }}
-      />
+      <div className="row-actions">
+        <Button
+          className="row-action"
+          title="Expand row"
+          icon={<AiOutlineDown />}
+          onClick={event => {
+            onExpand(item, event);
+            event.stopPropagation();
+          }}
+        />
+        <Tooltip title="View usage statistics">
+          <Button
+            className="row-action"
+            icon={<GrLineChart />}
+            onClick={event => {
+              setSelectedItem(item);
+              usageStatisticsModal.open();
+              event.stopPropagation();
+            }}
+          />
+        </Tooltip>
+      </div>
     );
   };
 
@@ -261,6 +279,11 @@ const InventoryTable = (): JSX.Element => {
             visible={drawer.state.addItem}
             onClose={() => drawer.close('addItem')}
             parentItem={selectedItem}
+          />
+          <UsageStatisticsModal
+            onClose={usageStatisticsModal.close}
+            visible={usageStatisticsModal.isVisible}
+            item={selectedItem}
           />
         </>
       )}

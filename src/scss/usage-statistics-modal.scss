@@ -1,0 +1,49 @@
+@import './variables';
+
+.usage-statistics-modal {
+  .ant-modal-body {
+    padding-bottom: 0.5em;
+    padding-top: 1em;
+  }
+
+  .ant-statistic-title,
+  .ant-statistic-content {
+    text-align: center;
+  }
+
+  .modal-description {
+    margin-bottom: 2em;
+    color: map-get($colors, 'text-muted');
+  }
+
+  b {
+    text-decoration: underline dashed;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 64px;
+    justify-content: center;
+
+    @media screen and (max-width: 420px) {
+      gap: 32px;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 1.5em;
+    }
+  }
+
+  .loading-spinner {
+    margin: 1em 0;
+  }
+
+  .load-error {
+    margin-top: 1em;
+    text-align: center;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
