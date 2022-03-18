@@ -1,5 +1,5 @@
 import '../../scss/edit-item-drawer.scss';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import {
   Form,
   Input,
@@ -26,7 +26,7 @@ import CreateReservationDrawer from './CreateReservationDrawer';
 type EditItemDrawerProps = {
   visible: boolean;
   onClose: () => void;
-  itemId: number;
+  item: Item;
 };
 
 const itemSchema = yup.object({
@@ -67,17 +67,13 @@ const renderDropdownWithMessage = (menuElement: React.ReactElement, message: str
 const EditItemDrawer = ({
   visible,
   onClose,
-  itemId
+  item
 }: EditItemDrawerProps): JSX.Element | null => {
   const inventory = useInventory();
-  // In this case, the parent that renders the component makes sure that the
-  // id of the item is always valid so we can safely cast to Item to get
-  // rid of the undefined type.
-  const item = useMemo(() => inventory.findItem(itemId), [itemId]) as Item;
   const [form] = Form.useForm();
   const drawer = useDrawer({ reservation: false });
   const formik = useFormik<Item>({
-    initialValues: item || ({} as Item),
+    initialValues: item,
     enableReinitialize: true,
     onSubmit: values => updateItem(values)
   });
@@ -97,6 +93,17 @@ const EditItemDrawer = ({
     try {
       const parsedItem = itemSchema.validateSync(values, { abortEarly: false });
       await inventory.updateItem(parsedItem as AtLeast<Item, 'ID'>);
+
+      notification.success({
+        duration: 3,
+        key: 'item-updated',
+        message: 'Item Updated',
+        description: (
+          <span>
+            <b>{parsedItem.name}</b> was updated.
+          </span>
+        )
+      });
     } catch (err) {
       if (err instanceof yup.ValidationError) {
         // Because errors are handled by Formik, we need to make sure Ant's form
@@ -111,7 +118,6 @@ const EditItemDrawer = ({
 
       if (err instanceof APIError) {
         notification.error({
-          duration: 5,
           key: 'error-updating',
           message: 'Error Updating',
           description: 'An error occurred while updating this item. Please try again.'
@@ -121,12 +127,6 @@ const EditItemDrawer = ({
       loader.stopLoading();
       return;
     }
-
-    notification.success({
-      key: 'item-updated',
-      message: 'Item Updated',
-      description: `${item.name} was updated`
-    });
 
     onClose();
     loader.stopLoading();

@@ -271,7 +271,7 @@ const InventoryTable = (): JSX.Element => {
       {selectedItem && (
         <>
           <EditItemDrawer
-            itemId={selectedItem.ID}
+            item={selectedItem}
             visible={drawer.state.editItem}
             onClose={() => drawer.close('editItem')}
           />

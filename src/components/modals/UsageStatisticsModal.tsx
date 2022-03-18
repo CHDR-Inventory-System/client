@@ -104,30 +104,34 @@ const UsageStatisticsModal = ({
         <div className="stat-row">
           <Statistic title="Total Reservations" value={reservations.length} />
         </div>
-        <div className="stat-row">
-          <Statistic
-            title="Total Reservation Time"
-            value={totalReservationTime}
-            formatter={value => formatDuration(value as number)}
-          />
-          <Statistic
-            title="Average Reservation Time"
-            value={totalReservationTime / Math.max(reservations.length, 1)}
-            formatter={value => formatDuration(value as number)}
-          />
-        </div>
-        <div className="stat-row">
-          <Statistic
-            title="Longest Reservation"
-            value={longestReservationTime}
-            formatter={value => formatDuration(value as number)}
-          />
-          <Statistic
-            title="Shortest Reservation"
-            value={shortestReservationTime}
-            formatter={value => formatDuration(value as number)}
-          />
-        </div>
+        {reservations.length > 0 && (
+          <>
+            <div className="stat-row">
+              <Statistic
+                title="Total Reservation Time"
+                value={totalReservationTime}
+                formatter={value => formatDuration(value as number)}
+              />
+              <Statistic
+                title="Average Reservation Time"
+                value={totalReservationTime / Math.max(reservations.length, 1)}
+                formatter={value => formatDuration(value as number)}
+              />
+            </div>
+            <div className="stat-row">
+              <Statistic
+                title="Longest Reservation"
+                value={longestReservationTime}
+                formatter={value => formatDuration(value as number)}
+              />
+              <Statistic
+                title="Shortest Reservation"
+                value={shortestReservationTime}
+                formatter={value => formatDuration(value as number)}
+              />
+            </div>
+          </>
+        )}
       </>
     );
   };

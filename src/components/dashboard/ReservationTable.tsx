@@ -131,7 +131,7 @@ const ReservationTable = (): JSX.Element => {
     }
   });
 
-  // NOTE: The date tnd the status need to be rendered in spans because their values
+  // NOTE: The date and the status need to be rendered in spans because their values
   // won't update otherwise when a reservation is updated (not sure why this happens)
   const columns: ColumnsType<Reservation> = useMemo(
     () => [
@@ -162,6 +162,7 @@ const ReservationTable = (): JSX.Element => {
           value: status,
           text: status
         })),
+        defaultFilteredValue: STATUSES,
         className: 'cell-status',
         onFilter: (value, reservation) =>
           reservation.status.indexOf(value as string) === 0,
