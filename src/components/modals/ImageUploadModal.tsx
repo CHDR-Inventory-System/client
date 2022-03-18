@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Modal, notification, Progress, Tooltip, Upload } from 'antd';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import { UploadFile } from 'antd/lib/upload/interface';
-import axios from 'axios';
 import useLoader from '../../hooks/loading';
 import useInventory from '../../hooks/inventory';
 import APIError from '../../util/APIError';
 import { BaseModalProps } from './base-modal-props';
+import API from '../../util/API';
 
 type ImageUploadModalProps = BaseModalProps & {
   itemId: number;
@@ -24,7 +24,6 @@ const ImageUploadModal = ({
   const loader = useLoader();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState(new Image());
-  const [cancelTokenSource, setCancelTokenSource] = useState(axios.CancelToken.source());
   const [uploadProgress, setUploadProgress] = useState(-1);
 
   const onBeforeUpload = (inputFile: File) => {
@@ -106,8 +105,7 @@ const ImageUploadModal = ({
       await inventory.uploadImage({
         itemId,
         onUploadProgress,
-        image: selectedImage,
-        cancelToken: cancelTokenSource.token
+        image: selectedImage
       });
       onClose();
     } catch (err) {
@@ -119,16 +117,17 @@ const ImageUploadModal = ({
       }
     }
 
-    // A new cancel token needs to be generated on each request
-    // https://github.com/axios/axios/issues/904#issuecomment-322054741
-    setCancelTokenSource(axios.CancelToken.source());
-
     loader.stopLoading();
   };
 
   const cancelUpload = () => {
-    cancelTokenSource.cancel();
+    API.cancelRequests();
     notification.close(PROGRESS_NOTIFICATION_KEY);
+  };
+
+  const cancelOnClose = () => {
+    cancelUpload();
+    onClose();
   };
 
   useEffect(() => {
@@ -166,7 +165,7 @@ const ImageUploadModal = ({
       className="image-upload-modal"
       title="Upload Image"
       visible={visible}
-      onCancel={onClose}
+      onCancel={cancelOnClose}
       okText={loader.isLoading ? 'Uploading' : 'Upload'}
       cancelText={loader.isLoading ? 'Cancel' : 'Close'}
       onOk={uploadImage}
@@ -176,7 +175,7 @@ const ImageUploadModal = ({
       }}
       cancelButtonProps={{
         danger: loader.isLoading,
-        onClick: loader.isLoading ? cancelUpload : onClose
+        onClick: loader.isLoading ? cancelUpload : cancelOnClose
       }}
     >
       <form onSubmit={uploadImage}>

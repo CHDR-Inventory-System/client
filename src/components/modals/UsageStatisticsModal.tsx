@@ -9,6 +9,7 @@ import useLoader from '../../hooks/loading';
 import LoadingSpinner from '../LoadingSpinner';
 import NoContent from '../dashboard/NoContent';
 import useReservations from '../../hooks/reservation';
+import API from '../../util/API';
 
 type UsageStatisticsModalProps = BaseModalProps & {
   item: Item;
@@ -136,6 +137,11 @@ const UsageStatisticsModal = ({
     );
   };
 
+  const cancelOnClose = () => {
+    API.cancelRequests();
+    onClose();
+  };
+
   useEffect(() => {
     if (visible) {
       loadReservations();
@@ -146,11 +152,11 @@ const UsageStatisticsModal = ({
     <Modal
       centered
       visible={visible}
-      onCancel={onClose}
+      onCancel={cancelOnClose}
       title="Usage Statistics"
       className="usage-statistics-modal"
       footer={[
-        <Button type="primary" onClick={onClose}>
+        <Button type="primary" onClick={cancelOnClose}>
           Close
         </Button>
       ]}
