@@ -3,6 +3,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import useLoader from '../hooks/loading';
 import useUser from '../hooks/user';
 import { User } from '../types/API';
+import Navbar from './Navbar';
 import PageNotFound from './PageNotFound';
 
 const MainPage = lazy(() => import('../pages/MainPage'));
@@ -69,7 +70,7 @@ const AppRoutes = (): JSX.Element | null => {
   }, [location.pathname]);
 
   if (loader.isLoading) {
-    return null;
+    return <Navbar showAvatar={false} />;
   }
 
   return (
@@ -78,13 +79,15 @@ const AppRoutes = (): JSX.Element | null => {
       <Route
         path="/"
         element={
-          <Suspense fallback={<div />}>{user.isAuthenticated() && <MainPage />}</Suspense>
+          <Suspense fallback={<Navbar showAvatar={false} />}>
+            {user.isAuthenticated() && <MainPage />}
+          </Suspense>
         }
       />
       <Route
         path="/dashboard"
         element={
-          <Suspense fallback={<div />}>
+          <Suspense fallback={<Navbar showAvatar={false} />}>
             {user.isAuthenticated() && <Dashboard key="Dashboard" />}
           </Suspense>
         }
@@ -92,7 +95,7 @@ const AppRoutes = (): JSX.Element | null => {
       <Route
         path="/reserve/:itemId"
         element={
-          <Suspense fallback={<div />}>
+          <Suspense fallback={<Navbar showAvatar={false} />}>
             {user.isAuthenticated() && <ReservationPage />}
           </Suspense>
         }
@@ -100,7 +103,7 @@ const AppRoutes = (): JSX.Element | null => {
       <Route
         path="/reservations"
         element={
-          <Suspense fallback={<div />}>
+          <Suspense fallback={<Navbar showAvatar={false} />}>
             {user.isAuthenticated() && <MyReservations />}
           </Suspense>
         }
@@ -108,7 +111,7 @@ const AppRoutes = (): JSX.Element | null => {
       <Route
         path="/calendar"
         element={
-          <Suspense fallback={<div />}>
+          <Suspense fallback={<Navbar showAvatar={false} />}>
             {user.isAuthenticated() && <ReservationCalendar />}
           </Suspense>
         }
