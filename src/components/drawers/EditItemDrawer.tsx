@@ -1,5 +1,5 @@
 import '../../scss/edit-item-drawer.scss';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   Form,
   Input,
@@ -64,12 +64,24 @@ const renderDropdownWithMessage = (menuElement: React.ReactElement, message: str
   </div>
 );
 
+// Even though this component uses the useInventory hook, it still takes an item prop.
+// This is because the drawer needs to automatically update when the item it renders
+// updates any of its properties.
 const EditItemDrawer = ({
   visible,
   onClose,
-  item
+  item: itemProp
 }: EditItemDrawerProps): JSX.Element | null => {
   const inventory = useInventory();
+
+  // In this case, the parent that renders the component makes sure that the
+  // id of the item is always valid so we can safely cast to Item to get
+  // rid of the undefined type.
+  const item = useMemo(
+    () => inventory.findItem(itemProp.ID),
+    [itemProp.ID, itemProp]
+  ) as Item;
+
   const [form] = Form.useForm();
   const drawer = useDrawer({ reservation: false });
   const formik = useFormik<Item>({
@@ -193,12 +205,12 @@ const EditItemDrawer = ({
       },
       title: 'Delete Item',
       content: (
-        <p>
+        <span>
           Are you sure you want to delete <b>{item.name}</b>? This will delete all{' '}
           <b>images</b>
           and <b>reservations</b> associated with this item.{' '}
           <b>This action cannot be undone</b>.
-        </p>
+        </span>
       ),
       okText: 'Delete',
       okButtonProps: {
