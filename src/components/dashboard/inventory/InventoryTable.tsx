@@ -239,7 +239,9 @@ const InventoryTable = (): JSX.Element => {
     return (
       <div className="row-actions">
         <Button
-          className="row-action"
+          className={classNames('row-action', {
+            'row-action-expand': (item.children || []).length > 0
+          })}
           title="Expand row"
           icon={<AiOutlineDown />}
           onClick={event => {
