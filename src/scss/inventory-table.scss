@@ -37,6 +37,11 @@
     border-bottom: 1px solid hsl(0, 0%, 89%);
   }
 
+  .row-actions {
+    display: flex;
+    gap: 8px;
+  }
+
   .row-action {
     border: 1px solid hsl(0deg, 0%, 80%);
     padding: 0;
@@ -49,6 +54,15 @@
       height: 0.8em;
       fill: hsl(0deg, 0%, 40%);
     }
+
+    path {
+      stroke: hsl(0deg, 0%, 40%);
+    }
+  }
+
+  .row-action-expand {
+    background-color: hsl(118, 74%, 85%);
+    border-color: hsl(118, 74%, 50%);
   }
 
   .add-child-button {

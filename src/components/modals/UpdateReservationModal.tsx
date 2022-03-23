@@ -51,7 +51,8 @@ const schema = yup.object({
 const UpdateReservationModal = ({
   onClose,
   visible,
-  reservation
+  reservation,
+  container
 }: UpdateReservationModalProps): JSX.Element => {
   const { item } = reservation;
   const user = useUser();
@@ -93,6 +94,7 @@ const UpdateReservationModal = ({
       });
 
       notification.success({
+        getContainer: () => container || document.body,
         key: 'reservation-update-success',
         message: 'Reservation Update',
         description: (
@@ -118,6 +120,7 @@ const UpdateReservationModal = ({
 
       if (err instanceof APIError) {
         notification.error({
+          getContainer: () => container || document.body,
           duration: 5,
           key: 'error-updating',
           message: 'Error Updating',
@@ -138,6 +141,7 @@ const UpdateReservationModal = ({
       await reservations.deleteReservation(reservation.ID);
 
       notification.success({
+        getContainer: () => container || document.body,
         key: 'reservation-delete-success',
         message: 'Reservation Deleted',
         description: (
@@ -149,15 +153,17 @@ const UpdateReservationModal = ({
       });
 
       onClose();
-    } catch {
-      notification.error({
-        key: 'reservation-delete-error',
-        message: 'Error Deleting Reservation',
-        description: `
-          An unexpected error occurred while deleting this reservation,
-          please try again.
-        `
-      });
+    } catch (err) {
+      if (err instanceof APIError && !err.cancelled) {
+        notification.error({
+          getContainer: () => container || document.body,
+          key: 'reservation-delete-error',
+          message: 'Error Deleting Reservation',
+          description: `
+            An unexpected error occurred while deleting this reservation,
+            please try again.`
+        });
+      }
     }
 
     loader.stopLoading();
@@ -165,6 +171,7 @@ const UpdateReservationModal = ({
 
   const confirmDelete = () => {
     Modal.confirm({
+      getContainer: () => container || document.body,
       centered: true,
       maskStyle: {
         backgroundColor: 'rgba(0, 0, 0, 50%)'
@@ -173,11 +180,12 @@ const UpdateReservationModal = ({
       content: (
         <p>
           Are you sure you want to delete <b>{reservation.user.fullName}</b>&apos;s{' '}
-          <b>{item.name}</b>&apos;s? <b>This action cannot be undone</b>.
+          reservation on <b>{item.name}</b>? <b>This action cannot be undone</b>!
         </p>
       ),
       className: 'modal--dangerous',
       okText: 'Delete',
+      maskClosable: true,
       okButtonProps: {
         className: 'ant-btn-dangerous'
       },
@@ -201,6 +209,7 @@ const UpdateReservationModal = ({
     <Modal
       destroyOnClose
       centered
+      getContainer={container}
       className="update-reservation-modal"
       onCancel={onClose}
       visible={visible}

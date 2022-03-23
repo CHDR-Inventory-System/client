@@ -7,6 +7,9 @@ type StopLoadingOpts = {
 export type UseLoadingHook = {
   readonly isLoading: boolean;
   readonly hasError: boolean;
+  /**
+   * Note that this function will also call `setError(false)`
+   */
   startLoading: () => void;
   stopLoading: (opts?: StopLoadingOpts) => void;
   toggleLoading: (isLoading: boolean) => void;

@@ -26,7 +26,7 @@ import CreateReservationDrawer from './CreateReservationDrawer';
 type EditItemDrawerProps = {
   visible: boolean;
   onClose: () => void;
-  itemId: number;
+  item: Item;
 };
 
 const itemSchema = yup.object({
@@ -64,20 +64,28 @@ const renderDropdownWithMessage = (menuElement: React.ReactElement, message: str
   </div>
 );
 
+// Even though this component uses the useInventory hook, it still takes an item prop.
+// This is because the drawer needs to automatically update when the item it renders
+// updates any of its properties.
 const EditItemDrawer = ({
   visible,
   onClose,
-  itemId
+  item: itemProp
 }: EditItemDrawerProps): JSX.Element | null => {
   const inventory = useInventory();
+
   // In this case, the parent that renders the component makes sure that the
   // id of the item is always valid so we can safely cast to Item to get
   // rid of the undefined type.
-  const item = useMemo(() => inventory.findItem(itemId), [itemId]) as Item;
+  const item = useMemo(
+    () => inventory.findItem(itemProp.ID),
+    [itemProp.ID, itemProp]
+  ) as Item;
+
   const [form] = Form.useForm();
   const drawer = useDrawer({ reservation: false });
   const formik = useFormik<Item>({
-    initialValues: item || ({} as Item),
+    initialValues: item,
     enableReinitialize: true,
     onSubmit: values => updateItem(values)
   });
@@ -97,6 +105,17 @@ const EditItemDrawer = ({
     try {
       const parsedItem = itemSchema.validateSync(values, { abortEarly: false });
       await inventory.updateItem(parsedItem as AtLeast<Item, 'ID'>);
+
+      notification.success({
+        duration: 3,
+        key: 'item-updated',
+        message: 'Item Updated',
+        description: (
+          <span>
+            <b>{parsedItem.name}</b> was updated.
+          </span>
+        )
+      });
     } catch (err) {
       if (err instanceof yup.ValidationError) {
         // Because errors are handled by Formik, we need to make sure Ant's form
@@ -111,7 +130,6 @@ const EditItemDrawer = ({
 
       if (err instanceof APIError) {
         notification.error({
-          duration: 5,
           key: 'error-updating',
           message: 'Error Updating',
           description: 'An error occurred while updating this item. Please try again.'
@@ -121,12 +139,6 @@ const EditItemDrawer = ({
       loader.stopLoading();
       return;
     }
-
-    notification.success({
-      key: 'item-updated',
-      message: 'Item Updated',
-      description: `${item.name} was updated`
-    });
 
     onClose();
     loader.stopLoading();
@@ -193,12 +205,12 @@ const EditItemDrawer = ({
       },
       title: 'Delete Item',
       content: (
-        <p>
+        <span>
           Are you sure you want to delete <b>{item.name}</b>? This will delete all{' '}
           <b>images</b>
           and <b>reservations</b> associated with this item.{' '}
           <b>This action cannot be undone</b>.
-        </p>
+        </span>
       ),
       okText: 'Delete',
       okButtonProps: {

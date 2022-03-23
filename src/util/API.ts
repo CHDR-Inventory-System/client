@@ -16,6 +16,10 @@ import {
 import APIError from './APIError';
 import { AtLeast } from './types';
 
+// HTTP methods that require the csrf token to be set as a header
+const csrfMethods = new Set(['post', 'put', 'patch', 'delete']);
+let cancelTokenSource = axios.CancelToken.source();
+
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
 axios.defaults.headers.patch['Content-Type'] = 'application/json';
@@ -24,9 +28,14 @@ axios.defaults.baseURL =
   process.env.NODE_ENV === 'development' ? '/api' : process.env.PROD_API_URL;
 
 axios.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response: AxiosResponse) => {
+    API.hasActiveRequest = false;
+    return response;
+  },
   (error: AxiosError) => {
     const errorMessage = error.response?.data.error as string | undefined;
+
+    API.hasActiveRequest = false;
 
     if (
       errorMessage?.toLowerCase().includes('missing cookie') &&
@@ -40,6 +49,10 @@ axios.interceptors.response.use(
     }
 
     if (axios.isCancel(error)) {
+      // A new cancel token needs to be generated on each request
+      // https://github.com/axios/axios/issues/904#issuecomment-322054741
+      cancelTokenSource = axios.CancelToken.source();
+
       // 499 represents a request that was cancelled by the user
       throw new APIError({
         cancelled: true,
@@ -54,10 +67,10 @@ axios.interceptors.response.use(
   }
 );
 
-// HTTP methods that require the csrf token to be set as a header
-const csrfMethods = new Set(['post', 'put', 'patch', 'delete']);
-
 axios.interceptors.request.use(config => {
+  API.hasActiveRequest = true;
+  config.cancelToken = cancelTokenSource.token;
+
   if (csrfMethods.has(config.method?.toLowerCase() || '')) {
     config.headers = config.headers || {};
     config.headers['X-CSRF-TOKEN'] = Cookies.get(process.env.COOKIE_CSRF_TOKEN_KEY) || '';
@@ -66,6 +79,20 @@ axios.interceptors.request.use(config => {
 });
 
 class API {
+  /**
+   * This is used to determine if {@link API.cancelRequests()} should generate
+   * a new cancel token. Note that a new cancel token is only generated if there's
+   * an active request
+   */
+  static hasActiveRequest = false;
+
+  static cancelRequests(): void {
+    if (API.hasActiveRequest) {
+      cancelTokenSource.cancel('Request cancelled by user');
+      cancelTokenSource = axios.CancelToken.source();
+    }
+  }
+
   static async login(email: string, password: string): Promise<User & { token: string }> {
     const response = await axios.post('/users/login', {
       email,
@@ -133,15 +160,13 @@ class API {
   static async uploadImage({
     itemId,
     image,
-    onUploadProgress,
-    cancelToken
+    onUploadProgress
   }: ImageUploadParams): Promise<ItemImage> {
     const formData = new FormData();
     formData.append('image', image);
 
     const response = await axios.post(`/inventory/${itemId}/uploadImage`, formData, {
-      onUploadProgress,
-      cancelToken
+      onUploadProgress
     });
 
     return response.data;
