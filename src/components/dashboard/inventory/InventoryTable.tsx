@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RenderExpandIconProps } from 'rc-table/lib/interface';
+import ReactDragListView from 'react-drag-listview';
 import EditItemDrawer from '../../drawers/EditItemDrawer';
 import useLoader from '../../../hooks/loading';
 import useInventory from '../../../hooks/inventory';
@@ -118,8 +119,16 @@ const InventoryTable = (): JSX.Element => {
     }
   });
 
-  const columns: ColumnsType<Item> = useMemo(
-    () => [
+  const [columnSortIndices, setColumnSortIndices] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('inventoryTableSort') || '') as string[];
+    } catch {
+      return ['name', 'barcode', 'type', 'quantity', 'location', 'available', 'created'];
+    }
+  });
+
+  const columns = useMemo<ColumnsType<Item>>(() => {
+    const cols: ColumnsType<Item> = [
       {
         title: 'Name',
         key: 'name',
@@ -185,9 +194,16 @@ const InventoryTable = (): JSX.Element => {
         sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
         render: (created: string) => <span>{formatDate(created)}</span>
       }
-    ],
-    [inventory.items]
-  );
+    ];
+
+    cols.sort(
+      (a, b) =>
+        columnSortIndices.indexOf(a.key as string) -
+        columnSortIndices.indexOf(b.key as string)
+    );
+
+    return cols;
+  }, [inventory.items, columnSortIndices]);
 
   const loadInventory = async () => {
     loader.startLoading();
@@ -264,6 +280,25 @@ const InventoryTable = (): JSX.Element => {
     );
   };
 
+  const onDragEnd = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === 0 || toIndex === 0) {
+      // Prevent the first column from being dragged since it has
+      // the actions for the row
+      return;
+    }
+
+    const cols = [...columns];
+
+    // Need to subtract 1 from `fromIndex` and `toIndex` because the 0th
+    // column has the row's actions
+    const item = cols.splice(fromIndex - 1, 1)[0];
+    cols.splice(toIndex - 1, 0, item);
+
+    const keys = cols.map(column => column.key as string);
+    setColumnSortIndices(keys);
+    localStorage.setItem('inventoryTableSort', JSON.stringify(keys));
+  };
+
   useEffect(() => {
     loadInventory();
   }, []);
@@ -289,40 +324,42 @@ const InventoryTable = (): JSX.Element => {
           />
         </>
       )}
-      <Table
-        rowKey="ID"
-        loading={{
-          spinning: loader.isLoading,
-          indicator: <LoadingSpinner />
-        }}
-        dataSource={inventory.items}
-        columns={columns}
-        locale={{
-          emptyText: (
-            <NoContent icon={<BsBoxSeam size={84} />} text="No items in inventory." />
-          )
-        }}
-        pagination={{
-          showTotal: renderTableCount,
-          showSizeChanger: true,
-          pageSize: 50
-        }}
-        expandable={{
-          expandedRowRender: expandedRowRenderer,
-          expandIcon: renderExpandIcon,
-          fixed: 'left'
-        }}
-        onRow={onRowClick}
-        // Only allow the table to scroll if there's actually data in it
-        scroll={{ x: true }}
-        rowClassName={item => {
-          return classNames({
-            'no-children': item.children?.length === 0,
-            'status-available': item.available,
-            'status-unavailable': !item.available
-          });
-        }}
-      />
+      <ReactDragListView.DragColumn onDragEnd={onDragEnd} nodeSelector="th">
+        <Table
+          rowKey="ID"
+          loading={{
+            spinning: loader.isLoading,
+            indicator: <LoadingSpinner />
+          }}
+          dataSource={inventory.items}
+          columns={columns}
+          locale={{
+            emptyText: (
+              <NoContent icon={<BsBoxSeam size={84} />} text="No items in inventory." />
+            )
+          }}
+          pagination={{
+            showTotal: renderTableCount,
+            showSizeChanger: true,
+            defaultPageSize: 50
+          }}
+          expandable={{
+            expandedRowRender: expandedRowRenderer,
+            expandIcon: renderExpandIcon,
+            fixed: 'left'
+          }}
+          onRow={onRowClick}
+          // Only allow the table to scroll if there's actually data in it
+          scroll={{ x: true }}
+          rowClassName={item => {
+            return classNames({
+              'no-children': item.children?.length === 0,
+              'status-available': item.available,
+              'status-unavailable': !item.available
+            });
+          }}
+        />
+      </ReactDragListView.DragColumn>
     </Card>
   );
 };

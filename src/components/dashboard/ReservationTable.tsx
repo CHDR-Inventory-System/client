@@ -8,6 +8,7 @@ import { FilterDropdownProps } from 'antd/lib/table/interface';
 // a nested data structure: https://stackoverflow.com/a/61742923/9124220
 import get from 'lodash/get';
 import isEqual from 'lodash/isEqual';
+import ReactDragListView from 'react-drag-listview';
 import type { Reservation, ReservationStatus } from '../../types/API';
 import useReservations from '../../hooks/reservation';
 import useLoader from '../../hooks/loading';
@@ -131,14 +132,47 @@ const ReservationTable = (): JSX.Element => {
     }
   });
 
+  const [columnSortIndices, setColumnSortIndices] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('reservationTableSort') || '') as string[];
+    } catch {
+      return [
+        'userFullName',
+        'itemName',
+        'startDateTime`',
+        'endDateTime',
+        'status',
+        'email',
+        'created'
+      ];
+    }
+  });
+
   // NOTE: The date and the status need to be rendered in spans because their values
   // won't update otherwise when a reservation is updated (not sure why this happens)
-  const columns: ColumnsType<Reservation> = useMemo(
-    () => [
+  const columns = useMemo<ColumnsType<Reservation>>(() => {
+    const cols: ColumnsType<Reservation> = [
+      {
+        ellipsis: true,
+        title: 'Name',
+        key: 'userFullName',
+        dataIndex: ['user', 'fullName'],
+        sorter: (first, second) =>
+          first.user.fullName.localeCompare(second.user.fullName),
+        ...getColumnSearchProps('user.fullName', 'user name')
+      },
+      {
+        title: 'Item Name',
+        key: 'itemName',
+        ellipsis: true,
+        dataIndex: ['item', 'name'],
+        sorter: (first, second) => first.item.name.localeCompare(second.item.name),
+        ...getColumnSearchProps('item.name', 'item name')
+      },
       {
         ellipsis: true,
         title: 'Check Out',
-        key: 'checkOutDate',
+        key: 'startDateTime',
         dataIndex: 'startDateTime',
         className: 'cell-checkout-date',
         sorter: createDateSorter,
@@ -147,7 +181,7 @@ const ReservationTable = (): JSX.Element => {
       {
         ellipsis: true,
         title: 'Return',
-        key: 'return Date',
+        key: 'endDateTime',
         dataIndex: 'endDateTime',
         className: 'cell-return-date',
         sorter: createDateSorter,
@@ -170,23 +204,6 @@ const ReservationTable = (): JSX.Element => {
         render: status => <span>{status}</span>
       },
       {
-        ellipsis: true,
-        title: 'Name',
-        key: 'userFullName',
-        dataIndex: ['user', 'fullName'],
-        sorter: (first, second) =>
-          first.user.fullName.localeCompare(second.user.fullName),
-        ...getColumnSearchProps('user.fullName', 'user name')
-      },
-      {
-        title: 'Item Name',
-        key: 'itemName',
-        ellipsis: true,
-        dataIndex: ['item', 'name'],
-        sorter: (first, second) => first.item.name.localeCompare(second.item.name),
-        ...getColumnSearchProps('item.name', 'item name')
-      },
-      {
         title: 'Email',
         key: 'email',
         dataIndex: ['user', 'email'],
@@ -202,9 +219,16 @@ const ReservationTable = (): JSX.Element => {
         sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
         render: (created: string) => <span>{formatDate(created)}</span>
       }
-    ],
-    [reservations.state]
-  );
+    ];
+
+    cols.sort(
+      (a, b) =>
+        columnSortIndices.indexOf(a.key as string) -
+        columnSortIndices.indexOf(b.key as string)
+    );
+
+    return cols;
+  }, [reservations.state, columnSortIndices]);
 
   const loadReservations = async () => {
     loader.startLoading();
@@ -230,6 +254,16 @@ const ReservationTable = (): JSX.Element => {
     }
   });
 
+  const onDragEnd = (fromIndex: number, toIndex: number) => {
+    const cols = [...columns];
+    const item = cols.splice(fromIndex, 1)[0];
+    cols.splice(toIndex, 0, item);
+
+    const keys = cols.map(column => column.key as string);
+    setColumnSortIndices(keys);
+    localStorage.setItem('reservationTableSort', JSON.stringify(keys));
+  };
+
   useEffect(() => {
     loadReservations();
   }, []);
@@ -243,30 +277,32 @@ const ReservationTable = (): JSX.Element => {
           onClose={updateReservationModal.close}
         />
       )}
-      <Table
-        rowKey="ID"
-        loading={{
-          spinning: loader.isLoading,
-          indicator: <LoadingSpinner />
-        }}
-        locale={{
-          emptyText: (
-            <NoContent
-              icon={<AiOutlineCalendar size={84} />}
-              text="No reservations to display."
-            />
-          )
-        }}
-        onRow={onRowClick}
-        dataSource={reservations.state}
-        columns={columns}
-        pagination={{
-          showTotal: renderTableCount,
-          showSizeChanger: true,
-          pageSize: 50
-        }}
-        scroll={{ x: true }}
-      />
+      <ReactDragListView.DragColumn onDragEnd={onDragEnd} nodeSelector="th">
+        <Table
+          rowKey="ID"
+          loading={{
+            spinning: loader.isLoading,
+            indicator: <LoadingSpinner />
+          }}
+          locale={{
+            emptyText: (
+              <NoContent
+                icon={<AiOutlineCalendar size={84} />}
+                text="No reservations to display."
+              />
+            )
+          }}
+          onRow={onRowClick}
+          dataSource={reservations.state}
+          columns={columns}
+          pagination={{
+            showTotal: renderTableCount,
+            showSizeChanger: true,
+            defaultPageSize: 50
+          }}
+          scroll={{ x: true }}
+        />
+      </ReactDragListView.DragColumn>
     </Card>
   );
 };

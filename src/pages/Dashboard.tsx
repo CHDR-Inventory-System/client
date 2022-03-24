@@ -16,6 +16,12 @@ type TabKey = 'inventory' | 'users' | 'reservations';
 
 const { TabPane } = Tabs;
 
+const sortMessage = (
+  <p className="table-sort-message">
+    Tip: you can drag a table&apos;s header to rearrange it&apos;s columns.
+  </p>
+);
+
 const Dashboard = (): JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
   const user = useUser();
@@ -32,6 +38,7 @@ const Dashboard = (): JSX.Element => {
 
   const inventoryTabContent = (
     <div className="tab-content">
+      {sortMessage}
       <div className="table-actions">
         <Button
           type="primary"
@@ -48,12 +55,14 @@ const Dashboard = (): JSX.Element => {
 
   const userTabContent = (
     <div className="tab-content">
+      {sortMessage}
       <UserTable />
     </div>
   );
 
   const reservationTabContent = (
     <div className="tab-content">
+      {sortMessage}
       <ReservationTable />
     </div>
   );
