@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import moment from 'moment';
 import RegisteredUsersContext from '../contexts/RegisteredUsers';
 import API from '../util/API';
 import { User, UserRole } from '../types/API';
+import { formatDate } from '../util/date';
 
 type UseRegisteredUsersHook = {
   readonly state: User[];
@@ -31,9 +31,7 @@ const useRegisteredUsers = (): UseRegisteredUsersHook => {
 
     users.forEach(user => {
       // The server returns GMT dates so we need to add 5 hours to convert it to EST
-      user.created = moment(user.created)
-        .add({ hours: 5 })
-        .format('MMM D, YYYY, hh:mm A');
+      user.created = formatDate(user.created);
     });
 
     dispatch({

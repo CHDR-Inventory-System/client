@@ -1,5 +1,5 @@
 import '../../scss/user-table.scss';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import {
   Table,
   Card,
@@ -17,6 +17,7 @@ import {
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Highlighter from 'react-highlight-words';
 import { AiOutlineDown, AiOutlineUser, AiOutlineSearch } from 'react-icons/ai';
+import ReactDragListView from 'react-drag-listview';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import type { ColumnsType, ColumnType } from 'antd/lib/table';
 import type { FilterDropdownProps } from 'antd/lib/table/interface';
@@ -188,63 +189,80 @@ const UserTable = (): JSX.Element => {
     }
   });
 
-  const columns: ColumnsType<User> = [
-    {
-      ellipsis: true,
-      title: 'Name',
-      key: 'fullName',
-      dataIndex: 'fullName',
-      ...getColumnSearchProps('fullName'),
-      sorter: (first, second) => first.fullName.localeCompare(second.fullName)
-    },
-    {
-      title: 'Email',
-      key: 'email',
-      dataIndex: 'email',
-      sorter: (first, second) => first.email.localeCompare(second.email),
-      ...getColumnSearchProps('email')
-    },
-    {
-      title: 'Role',
-      key: 'role',
-      dataIndex: 'role',
-      sorter: (first, second) => first.role.localeCompare(second.role),
-      sortDirections: ['ascend', 'descend'],
-      filters: USER_ROLES.map(role => ({
-        value: role,
-        text: role
-      })),
-      onFilter: (value, user) => user.role.indexOf(value as string) === 0,
-      render: (text: string, user: User) => (
-        <Tooltip
-          placement="right"
-          title={
-            currentUser.state.ID === user.ID
-              ? 'Cannot change your own role'
-              : "Change this user's role"
-          }
-        >
-          <Dropdown
-            disabled={currentUser.state.ID === user.ID}
-            overlay={createRoleMenu(user)}
-            trigger={['click']}
-            className="user-role-dropdown"
+  const [columnSortIndices, setColumnSortIndices] = useState([
+    'fullName',
+    'email',
+    'role',
+    'created'
+  ]);
+
+  const columns = useMemo<ColumnsType<User>>(() => {
+    const cols: ColumnsType<User> = [
+      {
+        ellipsis: true,
+        title: 'Name',
+        key: 'fullName',
+        dataIndex: 'fullName',
+        ...getColumnSearchProps('fullName'),
+        sorter: (first, second) => first.fullName.localeCompare(second.fullName)
+      },
+      {
+        title: 'Email',
+        key: 'email',
+        dataIndex: 'email',
+        sorter: (first, second) => first.email.localeCompare(second.email),
+        ...getColumnSearchProps('email')
+      },
+      {
+        title: 'Role',
+        key: 'role',
+        dataIndex: 'role',
+        sorter: (first, second) => first.role.localeCompare(second.role),
+        sortDirections: ['ascend', 'descend'],
+        filters: USER_ROLES.map(role => ({
+          value: role,
+          text: role
+        })),
+        onFilter: (value, user) => user.role.indexOf(value as string) === 0,
+        render: (text: string, user: User) => (
+          <Tooltip
+            placement="right"
+            title={
+              currentUser.state.ID === user.ID
+                ? 'Cannot change your own role'
+                : "Change this user's role"
+            }
           >
-            <div>
-              {text} <AiOutlineDown />
-            </div>
-          </Dropdown>
-        </Tooltip>
-      )
-    },
-    {
-      ellipsis: true,
-      title: 'Date Registered',
-      key: 'created',
-      dataIndex: 'created',
-      sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created)
-    }
-  ];
+            <Dropdown
+              disabled={currentUser.state.ID === user.ID}
+              overlay={createRoleMenu(user)}
+              trigger={['click']}
+              className="user-role-dropdown"
+            >
+              <div>
+                {text} <AiOutlineDown />
+              </div>
+            </Dropdown>
+          </Tooltip>
+        )
+      },
+      {
+        ellipsis: true,
+        title: 'Date Registered',
+        key: 'created',
+        dataIndex: 'created',
+        sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created)
+      }
+    ];
+
+    cols.sort(
+      (a, b) =>
+        columnSortIndices.indexOf(a.key as string) -
+        columnSortIndices.indexOf(b.key as string)
+    );
+
+    return cols;
+  }, [registeredUsers.state, columnSortIndices]);
 
   const loadUsers = async () => {
     loader.startLoading();
@@ -263,33 +281,42 @@ const UserTable = (): JSX.Element => {
     loader.stopLoading();
   };
 
+  const onDragEnd = (fromIndex: number, toIndex: number) => {
+    const cols = [...columns];
+    const item = cols.splice(fromIndex, 1)[0];
+    cols.splice(toIndex, 0, item);
+    setColumnSortIndices(cols.map(column => column.key as string));
+  };
+
   useEffect(() => {
     loadUsers();
   }, []);
 
   return (
     <Card bordered={false}>
-      <Table
-        rowKey="ID"
-        className="user-table"
-        loading={{
-          spinning: loader.isLoading,
-          indicator: <LoadingSpinner />
-        }}
-        dataSource={registeredUsers.state}
-        locale={{
-          emptyText: (
-            <NoContent icon={<AiOutlineUser size={84} />} text="No users to display." />
-          )
-        }}
-        columns={columns}
-        pagination={{
-          showTotal: renderTableCount,
-          showSizeChanger: true,
-          pageSize: 50
-        }}
-        scroll={{ x: true }}
-      />
+      <ReactDragListView.DragColumn onDragEnd={onDragEnd} nodeSelector="th">
+        <Table
+          rowKey="ID"
+          className="user-table"
+          loading={{
+            spinning: loader.isLoading,
+            indicator: <LoadingSpinner />
+          }}
+          dataSource={registeredUsers.state}
+          locale={{
+            emptyText: (
+              <NoContent icon={<AiOutlineUser size={84} />} text="No users to display." />
+            )
+          }}
+          columns={columns}
+          pagination={{
+            showTotal: renderTableCount,
+            showSizeChanger: true,
+            defaultPageSize: 50
+          }}
+          scroll={{ x: true }}
+        />
+      </ReactDragListView.DragColumn>
     </Card>
   );
 };

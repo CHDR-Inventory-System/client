@@ -1,5 +1,5 @@
 import '../../../scss/inventory-table.scss';
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Table, Card, Input, Button, notification, InputRef, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai';
@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { FilterDropdownProps } from 'antd/lib/table/interface';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { RenderExpandIconProps } from 'rc-table/lib/interface';
+import ReactDragListView from 'react-drag-listview';
 import EditItemDrawer from '../../drawers/EditItemDrawer';
 import useLoader from '../../../hooks/loading';
 import useInventory from '../../../hooks/inventory';
@@ -118,76 +119,66 @@ const InventoryTable = (): JSX.Element => {
     }
   });
 
-  const columns: ColumnsType<Item> = useMemo(
-    () => [
-      {
-        title: 'Name',
-        key: 'name',
-        dataIndex: 'name',
-        ellipsis: true,
-        sorter: (first, second) => first.name.localeCompare(second.name),
-        ...getColumnSearchProps('name')
-      },
-      {
-        title: 'Barcode',
-        key: 'barcode',
-        dataIndex: 'barcode',
-        sorter: (first, second) => first.barcode.localeCompare(second.barcode),
-        ...getColumnSearchProps('barcode')
-      },
-      {
-        title: 'Type',
-        key: 'type',
-        dataIndex: 'type',
-        sorter: (first, second) => first.type.localeCompare(second.type),
-        ...getColumnSearchProps('type')
-      },
-      {
-        title: 'Quantity',
-        key: 'quantity',
-        dataIndex: 'quantity',
-        sorter: (first, second) => first.quantity - second.quantity
-      },
-      {
-        title: 'Location',
-        key: 'location',
-        dataIndex: 'location',
-        ...getColumnSearchProps('location'),
-        sorter: (first, second) => first.location.localeCompare(second.location)
-      },
-      {
-        title: 'Status',
-        key: 'available',
-        dataIndex: 'available',
-        filters: [
-          {
-            value: true,
-            text: 'Available'
-          },
-          {
-            value: false,
-            text: 'Unavailable'
-          }
-        ],
-        sorter: (first, second) => +first.available - +second.available,
-        onFilter: (value, item) => item.available === (value as boolean),
-        className: 'row-status',
-        render: (available: boolean) => (
-          <span>{available ? 'Available' : 'Unavailable'}</span>
-        )
-      },
-      {
-        title: 'Created',
-        key: 'created',
-        dataIndex: 'created',
-        ellipsis: true,
-        defaultSortOrder: 'descend',
-        sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
-        render: (created: string) => <span>{formatDate(created)}</span>
-      }
-    ],
-    [inventory.items]
-  );
+  const [columns, setColumns] = useState<ColumnsType<Item>>([
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      ellipsis: true,
+      sorter: (first, second) => first.name.localeCompare(second.name),
+      ...getColumnSearchProps('name')
+    },
+    {
+      title: 'Barcode',
+      dataIndex: 'barcode',
+      sorter: (first, second) => first.barcode.localeCompare(second.barcode),
+      ...getColumnSearchProps('barcode')
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      sorter: (first, second) => first.type.localeCompare(second.type),
+      ...getColumnSearchProps('type')
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      sorter: (first, second) => first.quantity - second.quantity
+    },
+    {
+      title: 'Location',
+      dataIndex: 'location',
+      ...getColumnSearchProps('location'),
+      sorter: (first, second) => first.location.localeCompare(second.location)
+    },
+    {
+      title: 'Status',
+      dataIndex: 'available',
+      filters: [
+        {
+          value: true,
+          text: 'Available'
+        },
+        {
+          value: false,
+          text: 'Unavailable'
+        }
+      ],
+      sorter: (first, second) => +first.available - +second.available,
+      onFilter: (value, item) => item.available === (value as boolean),
+      className: 'row-status',
+      render: (available: boolean) => (
+        <span>{available ? 'Available' : 'Unavailable'}</span>
+      )
+    },
+    {
+      title: 'Created',
+      dataIndex: 'created',
+      ellipsis: true,
+      defaultSortOrder: 'descend',
+      sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
+      render: (created: string) => <span>{formatDate(created)}</span>
+    }
+  ]);
 
   const loadInventory = async () => {
     loader.startLoading();
@@ -264,6 +255,22 @@ const InventoryTable = (): JSX.Element => {
     );
   };
 
+  const onDragEnd = (fromIndex: number, toIndex: number) => {
+    if (fromIndex === 0 || toIndex === 0) {
+      // Prevent the first column from being dragged since it has
+      // the actions for the row
+      return;
+    }
+
+    const cols = [...columns];
+
+    // Need to subtract 1 from `fromIndex` and `toIndex` because the 0th
+    // column has the row's actions
+    const item = cols.splice(fromIndex - 1, 1)[0];
+    cols.splice(toIndex - 1, 0, item);
+    setColumns(cols);
+  };
+
   useEffect(() => {
     loadInventory();
   }, []);
@@ -289,40 +296,42 @@ const InventoryTable = (): JSX.Element => {
           />
         </>
       )}
-      <Table
-        rowKey="ID"
-        loading={{
-          spinning: loader.isLoading,
-          indicator: <LoadingSpinner />
-        }}
-        dataSource={inventory.items}
-        columns={columns}
-        locale={{
-          emptyText: (
-            <NoContent icon={<BsBoxSeam size={84} />} text="No items in inventory." />
-          )
-        }}
-        pagination={{
-          showTotal: renderTableCount,
-          showSizeChanger: true,
-          pageSize: 50
-        }}
-        expandable={{
-          expandedRowRender: expandedRowRenderer,
-          expandIcon: renderExpandIcon,
-          fixed: 'left'
-        }}
-        onRow={onRowClick}
-        // Only allow the table to scroll if there's actually data in it
-        scroll={{ x: true }}
-        rowClassName={item => {
-          return classNames({
-            'no-children': item.children?.length === 0,
-            'status-available': item.available,
-            'status-unavailable': !item.available
-          });
-        }}
-      />
+      <ReactDragListView.DragColumn onDragEnd={onDragEnd} nodeSelector="th">
+        <Table
+          rowKey="ID"
+          loading={{
+            spinning: loader.isLoading,
+            indicator: <LoadingSpinner />
+          }}
+          dataSource={inventory.items}
+          columns={columns}
+          locale={{
+            emptyText: (
+              <NoContent icon={<BsBoxSeam size={84} />} text="No items in inventory." />
+            )
+          }}
+          pagination={{
+            showTotal: renderTableCount,
+            showSizeChanger: true,
+            defaultPageSize: 50
+          }}
+          expandable={{
+            expandedRowRender: expandedRowRenderer,
+            expandIcon: renderExpandIcon,
+            fixed: 'left'
+          }}
+          onRow={onRowClick}
+          // Only allow the table to scroll if there's actually data in it
+          scroll={{ x: true }}
+          rowClassName={item => {
+            return classNames({
+              'no-children': item.children?.length === 0,
+              'status-available': item.available,
+              'status-unavailable': !item.available
+            });
+          }}
+        />
+      </ReactDragListView.DragColumn>
     </Card>
   );
 };

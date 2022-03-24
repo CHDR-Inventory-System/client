@@ -34,6 +34,11 @@
 .dashboard {
   $table-border-radius: 8px;
 
+  .table-sort-message {
+    color: map-get($colors, 'text-muted');
+    margin-bottom: 1.5em;
+  }
+
   .tab-content {
     width: 85%;
     margin: 2em;
