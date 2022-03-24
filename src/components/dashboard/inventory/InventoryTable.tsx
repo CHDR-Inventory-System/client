@@ -1,5 +1,5 @@
 import '../../../scss/inventory-table.scss';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { Table, Card, Input, Button, notification, InputRef, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { AiOutlineSearch, AiOutlineDown } from 'react-icons/ai';
@@ -119,66 +119,91 @@ const InventoryTable = (): JSX.Element => {
     }
   });
 
-  const [columns, setColumns] = useState<ColumnsType<Item>>([
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      ellipsis: true,
-      sorter: (first, second) => first.name.localeCompare(second.name),
-      ...getColumnSearchProps('name')
-    },
-    {
-      title: 'Barcode',
-      dataIndex: 'barcode',
-      sorter: (first, second) => first.barcode.localeCompare(second.barcode),
-      ...getColumnSearchProps('barcode')
-    },
-    {
-      title: 'Type',
-      dataIndex: 'type',
-      sorter: (first, second) => first.type.localeCompare(second.type),
-      ...getColumnSearchProps('type')
-    },
-    {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      sorter: (first, second) => first.quantity - second.quantity
-    },
-    {
-      title: 'Location',
-      dataIndex: 'location',
-      ...getColumnSearchProps('location'),
-      sorter: (first, second) => first.location.localeCompare(second.location)
-    },
-    {
-      title: 'Status',
-      dataIndex: 'available',
-      filters: [
-        {
-          value: true,
-          text: 'Available'
-        },
-        {
-          value: false,
-          text: 'Unavailable'
-        }
-      ],
-      sorter: (first, second) => +first.available - +second.available,
-      onFilter: (value, item) => item.available === (value as boolean),
-      className: 'row-status',
-      render: (available: boolean) => (
-        <span>{available ? 'Available' : 'Unavailable'}</span>
-      )
-    },
-    {
-      title: 'Created',
-      dataIndex: 'created',
-      ellipsis: true,
-      defaultSortOrder: 'descend',
-      sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
-      render: (created: string) => <span>{formatDate(created)}</span>
+  const [columnSortIndices, setColumnSortIndices] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('inventoryTableSort') || '') as string[];
+    } catch {
+      return ['name', 'barcode', 'type', 'quantity', 'location', 'available', 'created'];
     }
-  ]);
+  });
+
+  const columns = useMemo<ColumnsType<Item>>(() => {
+    const cols: ColumnsType<Item> = [
+      {
+        title: 'Name',
+        key: 'name',
+        dataIndex: 'name',
+        ellipsis: true,
+        sorter: (first, second) => first.name.localeCompare(second.name),
+        ...getColumnSearchProps('name')
+      },
+      {
+        title: 'Barcode',
+        key: 'barcode',
+        dataIndex: 'barcode',
+        sorter: (first, second) => first.barcode.localeCompare(second.barcode),
+        ...getColumnSearchProps('barcode')
+      },
+      {
+        title: 'Type',
+        key: 'type',
+        dataIndex: 'type',
+        sorter: (first, second) => first.type.localeCompare(second.type),
+        ...getColumnSearchProps('type')
+      },
+      {
+        title: 'Quantity',
+        key: 'quantity',
+        dataIndex: 'quantity',
+        sorter: (first, second) => first.quantity - second.quantity
+      },
+      {
+        title: 'Location',
+        key: 'location',
+        dataIndex: 'location',
+        ...getColumnSearchProps('location'),
+        sorter: (first, second) => first.location.localeCompare(second.location)
+      },
+      {
+        title: 'Status',
+        key: 'available',
+        dataIndex: 'available',
+        filters: [
+          {
+            value: true,
+            text: 'Available'
+          },
+          {
+            value: false,
+            text: 'Unavailable'
+          }
+        ],
+        sorter: (first, second) => +first.available - +second.available,
+        onFilter: (value, item) => item.available === (value as boolean),
+        className: 'row-status',
+        render: (available: boolean) => (
+          <span>{available ? 'Available' : 'Unavailable'}</span>
+        )
+      },
+      {
+        title: 'Created',
+        key: 'created',
+        dataIndex: 'created',
+        ellipsis: true,
+        defaultSortOrder: 'descend',
+        sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created),
+        render: (created: string) => <span>{formatDate(created)}</span>
+      }
+    ];
+
+    cols.sort(
+      (a, b) =>
+        columnSortIndices.indexOf(a.key as string) -
+        columnSortIndices.indexOf(b.key as string)
+    );
+
+    return cols;
+  }, [inventory.items, columnSortIndices]);
 
   const loadInventory = async () => {
     loader.startLoading();
@@ -268,7 +293,10 @@ const InventoryTable = (): JSX.Element => {
     // column has the row's actions
     const item = cols.splice(fromIndex - 1, 1)[0];
     cols.splice(toIndex - 1, 0, item);
-    setColumns(cols);
+
+    const keys = cols.map(column => column.key as string);
+    setColumnSortIndices(keys);
+    localStorage.setItem('inventoryTableSort', JSON.stringify(keys));
   };
 
   useEffect(() => {

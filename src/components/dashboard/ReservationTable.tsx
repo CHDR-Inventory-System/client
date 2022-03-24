@@ -132,15 +132,21 @@ const ReservationTable = (): JSX.Element => {
     }
   });
 
-  const [columnSortIndices, setColumnSortIndices] = useState([
-    'userFullName',
-    'itemName',
-    'startDateTime`',
-    'endDateTime',
-    'status',
-    'email',
-    'created'
-  ]);
+  const [columnSortIndices, setColumnSortIndices] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('reservationTableSort') || '') as string[];
+    } catch {
+      return [
+        'userFullName',
+        'itemName',
+        'startDateTime`',
+        'endDateTime',
+        'status',
+        'email',
+        'created'
+      ];
+    }
+  });
 
   // NOTE: The date and the status need to be rendered in spans because their values
   // won't update otherwise when a reservation is updated (not sure why this happens)
@@ -252,7 +258,10 @@ const ReservationTable = (): JSX.Element => {
     const cols = [...columns];
     const item = cols.splice(fromIndex, 1)[0];
     cols.splice(toIndex, 0, item);
-    setColumnSortIndices(cols.map(column => column.key as string));
+
+    const keys = cols.map(column => column.key as string);
+    setColumnSortIndices(keys);
+    localStorage.setItem('reservationTableSort', JSON.stringify(keys));
   };
 
   useEffect(() => {

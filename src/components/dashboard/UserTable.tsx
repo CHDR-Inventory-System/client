@@ -189,12 +189,13 @@ const UserTable = (): JSX.Element => {
     }
   });
 
-  const [columnSortIndices, setColumnSortIndices] = useState([
-    'fullName',
-    'email',
-    'role',
-    'created'
-  ]);
+  const [columnSortIndices, setColumnSortIndices] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('userTableSort') || '') as string[];
+    } catch {
+      return ['fullName', 'email', 'role', 'created'];
+    }
+  });
 
   const columns = useMemo<ColumnsType<User>>(() => {
     const cols: ColumnsType<User> = [
@@ -285,7 +286,10 @@ const UserTable = (): JSX.Element => {
     const cols = [...columns];
     const item = cols.splice(fromIndex, 1)[0];
     cols.splice(toIndex, 0, item);
-    setColumnSortIndices(cols.map(column => column.key as string));
+
+    const keys = cols.map(column => column.key as string);
+    setColumnSortIndices(keys);
+    localStorage.setItem('userTableSort', JSON.stringify(keys));
   };
 
   useEffect(() => {
