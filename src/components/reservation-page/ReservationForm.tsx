@@ -140,7 +140,7 @@ const ReservationForm = ({ item }: ReservationFormProps): JSX.Element => {
         item: item.item,
         checkoutDate: checkoutDate.valueOf(),
         returnDate: returnDate.valueOf(),
-        status: 'Pending'
+        status: values.status
       });
 
       notification.success({
