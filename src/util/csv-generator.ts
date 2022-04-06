@@ -61,15 +61,18 @@ const CSVGenerator = {
   generateReservationCSV: (reservations: Reservation[]): string => {
     const res = reservations.map(reservation => ({
       ID: reservation.ID,
+      itemID: reservation.item.ID,
+      adminID: reservation.admin?.ID,
+      adminEmail: reservation.admin?.email,
+      adminName: reservation.admin?.fullName,
+      userID: reservation.user.ID,
+      name: reservation.user.fullName,
+      email: reservation.user.email,
       created: formatDate(reservation.created),
       checkout: formatDate(reservation.startDateTime),
       return: formatDate(reservation.endDateTime),
       itemName: reservation.item.name,
-      email: reservation.user.email,
-      status: reservation.status,
-      name: reservation.user.fullName,
-      approvedBy: reservation.admin?.email,
-      itemID: reservation.item.ID
+      status: reservation.status
     }));
 
     return Papa.unparse(res);
