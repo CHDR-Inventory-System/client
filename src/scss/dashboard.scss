@@ -50,10 +50,18 @@
 
   .table-actions {
     margin-bottom: 1em;
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 4px 0;
   }
 
   .table-action svg {
     margin-right: 0.5em;
+  }
+
+  .ant-btn-loading {
+    cursor: not-allowed;
   }
 
   .ant-table {

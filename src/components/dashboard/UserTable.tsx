@@ -252,6 +252,7 @@ const UserTable = (): JSX.Element => {
         title: 'Date Registered',
         key: 'created',
         dataIndex: 'created',
+        defaultSortOrder: 'descend',
         sorter: (first, second) => Date.parse(first.created) - Date.parse(second.created)
       }
     ];
