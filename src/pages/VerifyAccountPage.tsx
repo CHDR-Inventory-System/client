@@ -6,6 +6,7 @@ import { motion, Transition, Variants } from 'framer-motion';
 import useUser from '../hooks/user';
 import useLoader from '../hooks/loading';
 import LoadingSpinner from '../components/LoadingSpinner';
+import LogoHeader from '../components/LogoHeader';
 
 type RouteParams = {
   userId: string;
@@ -74,10 +75,7 @@ const VerifyAccount = (): JSX.Element => {
 
   return (
     <div className="verify-account">
-      <header>
-        <h1>CHDR Inventory</h1>
-        <p>Center for Humanities and Digital Research</p>
-      </header>
+      <LogoHeader />
       <motion.div
         initial="hidden"
         animate="show"

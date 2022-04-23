@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import ProfileAvatar from './ProfileAvatar';
 import useUser from '../hooks/user';
+import logo from '../assets/images/logo.png';
 
 type NavbarProps = {
   className?: string;
@@ -27,6 +28,10 @@ const Navbar = ({
         [className]: className,
         'navbar--sticky': sticky
       })}
+      avatar={{
+        src: logo,
+        shape: 'square'
+      }}
       subTitle={user.isAdminOrSuper() ? 'Admin' : null}
       extra={
         showAvatar && [

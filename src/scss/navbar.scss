@@ -10,6 +10,18 @@
     top: 0;
   }
 
+  .ant-avatar-square {
+    background-color: transparent;
+
+    @media screen and (max-width: 420px) {
+      display: none;
+    }
+  }
+
+  .ant-avatar > img {
+    object-fit: contain;
+  }
+
   .ant-page-header-heading-title {
     @include font-fallback('Gotham-Bold');
     font-size: 2em;

@@ -5,6 +5,7 @@ import SignUpCard from '../components/cards/SignUpCard';
 import LogInCard from '../components/cards/LogInCard';
 import ResetPasswordCard from '../components/cards/ResetPasswordCard';
 import useUser from '../hooks/user';
+import LogoHeader from '../components/LogoHeader';
 
 type CardType = 'login' | 'signUp' | 'forgotPassword';
 
@@ -95,10 +96,7 @@ const Auth = (): JSX.Element | null => {
 
   return (
     <div className="auth">
-      <header>
-        <h1>CHDR Inventory</h1>
-        <p>Center for Humanities and Digital Research</p>
-      </header>
+      <LogoHeader />
       {cards[card]}
     </div>
   );

@@ -6,21 +6,6 @@
   align-items: center;
   flex-direction: column;
 
-  header {
-    text-align: center;
-    margin: 3em 1em 1.5em 1em;
-
-    h1 {
-      font-size: 3.5em;
-      margin-bottom: 0.25em;
-      line-height: 1.2;
-    }
-
-    p {
-      color: map-get($colors, 'text-muted');
-    }
-  }
-
   .card-container {
     display: flex;
     justify-content: center;

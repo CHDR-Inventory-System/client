@@ -9,6 +9,7 @@ import { ArgsProps } from 'antd/lib/notification';
 import useLoader from '../hooks/loading';
 import useUser from '../hooks/user';
 import APIError from '../util/APIError';
+import LogoHeader from '../components/LogoHeader';
 
 type FormValues = {
   email: string;
@@ -135,10 +136,7 @@ const UpdateEmailPage = (): JSX.Element => {
 
   return (
     <div className="update-email-page">
-      <header>
-        <h1>CHDR Inventory</h1>
-        <p>Center for Humanities and Digital Research</p>
-      </header>
+      <LogoHeader />
       <motion.div
         initial="hidden"
         animate="show"
