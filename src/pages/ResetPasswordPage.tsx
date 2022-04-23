@@ -9,6 +9,7 @@ import * as yup from 'yup';
 import useLoader from '../hooks/loading';
 import useUser from '../hooks/user';
 import APIError from '../util/APIError';
+import LogoHeader from '../components/LogoHeader';
 
 type FormValues = {
   password: string;
@@ -120,10 +121,7 @@ const ResetPasswordPage = (): JSX.Element => {
 
   return (
     <div className="reset-password-page">
-      <header>
-        <h1>CHDR Inventory</h1>
-        <p>Center for Humanities and Digital Research</p>
-      </header>
+      <LogoHeader />
       <Card title="Reset Password" className="reset-password-card">
         <Card.Meta
           description={

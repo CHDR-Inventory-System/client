@@ -1,0 +1,33 @@
+@import './variables';
+
+.logo-header {
+  text-align: center;
+  margin: 3em 1em 1.5em 1em;
+  display: flex;
+
+  img {
+    width: 50px;
+    margin-right: 16px;
+    object-fit: contain;
+  }
+
+  h1 {
+    font-size: 3.5em;
+    margin-bottom: 0.25em;
+    line-height: 1.2;
+  }
+
+  p {
+    color: map-get($colors, 'text-muted');
+  }
+
+  @media screen and (max-width: 560px) {
+    flex-direction: column;
+    margin-top: 1.5em;
+
+    img {
+      align-self: center;
+      margin-bottom: 16px;
+    }
+  }
+}
