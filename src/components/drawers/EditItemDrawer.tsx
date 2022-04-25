@@ -196,6 +196,17 @@ const EditItemDrawer = ({
     loader.stopLoading();
   };
 
+  const onQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const quantity = parseInt(event.target.value, 10);
+
+    if (Number.isNaN(quantity)) {
+      return;
+    }
+
+    formik.setFieldValue('quantity', quantity);
+    formik.setFieldValue('available', quantity > 0);
+  };
+
   const confirmDelete = () => {
     Modal.confirm({
       className: 'modal--dangerous',
@@ -325,7 +336,7 @@ const EditItemDrawer = ({
         >
           <Input
             type="number"
-            onChange={formik.handleChange('quantity')}
+            onChange={onQuantityChange}
             min={0}
             disabled={!item.main}
           />
